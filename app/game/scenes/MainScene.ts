@@ -73,12 +73,12 @@ export default class MainScene extends Scene {
       color: '#fff'
     }).setOrigin(0.5);
 
-    const minusBtn = this.add.text(150, 450, '-', {
+    const minusBtn = this.add.text(150, 400, '-', {
       fontSize: '24px',
       color: '#fff'
     }).setOrigin(0.5).setInteractive();
 
-    const plusBtn = this.add.text(250, 450, '+', {
+    const plusBtn = this.add.text(250, 400, '+', {
       fontSize: '24px',
       color: '#fff'
     }).setOrigin(0.5).setInteractive();

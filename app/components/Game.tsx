@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { Game as PhaserGame } from "phaser";
-import { GameConfig } from "../game/config";
+import { useEffect, useRef } from 'react';
+import { Game as PhaserGame } from 'phaser';
+import { GameConfig } from '../game/config';
 
 export default function Game() {
   const gameRef = useRef<PhaserGame | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && !gameRef.current) {
+    if (typeof window !== 'undefined' && !gameRef.current) {
       // Create new game instance
       gameRef.current = new PhaserGame({
         ...GameConfig,
@@ -27,13 +27,10 @@ export default function Game() {
         }
       };
 
-      document.addEventListener("visibilitychange", handleVisibilityChange);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       return () => {
-        document.removeEventListener(
-          "visibilitychange",
-          handleVisibilityChange
-        );
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
         if (gameRef.current) {
           gameRef.current.sound?.stopAll();
           gameRef.current.destroy(true);

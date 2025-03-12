@@ -9,14 +9,14 @@ export const GameConfig: Types.Core.GameConfig = {
     mode: Phaser.Scale.NO_ZOOM,
     width: 1024,
     height: 768,
-    autoCenter: Phaser.Scale.NO_ZOOM
+    autoCenter: Phaser.Scale.NO_ZOOM,
   },
   physics: {
     default: 'arcade',
     arcade: {
       gravity: { x: 0, y: 0 },
-      debug: false
-    }
+      debug: false,
+    },
   },
-  scene: MainScene
-}; 
+  scene: MainScene,
+};

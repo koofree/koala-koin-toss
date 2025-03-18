@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { Game as PhaserGame } from 'phaser';
+import { useEffect, useRef } from 'react';
 import { GameConfig } from '../game/config';
 
 export default function Game() {

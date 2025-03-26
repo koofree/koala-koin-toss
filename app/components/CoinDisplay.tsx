@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface CoinDisplayProps {
@@ -46,45 +47,37 @@ export const CoinDisplay = ({
       {Array.from({ length: count }).map((_, idx) => (
         <div
           key={idx}
-          className={`relative ${count === 1 ? 'w-[120px] h-[120px]' : 'w-[60px] h-[60px]'} ${
+          className={`relative ${count === 1 ? 'w-[264px] h-[264px]' : 'w-[128px] h-[128px]'} ${
             idx % 5 === 0 ? 'basis-full sm:basis-auto' : ''
           }`}
         >
           <div
-            className={`absolute inset-0 rounded-full ${
-              results[idx] === 'HEADS' ? 'bg-[#FFD700]' : 'bg-[#C0C0C0]'
-            } flex items-center justify-center font-bold`}
+            className="absolute inset-0"
             style={{
-              transform: isFlipping ? `rotateX(${progress * 10}deg)` : 'none',
+              transform: isFlipping ? `rotateY(${progress * 10}deg)` : 'none',
               transition: 'transform 0.1s linear',
+              transformStyle: 'preserve-3d',
             }}
           >
-            {isFlipping
-              ? '?'
-              : results[idx]
-                ? results[idx] === 'HEADS'
-                  ? 'H'
-                  : 'T'
-                : selectedSide
-                  ? selectedSide === 'HEADS'
-                    ? 'H?'
-                    : 'T?'
-                  : '?'}
-          </div>
-          {isFlipping && (
-            <svg className="absolute inset-0 -rotate-90" viewBox="0 0 100 100">
-              <circle
-                cx="50"
-                cy="50"
-                r="45"
-                stroke="#3498db"
-                strokeWidth="4"
-                fill="none"
-                strokeDasharray="100"
-                strokeDashoffset={100 - progress}
+            <div className="absolute inset-0 backface-hidden">
+              <Image
+                src="/images/header/img_koala-coin_front_264px.png"
+                alt="Coin Front"
+                width={count === 1 ? 264 : 128}
+                height={count === 1 ? 264 : 128}
+                className="w-full h-full object-contain"
               />
-            </svg>
-          )}
+            </div>
+            <div className="absolute inset-0 backface-hidden rotate-y-180">
+              <Image
+                src="/images/header/img_koala-coin_back_264px.png"
+                alt="Coin Back"
+                width={count === 1 ? 264 : 128}
+                height={count === 1 ? 264 : 128}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
         </div>
       ))}
     </div>

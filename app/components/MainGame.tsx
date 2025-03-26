@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { ActionButtons } from './ActionButtons';
-import { BettingControls } from './BettingControls';
 import { CoinDisplay } from './CoinDisplay';
-import { GameModeControls } from './GameModeControls';
 
 // Calculate probability of getting k or more successes in n trials
 const calculateProbability = (n: number, k: number, max: number) => {
@@ -38,6 +36,8 @@ export const MainGame = () => {
   const [isFlipping, setIsFlipping] = useState(false);
   const [autoFlip, setAutoFlip] = useState(false);
   const [isWinning, setIsWinning] = useState<boolean | null>(null);
+  const [animationEnabled, setAnimationEnabled] = useState(true);
+  const [autoFlipCount, setAutoFlipCount] = useState(1);
 
   const handleCoinCountChange = (count: number) => {
     setCoinCount(count);
@@ -86,7 +86,7 @@ export const MainGame = () => {
   };
 
   return (
-    <div className="w-3/5 p-5 flex flex-col">
+    <div className="w-full p-5 flex flex-col">
       <div className="flex justify-between mb-4">
         <div className="text-xl">Session Stats</div>
         <div className="text-2xl font-bold">Balance: {balance} FCT</div>
@@ -193,19 +193,6 @@ export const MainGame = () => {
       )}
 
       <div className="mt-2 space-y-4">
-        <BettingControls
-          betAmount={betAmount}
-          setBetAmount={setBetAmount}
-          maxBet={Math.min(balance, 100)}
-        />
-
-        <GameModeControls
-          coinCount={coinCount}
-          setCoinCount={handleCoinCountChange}
-          minHeads={minHeads}
-          setMinHeads={setMinHeads}
-        />
-
         <ActionButtons
           selectedSide={selectedSide}
           setSelectedSide={setSelectedSide}
@@ -213,7 +200,30 @@ export const MainGame = () => {
           autoFlip={autoFlip}
           setAutoFlip={setAutoFlip}
           onFlip={handleFlip}
+          coinCount={coinCount}
+          setCoinCount={handleCoinCountChange}
+          minHeads={minHeads}
+          setMinHeads={setMinHeads}
+          betAmount={betAmount}
+          setBetAmount={setBetAmount}
+          balance={balance}
+          autoFlipCount={autoFlipCount}
+          setAutoFlipCount={setAutoFlipCount}
         />
+
+        <div className="flex justify-end mt-4 pr-10">
+          <div className="text-xs text-white flex items-center">ANIMATION</div>
+          <img
+            src={
+              animationEnabled
+                ? '/images/middle/buttons/btn_toggle_on.png'
+                : '/images/middle/buttons/btn_toggle_off.png'
+            }
+            alt={animationEnabled ? 'Toggle On' : 'Toggle Off'}
+            onClick={() => setAnimationEnabled(!animationEnabled)}
+            className="w-10 h-4 mx-2 cursor-pointer"
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,43 +1,37 @@
+import { useState } from 'react';
+
 interface BettingControlsProps {
-  betAmount: number;
-  setBetAmount: (amount: number) => void;
-  maxBet: number;
+  onAnimationToggle: (enabled: boolean) => void;
 }
 
-export const BettingControls = ({ betAmount, setBetAmount, maxBet }: BettingControlsProps) => {
-  const adjustBet = (amount: number) => {
-    const newBet = Math.min(Math.max(1, amount), maxBet);
-    setBetAmount(newBet);
+export function BettingControls({ onAnimationToggle }: BettingControlsProps) {
+  const [isAnimationEnabled, setIsAnimationEnabled] = useState(true);
+
+  const handleAnimationToggle = (enabled: boolean) => {
+    // Handle animation state change
+    console.log('Animation enabled:', enabled);
   };
 
   return (
-    <div className="flex items-center gap-4 justify-center">
-      <button
-        className="w-10 h-10 rounded-lg bg-[#3498db] hover:bg-[#2980b9] active:bg-[#1f6dad] disabled:bg-[#95a5a6]"
-        onClick={() => adjustBet(betAmount - 1)}
-        disabled={betAmount <= 1}
-      >
-        -
-      </button>
+    <div className="flex justify-between items-center w-full p-4">
+      {/* Left side - Game Mode Controls */}
+      <div className="flex items-center">
+        <button
+          onClick={() => handleAnimationToggle(true)}
+          className={`px-4 py-2 rounded ${
+            isAnimationEnabled ? 'bg-purple-600 text-white' : 'bg-gray-700 text-gray-300'
+          } hover:opacity-90 transition-all`}
+        >
+          {isAnimationEnabled ? 'Animation ON' : 'Animation OFF'}
+        </button>
+      </div>
 
-      <input
-        type="number"
-        value={betAmount}
-        onChange={(e) => adjustBet(parseInt(e.target.value) || 1)}
-        className="w-24 h-9 text-center rounded bg-gray-700"
-        min={1}
-        max={maxBet}
-      />
-
-      <button
-        className="w-10 h-10 rounded-lg bg-[#3498db] hover:bg-[#2980b9] active:bg-[#1f6dad] disabled:bg-[#95a5a6]"
-        onClick={() => adjustBet(betAmount + 1)}
-        disabled={betAmount >= maxBet}
-      >
-        +
-      </button>
-
-      <div className="text-lg font-mono">Current Bet: {betAmount} FCT</div>
+      {/* Right side - Action Buttons */}
+      <div className="flex gap-4">
+        <button className="px-6 py-3 bg-purple-600 text-white rounded hover:bg-purple-700 transition-all">
+          FLIP
+        </button>
+      </div>
     </div>
   );
-};
+}

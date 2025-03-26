@@ -1,136 +1,93 @@
-# Coin Flip Game Layout
+# Layout Documentation
+
+## Theme
+
+- Primary Background: #0C0C0C
+- Secondary Background: Linear gradient from #0C0C0C to #320076
+- Accent Colors:
+  - Primary Purple: #B138E8
+  - Secondary Purple: #7620A8
 
 ## Layout Structure
 
-### Main Sections
+### Root Layout
 
-- **Left Section**: Game history panel (20% of screen width)
-- **Center Section**: Main game area (60% of screen width)
-- **Right Section**: Statistics and settings panel (20% of screen width)
+- Full viewport height and width
+- Support for both Light and Dark themes
+- Animated gradient background with subtle floating elements
+- Font: `Press Start 2P` for retro gaming aesthetic
 
-### Game History Panel (Left)
+### Page Layout
 
-- Fixed width: 20% of screen
-- Dark background for contrast
-- Displays last 10 game results with:
-  - Game ID
-  - Bet amount
-  - Selected side
-  - Result (win/loss)
-  - Timestamp
-- Color-coded results (green for wins, red for losses)
+![entire_screen_1.png](entire_screen_1.png)
+![entire_screen_2.png](entire_screen_2.png)
 
-### Main Game Area (Center)
+1. Header & Footer
 
-#### Top Area
+   - No header or footer present as this page will be embedded within another service
 
-- Balance display (top-right)
-- Session statistics summary (top-left)
+2. Main Content Area
 
-#### Center Area
+   - Padding: 2rem (32px)
+   - Fixed dimensions: 1200px width × 800px height
+   - Horizontally centered in viewport
+   - Sections separated by 2rem gap
 
-- Coin Display Modes:
-  - Single Mode: 120px centered coin
-  - Multiple Mode: Grid layout for 1-10 coins (60px each)
-  - Coin Styling:
-    - Heads: Gold with "H" marking
-    - Tails: Silver with "T" marking
-  - Animation progress indicator (circular timer)
+3. Game Layout
+   - Block-style arrangement
+   - Game Board (Coin Flipping Area)
+     - Borderless design
+     - Transparent background
+     - Positioned at top third of layout
+     - Spans full width
+   - Controls Section
+     - 2D pixel-art style dotted background and border
+     - Positioned at bottom two-thirds of layout
+     - Occupies middle two-thirds of width
+   - Side Padding Areas
+     - Left and right padding each occupy 1/6 of total width
+     - Animated character displays in these areas
 
-#### Bottom Area (Controls)
+### Control Section Layout
 
-1. Betting Controls Row
+![control_panel.png](control_panel.png)
 
-   - "-" button
-   - Bet amount input field (1-100 FCT)
-   - "+" button
-   - Current bet display
+    - First Row
+        - AUTOBET: Checkbox options for setting automatic win conditions
+        - COINAMOUNT: Slider from 0.0x to 1.0x to adjust betting proportion
+        - WAGER: Betting amount input with 0.5x and 2x quick adjustment buttons
+    - Second Row
+        - PRESETS: Quick selection options (1:1 (x1.96), 1:10 (x983.04), etc.)
+        - MIN HEADS/TAILS: Minimum required heads or tails count for winning
+        - POTENTIAL WIN: Calculated potential earnings display based on current settings
 
-2. Game Mode Controls Row
+## Responsive Design
 
-   - Coin count selector dropdown (1-10)
-   - Minimum heads input field (for multiple mode)
+- Fixed layout with no responsive adaptations
 
-3. Side Selection Row
+## Component Spacing
 
-   - HEADS button (150px width, blue when selected)
-   - TAILS button (150px width, red when selected)
+- Small gap: 0.5rem (8px)
+- Medium gap: 1rem (16px)
+- Large gap: 2rem (32px)
 
-4. Action Buttons Row
-   - FLIP button (200px width, green)
-   - Auto-flip toggle button
-   - Stop button (visible during auto-flip)
+## Animations
 
-### Statistics & Settings Panel (Right)
+- Smooth transitions: 0.2s ease-in-out
+- Interactive button hover effects
+- Coin flip animation featuring distinct front and back images
+- Results reveal animation sequence
 
-#### Session Statistics Section
+## Z-Index Hierarchy
 
-- Win/loss ratio
-- Total amount won/lost
-- Longest win/loss streak
-- Real-time updates
+1. Base content: 0
+2. Game controls: 1
+3. Modal overlays: 100
+4. Notifications: 1000
 
-#### Settings Section
+## Accessibility Features
 
-- Animation controls:
-  - Toggle on/off
-  - Speed selection (Slow/Normal/Fast)
-- Auto-flip settings
-- Sound toggle
-
-## Visual Design Specifications
-
-### Colors
-
-- Background: Dark theme (#282c34)
-- Heads coin: Gold (#FFD700)
-- Tails coin: Silver (#C0C0C0)
-- Win indicator: Green (#4CAF50)
-- Loss indicator: Red (#F44336)
-- Button states:
-  - Default: #3498db
-  - Hover: #2980b9
-  - Active: #1f6dad
-  - Disabled: #95a5a6
-
-### Spacing and Dimensions
-
-- Standard padding: 20px
-- Button heights: 40px
-- Input field heights: 36px
-- Gaps between controls: 16px
-- Border radius: 8px
-
-### Responsive Behavior
-
-- Minimum width: 1024px
-- Maximum width: 1920px
-- Breakpoints:
-  - Mobile: Hide statistics panel
-  - Tablet: Condensed controls layout
-  - Desktop: Full layout
-
-### Animation Specifications
-
-- Coin flip animation: 60fps
-- Duration options:
-  - Slow: 3s
-  - Normal: 2s
-  - Fast: 1s
-- Progress indicator animation: Smooth circular rotation
-
-### Typography
-
-- Primary font: System default sans-serif
-- Game statistics: Monospace for numbers
-- Button text: Bold, 16px
-- Balance display: Bold, 24px
-- History text: 14px
-
-## Technical Constraints
-
-- Betting controls locked during animation
-- Auto-flip mode maximum: 100 consecutive flips
-- Local storage for game history
-- Minimum balance check: 1 FCT
-- Maximum single bet: 100 FCT or current balance
+- Minimum contrast ratio of 4.5:1 for readability
+- Visible focus indicators for navigation
+- ARIA labels on all interactive elements
+- Complete keyboard navigation support

@@ -1,13 +1,8 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { GameHistory } from './GameHistory';
 import { MainGame } from './MainGame';
 import { StatsPanel } from './StatsPanel';
-
-const Game = dynamic(() => import('./Game'), {
-  ssr: false,
-});
 
 export const GameWrapper = () => {
   return (

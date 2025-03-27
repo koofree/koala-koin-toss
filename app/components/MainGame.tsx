@@ -122,7 +122,7 @@ export const MainGame = () => {
   }, [betAmount, balance, winningProbability]);
 
   return (
-    <div className="w-full p-5 pt-8 flex flex-col">
+    <div className="w-full h-full p-5 pt-8 flex flex-col">
       <div className="h-[25vh] flex items-center">
         <CoinDisplay
           count={coinCount}

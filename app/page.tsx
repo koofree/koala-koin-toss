@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center relative">
       <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat">
-        <div className="w-full flex flex-row items-center">
+        <div className="w-full h-full flex flex-row items-center">
           <div className="w-2/12 h-full flex flex-col items-center justify-center">
             <img
               src="/images/koala/dancing/dancing_koala_front.gif"

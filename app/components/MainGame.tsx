@@ -34,7 +34,7 @@ export const MainGame = () => {
   const [balance, setBalance] = useState(100);
   const [betAmount, setBetAmount] = useState(1);
   const [selectedSide, setSelectedSide] = useState<'HEADS' | 'TAILS' | null>(null);
-  const [results, setResults] = useState<Array<'HEADS' | 'TAILS'>>([]);
+  const [results, setResults] = useState<Array<'HEADS' | 'TAILS' | null>>([null]);
   const [coinCount, setCoinCount] = useState(1);
   const [minHeads, setMinHeads] = useState(1);
   const [isFlipping, setIsFlipping] = useState(false);
@@ -47,7 +47,7 @@ export const MainGame = () => {
 
   const handleCoinCountChange = (count: number) => {
     setCoinCount(count);
-    setResults([]);
+    setResults(Array(count).fill(null));
     if (minHeads > count) {
       setMinHeads(count);
     }
@@ -115,12 +115,14 @@ export const MainGame = () => {
       setBetAmount(balance);
     }
 
-    const reward = caculateReward(betAmount, winningProbability);
-    setExpectedValue(reward);
+    if (winningProbability > 0) {
+      const reward = caculateReward(betAmount, winningProbability);
+      setExpectedValue(reward);
+    }
   }, [betAmount, balance, winningProbability]);
 
   return (
-    <div className="w-full p-5 pt-10 flex flex-col">
+    <div className="w-full p-5 pt-8 flex flex-col">
       <div className="h-[25vh] flex items-center">
         <CoinDisplay
           count={coinCount}
@@ -131,7 +133,7 @@ export const MainGame = () => {
         />
       </div>
 
-      <div className="mt-2 space-y-4">
+      <div className="space-y-4">
         <ActionButtons
           selectedSide={selectedSide}
           setSelectedSide={setSelectedSide}
@@ -152,8 +154,8 @@ export const MainGame = () => {
           expectedValue={expectedValue}
         />
 
-        <div className="flex justify-end mt-4 pr-10">
-          <div className="text-xs text-white flex items-center">ANIMATION</div>
+        <div className="flex justify-end pr-10">
+          <div className="text-[9px] text-white flex items-center">ANIMATION</div>
           <img
             src={
               animationEnabled
@@ -162,7 +164,7 @@ export const MainGame = () => {
             }
             alt={animationEnabled ? 'Toggle On' : 'Toggle Off'}
             onClick={() => setAnimationEnabled(!animationEnabled)}
-            className="w-10 h-4 mx-2 cursor-pointer"
+            className="w-[30px] h-[12px] mx-2 cursor-pointer"
           />
         </div>
       </div>

@@ -29,17 +29,17 @@ export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: Sel
   };
 
   return (
-    <div className="relative  w-[200px]">
+    <div className="relative  w-[120px]">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full h-11
+        className="flex items-center justify-between w-full
         bg-[url('/images/middle/dropdown/btn_dropdown.png')] 
         bg-cover bg-center bg-no-repeat 
         px-3 py-2 rounded-tl-lg rounded-br-lg shadow-lg
         text-white text-xs hover:opacity-90 transition-opacity"
       >
-        <span>{selectedOption.label}</span>
+        <span className="text-[9px]">{selectedOption.label}</span>
         <div
           className={`w-0 h-0 ml-2 transform transition-transform ${isOpen ? 'rotate-180' : ''}
           absolute top-1/2 right-3 -translate-x-1/2 -translate-y-1/2
@@ -64,7 +64,7 @@ export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: Sel
                 key={option.idx}
                 onClick={() => handleOptionSelect(option)}
                 className="
-                    w-[148px] mx-2 px-2 py-2 text-left text-xs text-white
+                    w-[105px] mx-2 pl-2 text-left text-[9px] text-white
                      hover:bg-white hover:bg-opacity-10"
               >
                 {option.label}

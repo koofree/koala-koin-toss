@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 interface CoinDisplayProps {
   count: number;
   isFlipping: boolean;
-  results: Array<'HEADS' | 'TAILS'>;
+  results: Array<'HEADS' | 'TAILS' | null>;
   selectedSide: 'HEADS' | 'TAILS' | null;
   animationEnabled: boolean;
 }
@@ -39,15 +39,16 @@ export const CoinDisplay = ({
   }, [isFlipping, animationDuration]);
 
   return (
-    <div className="flex flex-wrap gap-4 justify-center items-center max-w-[600px] mx-auto">
+    <div className="flex flex-wrap gap-2 justify-center items-center max-w-[400px] mx-auto">
       {Array.from({ length: count }).map((_, idx) => {
         const result = results[idx];
         const isHeads = result === 'HEADS';
+        const isNull = result === null;
 
         return (
           <div
             key={idx}
-            className={`relative ${count === 1 ? 'w-[128px] h-[128px]' : 'w-[96px] h-[96px]'} ${
+            className={`relative ${count === 1 ? 'w-[128px] h-[128px]' : 'w-[64px] h-[64px]'} ${
               idx % 5 === 0 ? 'basis-full sm:basis-auto' : ''
             }`}
           >
@@ -66,8 +67,8 @@ export const CoinDisplay = ({
                       <Image
                         src="/images/middle/coins/img_koala-coin_front_124px-1.png"
                         alt="Coin Front"
-                        width={count === 1 ? 128 : 96}
-                        height={count === 1 ? 128 : 96}
+                        width={count === 1 ? 128 : 64}
+                        height={count === 1 ? 128 : 64}
                         className="w-full h-full object-contain"
                       />
                     </div>
@@ -76,8 +77,8 @@ export const CoinDisplay = ({
                       <Image
                         src="/images/middle/coins/img_koala-coin_back_124px-1.png"
                         alt="Coin Back"
-                        width={count === 1 ? 128 : 96}
-                        height={count === 1 ? 128 : 96}
+                        width={count === 1 ? 128 : 64}
+                        height={count === 1 ? 128 : 64}
                         className="w-full h-full object-contain"
                       />
                     </div>
@@ -86,17 +87,21 @@ export const CoinDisplay = ({
               ) : (
                 <Image
                   src={
-                    isHeads
-                      ? selectedSide === 'HEADS'
-                        ? '/images/middle/coins/img_koala-coin_front_124px-1.png'
+                    isNull
+                      ? selectedSide === 'TAILS'
+                        ? '/images/middle/coins/img_koala-coin_back_disabled_124px.png'
                         : '/images/middle/coins/img_koala-coin_front_disabled_124px.png'
-                      : selectedSide === 'TAILS'
-                        ? '/images/middle/coins/img_koala-coin_back_124px-1.png'
-                        : '/images/middle/coins/img_koala-coin_back_disabled_124px.png'
+                      : isHeads
+                        ? selectedSide === 'HEADS'
+                          ? '/images/middle/coins/img_koala-coin_front_124px-1.png'
+                          : '/images/middle/coins/img_koala-coin_front_disabled_124px.png'
+                        : selectedSide === 'TAILS'
+                          ? '/images/middle/coins/img_koala-coin_back_124px-1.png'
+                          : '/images/middle/coins/img_koala-coin_back_disabled_124px.png'
                   }
                   alt={isHeads ? 'Coin Front' : 'Coin Back'}
-                  width={count === 1 ? 128 : 96}
-                  height={count === 1 ? 128 : 96}
+                  width={count === 1 ? 128 : 64}
+                  height={count === 1 ? 128 : 64}
                   className="w-full h-full object-contain"
                 />
               )}

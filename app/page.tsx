@@ -11,7 +11,7 @@ export default function Home() {
             <img
               src="/images/koala/dancing/dancing_koala_front.gif"
               alt="Dancing Koala"
-              className="w-2/3"
+              className="w-2/3 mt-[250px]"
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">
@@ -26,7 +26,7 @@ export default function Home() {
             <img
               src="/images/koala/dancing/dancing_koala_back.gif"
               alt="Dancing Koala"
-              className="w-2/3"
+              className="w-2/3 mt-[250px]"
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">

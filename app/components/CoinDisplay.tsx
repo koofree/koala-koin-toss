@@ -6,7 +6,7 @@ interface CoinDisplayProps {
   isFlipping: boolean;
   results: Array<'HEADS' | 'TAILS'>;
   selectedSide: 'HEADS' | 'TAILS' | null;
-  animationSpeed?: 'Slow' | 'Normal' | 'Fast';
+  animationEnabled: boolean;
 }
 
 export const CoinDisplay = ({
@@ -14,15 +14,11 @@ export const CoinDisplay = ({
   isFlipping,
   results,
   selectedSide,
-  animationSpeed = 'Normal',
+  animationEnabled,
 }: CoinDisplayProps) => {
   const [progress, setProgress] = useState(0);
 
-  const animationDuration = {
-    Slow: 3000,
-    Normal: 2000,
-    Fast: 1000,
-  }[animationSpeed];
+  const animationDuration = animationEnabled ? 2000 : 0;
 
   useEffect(() => {
     if (isFlipping) {

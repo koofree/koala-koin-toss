@@ -84,12 +84,15 @@ export const MainGame = () => {
       reward = caculateReward(betAmount, probability);
     }
 
-    setTimeout(() => {
-      setIsWinning(won);
-      setResults(newResults);
-      setBalance((prev) => (won ? prev + reward : prev - betAmount));
-      setIsFlipping(false);
-    }, 1500);
+    setTimeout(
+      () => {
+        setIsWinning(won);
+        setResults(newResults);
+        setBalance((prev) => (won ? prev + reward : prev - betAmount));
+        setIsFlipping(false);
+      },
+      animationEnabled ? 1500 : 0
+    );
   };
 
   useEffect(() => {
@@ -117,18 +120,14 @@ export const MainGame = () => {
   }, [betAmount, balance, winningProbability]);
 
   return (
-    <div className="w-full p-5 flex flex-col">
-      <div className="flex justify-between mb-4">
-        <div className="text-xl">Session Stats</div>
-        <div className="text-2xl font-bold">Balance: {balance} FCT</div>
-      </div>
-
+    <div className="w-full p-5 pt-10 flex flex-col">
       <div className="h-[25vh] flex items-center">
         <CoinDisplay
           count={coinCount}
           isFlipping={isFlipping}
           results={results}
           selectedSide={selectedSide}
+          animationEnabled={animationEnabled}
         />
       </div>
 

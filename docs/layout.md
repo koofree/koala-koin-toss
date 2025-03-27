@@ -2,6 +2,9 @@
 
 ## Theme
 
+- Primary Color: #48bb78 (green)
+- Secondary Color: #4a5568 (gray)
+- Background Color: #282c34
 - Primary Background: #0C0C0C
 - Secondary Background: Linear gradient from #0C0C0C to #320076
 - Accent Colors:
@@ -12,10 +15,9 @@
 
 ### Root Layout
 
-- Full viewport height and width
-- Support for both Light and Dark themes
-- Animated gradient background with subtle floating elements
-- Font: `Press Start 2P` for retro gaming aesthetic
+- Full viewport height (min-h-screen)
+- Dark theme with gray-900 background
+- Font: System default (no custom font implementation found)
 
 ### Page Layout
 
@@ -28,9 +30,9 @@
 
 2. Main Content Area
 
-   - Padding: 2rem (32px)
-   - Fixed dimensions: 1200px width × 800px height
+   - No fixed dimensions implemented yet
    - Horizontally centered in viewport
+   - Padding: 2rem (32px)
    - Sections separated by 2rem gap
 
 3. Game Layout
@@ -63,7 +65,8 @@
 
 ## Responsive Design
 
-- Fixed layout with no responsive adaptations
+- Currently uses Tailwind's responsive utilities
+- Minimum height set to full viewport height
 
 ## Component Spacing
 

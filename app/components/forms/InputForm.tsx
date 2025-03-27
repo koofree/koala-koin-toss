@@ -44,7 +44,7 @@ export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
         onChange={(e) => handleCoinCountChange(e.target.value)}
         className="w-[90px] h-8 appearance-none bg-transparent cursor-pointer
                     text-[9px]
-                    bg-contain text-white text-xs
+                    bg-contain text-white
                     [&::-webkit-slider-thumb]:appearance-none
                     [&::-webkit-slider-thumb]:h-6
                     [&::-webkit-slider-thumb]:w-6

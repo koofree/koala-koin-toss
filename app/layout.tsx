@@ -1,3 +1,4 @@
+import NextAbstractWalletProvider from './components/NextAbstractWalletProvider';
 import './globals.css';
 
 export const metadata = {
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-gray-900">{children}</body>
+      <NextAbstractWalletProvider>
+        <body className="min-h-screen bg-gray-100">{children}</body>
+      </NextAbstractWalletProvider>
     </html>
   );
 }

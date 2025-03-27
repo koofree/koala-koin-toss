@@ -1,8 +1,13 @@
 {
   "dependencies": {
-    "framer-motion": "^12.4.10",
-    "next": "^15.2.1",
-    "phaser": "^3.88.2"
+    "@abstract-foundation/agw-client": "1.1.1",
+    "@abstract-foundation/agw-react": "1.2.3",
+    "@privy-io/cross-app-connect": "0.1.5",
+    "next": "14.2.13",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "wagmi": "2.12.25",
+    "viem": "2.21.26"
   },
   "scripts": {
     "dev": "next dev",
@@ -10,19 +15,17 @@
     "start": "next start",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "format:watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}",
-    "prepare": "husky install"
+    "format:watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}"
   },
   "devDependencies": {
-    "@types/node": "22.13.9",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/node": "20.11.30",
+    "@types/react": "18.2.67",
+    "@types/react-dom": "18.2.22",
     "autoprefixer": "^10.4.21",
-    "husky": "^9.1.7",
-    "postcss": "^8.5.3",
     "prettier": "^3.1.0",
-    "tailwindcss": "^3.3.0",
-    "typescript": "5.8.2"
+    "postcss": "8.4.35",
+    "tailwindcss": "3.4.1",
+    "typescript": "5.4.2"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

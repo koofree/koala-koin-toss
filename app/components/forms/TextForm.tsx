@@ -1,43 +1,15 @@
-import { useState } from 'react';
-
-interface SliderFormProps {
+interface TextFormProps {
   value: number;
-  setValue: (count: number) => void;
-  max: number;
 }
 
-export const InputForm = ({ value, setValue, max = 10 }: SliderFormProps) => {
-  const [inputValue, setInputValue] = useState(value.toFixed(2));
-
-  const handleCoinCountChange = (_value: string) => {
-    if (!_value) {
-      setValue(0);
-      setInputValue('');
-      return;
-    }
-
-    if (_value.endsWith('.')) {
-      setInputValue(_value);
-      return;
-    }
-
-    let value = parseFloat(parseFloat(_value).toFixed(2));
-
-    if (value > max) {
-      value = max;
-    }
-
-    setValue(value);
-    setInputValue(value.toString());
-  };
-
+export const TextForm = ({ value }: TextFormProps) => {
   return (
     <div className="flex items-center bg-[#1A1832] px-3 py-2 rounded-tl-lg rounded-br-lg shadow-lg w-[200px]">
       <div className="w-3 text-white text-xs">$</div>
       <input
         type="text"
-        value={inputValue}
-        onChange={(e) => handleCoinCountChange(e.target.value)}
+        disabled
+        value={value}
         className="w-[140px] h-8 appearance-none bg-transparent cursor-pointer
                      bg-contain text-white text-xs
                     [&::-webkit-slider-thumb]:appearance-none

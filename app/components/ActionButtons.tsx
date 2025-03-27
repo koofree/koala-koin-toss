@@ -1,6 +1,9 @@
 import { CheckBox } from './forms/CheckBox';
 import { InputForm } from './forms/InputForm';
+import { SelectForm } from './forms/SelectForm';
 import { SliderForm } from './forms/SliderForm';
+import { TextForm } from './forms/TextForm';
+import { TitlePanel } from './forms/TitlePanel';
 
 interface ActionButtonsProps {
   selectedSide: 'HEADS' | 'TAILS' | null;
@@ -18,6 +21,8 @@ interface ActionButtonsProps {
   betAmount: number;
   setBetAmount: (amount: number) => void;
   balance: number;
+  winningProbability: number;
+  expectedValue: number;
 }
 
 export const ActionButtons = ({
@@ -36,18 +41,9 @@ export const ActionButtons = ({
   betAmount,
   setBetAmount,
   balance,
+  winningProbability,
+  expectedValue,
 }: ActionButtonsProps) => {
-  const handleCoinCountChange = (count: number) => {
-    setCoinCount(count);
-    if (minHeads > count) {
-      setMinHeads(count);
-    }
-  };
-
-  function calculateProbability(coinCount: number, arg1: number, arg2: number) {
-    throw new Error('Function not implemented.');
-  }
-
   return (
     <div
       className="space-y-14 bg-[url('/images/middle/img_main-board.png')] bg-cover bg-center bg-no-repeat 
@@ -55,28 +51,12 @@ export const ActionButtons = ({
       flex flex-col items-center
     "
     >
-      <div
-        className="flex items-center justify-center 
-          mx-auto
-          bg-[url('/images/middle/img_title-bar_2-1.png')] 
-          bg-cover bg-center bg-no-repeat h-10 w-40
-          before:content-[''] before:absolute before:left-[-16px] before:top-0 before:w-4 before:h-10
-          before:bg-[url('/images/middle/img_title-bar_1.png')] before:bg-cover before:bg-center before:bg-no-repeat
-          after:content-[''] after:absolute after:right-[-16px] after:top-0 after:w-4 after:h-10
-          after:bg-[url('/images/middle/img_title-bar_3.png')] after:bg-cover after:bg-center after:bg-no-repeat
-          relative
-          "
-      >
-        <div className="flex items-center gap-2">
-          <img src="/images/middle/coins/ic_koa_20px.png" width={12} alt="1 TO WIN" />
-          <label htmlFor="1-to-win" className="text-white text-xs">
-            1 TO WIN
-          </label>
-          <label htmlFor="50% CHANCE" className="text-white text-[10px]">
-            50% CHANCE
-          </label>
-        </div>
-      </div>
+      <TitlePanel
+        selectedSide={selectedSide}
+        coinCount={coinCount}
+        minHeads={minHeads}
+        winningProbability={winningProbability}
+      />
       <div className="flex flex-row items-center">
         <div className="flex items-center justify-between w-8/12 flex-wrap">
           <div className="relative flex items-center w-1/3">
@@ -110,7 +90,27 @@ export const ActionButtons = ({
             <label className="block text-left mb-2 absolute -top-6 left-0 right-0 text-gray-300 text-xs ">
               MIN HEADS / TAILS
             </label>
+            <SelectForm
+              minHeads={minHeads}
+              coinCount={coinCount}
+              setMinHeadsAndCoinCount={(minHeads, coinCount) => {
+                setCoinCount(coinCount);
+                setMinHeads(minHeads);
+              }}
+            />
+          </div>
+
+          <div className="relative flex items-center w-1/3">
+            <label className="block text-left mb-2 absolute -top-6 left-0 right-0 text-gray-300 text-xs ">
+              MIN HEADS / TAILS
+            </label>
             <SliderForm value={minHeads} setValue={setMinHeads} max={coinCount} />
+          </div>
+          <div className="relative flex items-center w-1/3">
+            <label className="block text-left mb-2 absolute -top-6 left-0 right-0 text-gray-300 text-xs ">
+              POTENTIAL WIN
+            </label>
+            <TextForm value={expectedValue} />
           </div>
         </div>
 

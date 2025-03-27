@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActionButtons } from './ActionButtons';
 import { CoinDisplay } from './CoinDisplay';
 
@@ -26,6 +26,10 @@ const calculateProbability = (n: number, k: number, max: number) => {
   return probability;
 };
 
+const caculateReward = (betAmount: number, probability: number) => {
+  return parseFloat((betAmount / probability).toFixed(2));
+};
+
 export const MainGame = () => {
   const [balance, setBalance] = useState(100);
   const [betAmount, setBetAmount] = useState(1);
@@ -38,6 +42,8 @@ export const MainGame = () => {
   const [isWinning, setIsWinning] = useState<boolean | null>(null);
   const [animationEnabled, setAnimationEnabled] = useState(true);
   const [autoFlipCount, setAutoFlipCount] = useState(1);
+  const [winningProbability, setWinningProbability] = useState(0);
+  const [expectedValue, setExpectedValue] = useState(0);
 
   const handleCoinCountChange = (count: number) => {
     setCoinCount(count);
@@ -73,8 +79,9 @@ export const MainGame = () => {
           ? calculateProbability(coinCount, minHeads, coinCount) // P(heads >= minHeads)
           : calculateProbability(coinCount, 0, coinCount - minHeads); // P(heads <= coinCount - minHeads)
 
+      setWinningProbability(probability);
       // Higher reward for lower probability events
-      reward = Math.round(betAmount / probability);
+      reward = caculateReward(betAmount, probability);
     }
 
     setTimeout(() => {
@@ -84,6 +91,30 @@ export const MainGame = () => {
       setIsFlipping(false);
     }, 1500);
   };
+
+  useEffect(() => {
+    if (selectedSide && coinCount && minHeads) {
+      const probability =
+        selectedSide === 'HEADS'
+          ? calculateProbability(coinCount, minHeads, coinCount) // P(heads >= minHeads)
+          : calculateProbability(coinCount, 0, coinCount - minHeads); // P(heads <= coinCount - minHeads)
+
+      setWinningProbability(probability);
+    }
+  }, [selectedSide, coinCount, minHeads]);
+
+  useEffect(() => {
+    if (!betAmount) {
+      setBetAmount(0);
+    }
+
+    if (balance < betAmount) {
+      setBetAmount(balance);
+    }
+
+    const reward = caculateReward(betAmount, winningProbability);
+    setExpectedValue(reward);
+  }, [betAmount, balance, winningProbability]);
 
   return (
     <div className="w-full p-5 flex flex-col">
@@ -100,97 +131,6 @@ export const MainGame = () => {
           selectedSide={selectedSide}
         />
       </div>
-
-      {results.length > 0 ? (
-        <div className="text-center my-4">
-          {results.length > 0 && (
-            <>
-              {balance > 0 ? (
-                isWinning ? (
-                  <div className="flex flex-col items-center bg-gradient-to-r from-green-400 to-emerald-500 p-6 rounded-xl shadow-lg">
-                    <div className="text-4xl mb-3">🎰 WINNER! 🎰</div>
-                    <div className="text-white text-5xl font-black mb-2">
-                      +
-                      {(
-                        betAmount /
-                        calculateProbability(
-                          coinCount,
-                          selectedSide === 'HEADS' ? minHeads : 0,
-                          selectedSide === 'HEADS' ? coinCount : coinCount - minHeads
-                        )
-                      ).toFixed(2)}{' '}
-                      FCT
-                    </div>
-                    <div className="text-white text-xl">
-                      Multiplier:{' '}
-                      {(
-                        betAmount /
-                        calculateProbability(
-                          coinCount,
-                          selectedSide === 'HEADS' ? minHeads : 0,
-                          selectedSide === 'HEADS' ? coinCount : coinCount - minHeads
-                        ) /
-                        betAmount
-                      ).toFixed(2)}
-                      x
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center bg-gradient-to-r from-red-400 to-rose-500 p-6 rounded-xl shadow-lg">
-                    <div className="text-4xl mb-3">😢 LOSER! 😢</div>
-                    <div className="text-white text-5xl font-black mb-2">
-                      -{betAmount.toFixed(2)} FCT
-                    </div>
-                    <div className="text-white text-xl">Better luck next time!</div>
-                  </div>
-                )
-              ) : (
-                <div className="flex flex-col items-center bg-gradient-to-r from-red-400 to-rose-500 p-6 rounded-xl shadow-lg">
-                  <div className="text-4xl mb-3">💔 GAME OVER 💔</div>
-                  <div className="text-white text-5xl font-black mb-2">-{betAmount} FCT</div>
-                  <button
-                    className="mt-3 bg-white text-rose-500 px-6 py-2 rounded-full font-bold hover:bg-rose-100 transition-colors"
-                    onClick={() => setBalance(100)}
-                  >
-                    Try Again
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      ) : (
-        <div className="text-center my-4">
-          <div className="text-xl">
-            {selectedSide && (
-              <>
-                Expected reward:{' '}
-                <span className="font-bold">
-                  {(
-                    betAmount /
-                    calculateProbability(
-                      coinCount,
-                      selectedSide === 'HEADS' ? minHeads : 0,
-                      selectedSide === 'HEADS' ? coinCount : coinCount - minHeads
-                    )
-                  ).toFixed(2)}
-                </span>{' '}
-                FCT (
-                {(
-                  betAmount /
-                  calculateProbability(
-                    coinCount,
-                    selectedSide === 'HEADS' ? minHeads : 0,
-                    selectedSide === 'HEADS' ? coinCount : coinCount - minHeads
-                  ) /
-                  betAmount
-                ).toFixed(2)}
-                x multiplier)
-              </>
-            )}
-          </div>
-        </div>
-      )}
 
       <div className="mt-2 space-y-4">
         <ActionButtons
@@ -209,6 +149,8 @@ export const MainGame = () => {
           balance={balance}
           autoFlipCount={autoFlipCount}
           setAutoFlipCount={setAutoFlipCount}
+          winningProbability={winningProbability}
+          expectedValue={expectedValue}
         />
 
         <div className="flex justify-end mt-4 pr-10">

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface SliderFormProps {
@@ -7,7 +8,7 @@ interface SliderFormProps {
 }
 
 export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
-  const [inputValue, setInputValue] = useState(value.toFixed(2));
+  const [inputValue, setInputValue] = useState(value.toFixed(8));
 
   const handleCoinCountChange = (_value: string) => {
     if (!_value) {
@@ -16,12 +17,12 @@ export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
       return;
     }
 
-    if (_value.endsWith('.')) {
+    if (_value.endsWith('.') || _value.endsWith('0')) {
       setInputValue(_value);
       return;
     }
 
-    let value = parseFloat(parseFloat(_value).toFixed(2));
+    let value = parseFloat(parseFloat(_value).toFixed(8));
 
     if (value > max) {
       value = max;
@@ -36,8 +37,16 @@ export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
   }, [value]);
 
   return (
-    <div className="flex items-center bg-[#1A1832] px-3 rounded-tl-lg rounded-br-lg shadow-lg w-[120px]">
-      <div className="w-3 mr-[5px] text-white text-[9px]">$</div>
+    <div className="flex items-center bg-[#1A1832] pr-3 pl-2 rounded-tl-lg rounded-br-lg shadow-lg w-[120px]">
+      <div className="w-[12px] inline-block mr-1">
+        <Image
+          src="/images/ethereum-svgrepo-com.svg"
+          alt="ETH"
+          className="flex w-[12px] my-auto mr-3"
+          width={12}
+          height={12}
+        />
+      </div>
       <input
         type="text"
         value={inputValue}

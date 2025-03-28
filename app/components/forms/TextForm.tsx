@@ -1,16 +1,26 @@
+import Image from 'next/image';
+
 interface TextFormProps {
   value: number;
 }
 
 export const TextForm = ({ value }: TextFormProps) => {
   return (
-    <div className="flex items-center bg-[#1A1832] px-3 rounded-tl-lg rounded-br-lg shadow-lg w-[120px]">
-      <div className="w-3 text-white mr-[5px] text-[9px]">$</div>
+    <div className="flex items-center bg-[#1A1832] pl-2 pr-3 rounded-tl-lg rounded-br-lg shadow-lg w-[120px]">
+      <div className="w-[12px] inline-block mr-1">
+        <Image
+          src="/images/ethereum-svgrepo-com.svg"
+          alt="ETH"
+          className="flex w-[12px] my-auto mr-3"
+          width={12}
+          height={12}
+        />
+      </div>
       <input
         type="text"
         disabled
         value={value}
-        className="w-[140px] h-8 appearance-none bg-transparent cursor-pointer
+        className="w-[100px] h-8 appearance-none bg-transparent cursor-pointer
                      bg-contain text-white  text-[9px]
                     [&::-webkit-slider-thumb]:appearance-none
                     [&::-webkit-slider-thumb]:h-6

@@ -22,11 +22,14 @@ export const CoinDisplay = ({
 
   useEffect(() => {
     if (isFlipping) {
+      // Increase the step size to make the flipping speed faster while keeping the same duration
+
+      const flipCount = 100000;
       const interval = setInterval(() => {
         setProgress((prev) => {
-          if (prev >= 100) {
+          if (prev >= flipCount) {
             clearInterval(interval);
-            return 100;
+            return 360;
           }
           return prev + 100 / (animationDuration / 50);
         });

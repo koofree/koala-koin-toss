@@ -1,74 +1,44 @@
 'use client';
 
-import { useLoginWithAbstract, useWriteContractSponsored } from '@abstract-foundation/agw-react';
+import { useWriteContractSponsored } from '@abstract-foundation/agw-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { createPublicClient, formatUnits, http, parseAbi } from 'viem';
-import { abstractTestnet } from 'viem/chains';
+import { useEffect } from 'react';
+import { formatUnits, parseAbi } from 'viem';
 import { getGeneralPaymasterInput } from 'viem/zksync';
-import { useAccount, useBalance, useSendTransaction, useWaitForTransactionReceipt } from 'wagmi';
+import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi';
 
-export const UserPanel = () => {
-  const { login, logout } = useLoginWithAbstract();
-  const { address, status } = useAccount();
+interface UserPanelProps {
+  login: () => void;
+  logout: () => void;
+  address?: `0x${string}`;
+  walletBalance?: { value: bigint; decimals: number; symbol: string };
+  status: 'connected' | 'reconnecting' | 'connecting' | 'disconnected';
+  createSession: any; // TODO: Replace with proper type when available
+}
+
+export const UserPanel = ({
+  login,
+  logout,
+  address,
+  walletBalance,
+  status,
+  createSession,
+}: UserPanelProps) => {
   const { sendTransaction, isPending } = useSendTransaction();
   const { writeContractSponsored, data: transactionHash } = useWriteContractSponsored();
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
     hash: transactionHash,
   });
-  const { data: balance } = useBalance({
-    address: address,
-  });
 
-  // Create a public client to interact with the blockchain
-  const publicClient = createPublicClient({
-    chain: abstractTestnet,
-    transport: http(),
-  });
-
-  // State to store events
-  const [events, setEvents] = useState<any[]>([]);
-
-  // Function to fetch events from contract
-  const fetchContractEvents = async () => {
-    if (!address) return;
-
-    try {
-      // Import KoalaKoinTossV1 ABI from the JSON file
-      const koalaKoinTossV1Abi = await import('../../public/abis/KoalaKoinTossV1.json').then(
-        (module) => module.default.abi
-      );
-
-      // Replace with your actual contract address
-      const contractAddress = '0x14444806071625C010f01D5240d379C6247e7428';
-
-      const blockNumber = await publicClient.getBlockNumber();
-
-      // Fetch events
-      const logs = await publicClient.getLogs({
-        address: contractAddress,
-        fromBlock: blockNumber - BigInt(1000),
-        toBlock: blockNumber,
-        events: koalaKoinTossV1Abi.filter((v) => v.type === 'event'), // filtering type is event
-      });
-
-      setEvents(logs);
-      console.log('Contract events:', logs);
-    } catch (error) {
-      console.error('Error fetching contract events:', error);
-    }
-  };
-
-  // Fetch events when component mounts or address changes
-  useEffect(() => {
-    if (address) {
-      fetchContractEvents();
-    }
-  }, [address]);
-
-  const formattedBalance = balance
-    ? `${formatUnits(balance.value, balance.decimals)} ${balance.symbol}`
+  const formattedBalance = walletBalance
+    ? `${formatUnits(walletBalance.value, walletBalance.decimals)} ${walletBalance.symbol}`
     : '0 ETH';
+
+  useEffect(() => {
+    if (status === 'connected') {
+      createSession();
+    }
+  }, [status]);
 
   return (
     <>
@@ -118,18 +88,20 @@ export const UserPanel = () => {
                             ? 'bg-gray-500 cursor-not-allowed opacity-50'
                             : 'bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent'
                         }`}
-                onClick={() =>
-                  writeContractSponsored({
-                    abi: parseAbi(['function mint(address,uint256) external']),
-                    address: '0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA',
-                    functionName: 'mint',
-                    args: [address, BigInt(1)],
-                    paymaster: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
-                    paymasterInput: getGeneralPaymasterInput({
-                      innerInput: '0x',
-                    }),
-                  })
-                }
+                onClick={() => {
+                  if (address) {
+                    writeContractSponsored({
+                      abi: parseAbi(['function mint(address,uint256) external']),
+                      address: '0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA',
+                      functionName: 'mint',
+                      args: [address, BigInt(1)],
+                      paymaster: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
+                      paymasterInput: getGeneralPaymasterInput({
+                        innerInput: '0x',
+                      }),
+                    });
+                  }
+                }}
                 disabled={
                   !writeContractSponsored || isPending || transactionReceipt?.status === 'success'
                 }

@@ -3,7 +3,8 @@ const simulate = (
   selectedSide: 'HEADS' | 'TAILS',
   coinCount: number,
   minHeads: number
-) => {
+): Array<'HEADS' | 'TAILS'> => {
+  s;
   // Generate results for all coins
   const newResults = Array(coinCount)
     .fill(0)

@@ -98,33 +98,33 @@ export const MainGame = ({
       if (balance < betAmount) {
         alert('Betting amount was over the your balance!');
       }
+
+      setIsFlipping(false);
       return;
     }
+
+    setIsFlipping(true);
 
     const sessionData = await getStoredSession(userAddress, createSessionAsync);
     if (!sessionData) {
       createAndStoreSession(userAddress, createSessionAsync);
+      setIsFlipping(false);
       return;
     }
+
     const { session, privateKey } = sessionData;
-
     const sessionSigner = privateKeyToAccount(privateKey);
-
-    setIsFlipping(true);
-
     const sendValue = parseEther(betAmount.toString());
 
     let result: `0x${string}` | undefined;
     try {
       const sessionClient = abstractClient.toSessionClient(sessionSigner, session);
 
-      result = await sessionClient.sendTransaction({
-        ...clientConfig,
+      result = await sessionClient.writeContract({
         abi: koalaKoinTossV1Abi,
-        to: contractAddress,
-        address: contractAddress,
         account: sessionClient.account,
         chain: clientConfig.chain,
+        address: contractAddress,
         functionName: functionNames.koinTossEth,
         args: [gameNumber],
         value: sendValue,
@@ -136,6 +136,8 @@ export const MainGame = ({
         setTxError(new Error(String(error)));
       }
     }
+
+    console.log('result', result);
 
     setTransactionHash(result);
   };

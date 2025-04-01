@@ -62,14 +62,24 @@ export const createAndStoreSession = async (
             selector: toFunctionSelector('koin_toss_eth(uint256) external payable'),
             valueLimit: {
               limitType: LimitType.Unlimited,
-              limit: BigInt(0),
+              limit: parseEther('1'),
               period: BigInt(0),
             },
-            maxValuePerUse: BigInt(0),
+            maxValuePerUse: parseEther('1'),
             constraints: [],
           },
         ],
-        transferPolicies: [],
+        transferPolicies: [
+          {
+            target: contractAddress,
+            maxValuePerUse: parseEther('1'),
+            valueLimit: {
+              limitType: LimitType.Unlimited,
+              limit: parseEther('1'),
+              period: BigInt(0),
+            },
+          },
+        ],
       },
     });
 

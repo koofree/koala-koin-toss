@@ -6,7 +6,7 @@ import koalaKoinTossV1 from '../public/abis/KoalaKoinTossV1.json';
 const environments = {
   development: {
     chain: abstractTestnet,
-    contractAddress: '0x14444806071625C010f01D5240d379C6247e7428',
+    contractAddress: '0x2439D8c9938a9181B17bfb474DC601Aa5d5eff7e',
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
         case coinCount === 1 && minHeads === 1:
@@ -37,7 +37,7 @@ const environments = {
       },
       testnet: false,
     },
-    contractAddress: '0x14444806071625C010f01D5240d379C6247e7428', // TODO:Replace with production contract address
+    contractAddress: '0x2439D8c9938a9181B17bfb474DC601Aa5d5eff7e', // TODO:Replace with production contract address
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
         case coinCount === 1 && minHeads === 1:
@@ -64,3 +64,12 @@ export const clientConfig = {
   chain: currentConfig.chain,
 };
 export const getGameNumber = currentConfig.getGameNumber;
+export const functionNames = {
+  koinToss: 'koin_toss',
+  koinTossEth: 'koin_toss_eth',
+  getPayout: 'getPayout',
+  getGameOptions: 'gameOptions',
+  getBetLimits: 'getBetLimits',
+  getGameCount: 'gameCount',
+  getPrizePools: 'prizePools',
+};

@@ -4,7 +4,13 @@ import { createPublicClient, formatUnits, http, parseEther } from 'viem';
 import { getGeneralPaymasterInput } from 'viem/zksync';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
 
-import { clientConfig, contractAddress, getGameNumber, koalaKoinTossV1Abi } from '@/config';
+import {
+  clientConfig,
+  contractAddress,
+  functionNames,
+  // getGameNumber,
+  koalaKoinTossV1Abi,
+} from '@/config';
 import { GameResult } from '@/database';
 import { generateResult } from '@/utils/generators';
 import { ActionButtons } from './ActionButtons';
@@ -49,8 +55,15 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   const { data: gameOptions, refetch: refetchGameOptions } = useReadContract({
     address: contractAddress,
     abi: koalaKoinTossV1Abi,
-    functionName: 'gameOptions',
+    functionName: functionNames.getGameOptions,
     args: [gameNumber], // gameId and betAmount in wei
+  });
+
+  const { data: betLimits, refetch: refetchBetLimits } = useReadContract({
+    address: contractAddress,
+    abi: koalaKoinTossV1Abi,
+    functionName: functionNames.getBetLimits,
+    args: [gameNumber],
   });
 
   const [payout, setPayout] = useState<number>();
@@ -89,7 +102,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
     writeContractSponsored({
       abi: koalaKoinTossV1Abi,
       address: contractAddress,
-      functionName: 'bet_eth',
+      functionName: functionNames.koinTossEth,
       args: [gameNumber],
       value: sendValue,
       paymaster: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
@@ -126,6 +139,97 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
     setIsFlipping(false);
   };
 
+  const [allGameOptions, setAllGameOptions] = useState<Array<[number, number, number, string]>>([]);
+
+  const getGameNumber = (coinCount: number, minHeads: number): number | undefined => {
+    return allGameOptions.find((v) => v[1] === coinCount && v[2] === minHeads)?.[0];
+  };
+
+  const [initStarted, setInitStarted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(0);
+
+  const initializeAllGameOptions = async () => {
+    const storedAllGameOptions = localStorage.getItem('allGameOptions');
+    const storedAllGameOptionsUpdatedAt = localStorage.getItem('allGameOptionsUpdatedAt');
+
+    console.log('storedAllGameOptionsUpdatedAt', storedAllGameOptionsUpdatedAt);
+
+    if (storedAllGameOptions) {
+      setAllGameOptions(JSON.parse(storedAllGameOptions));
+      setIsLoading(100);
+      return;
+    }
+
+    const gameCount = await publicClient.readContract({
+      address: contractAddress,
+      abi: koalaKoinTossV1Abi,
+      functionName: functionNames.getGameCount,
+    });
+
+    setIsLoading((prev) => prev + 1);
+
+    const newAllGameOptions = [];
+    const prizePoolMap: Record<number, unknown> = {};
+
+    try {
+      for (let i = 0; i < Number(gameCount); i++) {
+        const gameOption = await publicClient.readContract({
+          address: contractAddress,
+          abi: koalaKoinTossV1Abi,
+          functionName: functionNames.getGameOptions,
+          args: [i],
+        });
+        setIsLoading((prev) => prev + 1);
+
+        if (Array.isArray(gameOption)) {
+          let prizePools = prizePoolMap[Number(gameOption[7])];
+          if (!prizePools) {
+            prizePools = await publicClient.readContract({
+              address: contractAddress,
+              abi: koalaKoinTossV1Abi,
+              functionName: functionNames.getPrizePools,
+              args: [Number(gameOption[7])],
+            });
+
+            prizePoolMap[Number(gameOption[7])] = prizePools;
+            console.log('prizePools', prizePools);
+          }
+
+          if (
+            Array.isArray(prizePools) &&
+            gameOption[6] === true &&
+            String(prizePools[1]).toUpperCase() === 'WETH'
+          ) {
+            newAllGameOptions.push([
+              Number(gameOption[0]),
+              Number(gameOption[1]),
+              Number(gameOption[2]),
+              String(prizePools[1]).toUpperCase(),
+            ]);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error loading game options:', error);
+    } finally {
+      setIsLoading(100);
+    }
+
+    console.log('newAllGameOptions', newAllGameOptions);
+
+    // Type assertion to fix the type error
+    setAllGameOptions(newAllGameOptions as Array<[number, number, number, string]>);
+    localStorage.setItem('allGameOptions', JSON.stringify(newAllGameOptions));
+    localStorage.setItem('allGameOptionsUpdatedAt', JSON.stringify(new Date().toISOString()));
+  };
+
+  useEffect(() => {
+    if (isLoading === 0) {
+      setIsLoading(1);
+      initializeAllGameOptions();
+    }
+  }, [initStarted]);
+
   useEffect(() => {
     if (!transactionReceipt) return;
 
@@ -156,17 +260,18 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
     if (coinCount && minHeads) {
       const gameNumber = getGameNumber(coinCount, minHeads);
       if (gameNumber !== undefined) {
-        setGameNumber(gameNumber);
+        setGameNumber(Number(gameNumber));
         setDisabled(false);
       } else {
         setGameNumber(-1);
         setDisabled(true);
       }
     }
-  }, [coinCount, minHeads]);
+  }, [coinCount, minHeads, allGameOptions]);
 
   useEffect(() => {
     refetchGameOptions();
+    refetchBetLimits();
   }, [gameNumber]);
 
   useEffect(() => {
@@ -180,7 +285,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
         .readContract({
           address: contractAddress,
           abi: koalaKoinTossV1Abi,
-          functionName: 'getPayout',
+          functionName: functionNames.getPayout,
           args: [gameNumber, parseEther(betAmount.toString())],
         })
         .then((r) => {
@@ -194,21 +299,29 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   }, [gameOptions]);
 
   useEffect(() => {
+    let finalBetAmount = betAmount;
     if (!betAmount) {
-      setBetAmount(0);
+      finalBetAmount = 0;
     }
 
     if (balance < betAmount) {
-      setBetAmount(balance);
+      finalBetAmount = balance;
     }
+    console.log('betLimits', betLimits);
+
+    if (Array.isArray(betLimits) && betLimits[1] < betAmount) {
+      finalBetAmount = Number(betLimits[1]);
+    }
+
+    setBetAmount(finalBetAmount);
 
     if (winningProbability > 0 && gameNumber >= 0) {
       publicClient
         .readContract({
           address: contractAddress,
           abi: koalaKoinTossV1Abi,
-          functionName: 'getPayout',
-          args: [gameNumber, parseEther(betAmount.toString())],
+          functionName: functionNames.getPayout,
+          args: [gameNumber, parseEther(finalBetAmount.toString())],
         })
         .then((r) => {
           if (Array.isArray(r)) {
@@ -238,6 +351,8 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
 
+    setInitStarted(true);
+
     return () => {
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
     };
@@ -256,28 +371,38 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
       </div>
 
       <div className="space-y-4">
-        <ActionButtons
-          selectedSide={selectedSide}
-          setSelectedSide={setSelectedSide}
-          isFlipping={isFlipping}
-          autoFlip={autoFlip}
-          setAutoFlip={setAutoFlip}
-          onFlip={handleFlip}
-          coinCount={coinCount}
-          setCoinCount={handleCoinCountChange}
-          minHeads={minHeads}
-          setMinHeads={setMinHeads}
-          betAmount={betAmount}
-          setBetAmount={setBetAmount}
-          balance={balance}
-          autoFlipCount={autoFlipCount}
-          setAutoFlipCount={setAutoFlipCount}
-          winningProbability={winningProbability}
-          expectedValue={expectedValue}
-          repeatTrying={repeatTrying}
-          disabled={disabled}
-          ref={flipRef}
-        />
+        {isLoading < 100 && (
+          <div className="text-white mt-[100px] min-h-[200px]">
+            <div className="flex justify-center items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+              <span className="ml-3">Loading game... ({isLoading}/100)</span>
+            </div>
+          </div>
+        )}
+        {isLoading >= 100 && (
+          <ActionButtons
+            selectedSide={selectedSide}
+            setSelectedSide={setSelectedSide}
+            isFlipping={isFlipping}
+            autoFlip={autoFlip}
+            setAutoFlip={setAutoFlip}
+            onFlip={handleFlip}
+            coinCount={coinCount}
+            setCoinCount={handleCoinCountChange}
+            minHeads={minHeads}
+            setMinHeads={setMinHeads}
+            betAmount={betAmount}
+            setBetAmount={setBetAmount}
+            balance={balance}
+            autoFlipCount={autoFlipCount}
+            setAutoFlipCount={setAutoFlipCount}
+            winningProbability={winningProbability}
+            expectedValue={expectedValue}
+            repeatTrying={repeatTrying}
+            disabled={disabled}
+            ref={flipRef}
+          />
+        )}
 
         <div className="flex justify-end pr-10">
           <div className="text-[9px] text-white flex items-center">ANIMATION</div>

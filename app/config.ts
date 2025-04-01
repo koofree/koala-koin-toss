@@ -1,4 +1,5 @@
 // Configuration based on environment
+import { generatePrivateKey } from 'viem/accounts';
 import { abstractTestnet } from 'viem/chains';
 import koalaKoinTossV1 from '../public/abis/KoalaKoinTossV1.json';
 
@@ -81,3 +82,9 @@ export const eventNames = {
 
 // For build-time timestamp (this will be replaced with actual build time)
 export const BUILD_TIME = process.env.BUILD_TIME || new Date().toISOString();
+export const SESSION_PRIVATE_KEY = process.env.SESSION_PRIVATE_KEY
+  ? (process.env.SESSION_PRIVATE_KEY as `0x${string}`)
+  : generatePrivateKey();
+export const ABSTRACT_GLOBAL_WALLET_ADDRESS = process.env.ABSTRACT_GLOBAL_WALLET_ADDRESS
+  ? (process.env.ABSTRACT_GLOBAL_WALLET_ADDRESS as `0x${string}`)
+  : '0x5407B5040dec3D339A9247f3654E59EEccbb6391';

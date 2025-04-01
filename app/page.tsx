@@ -166,8 +166,9 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {true && (
+          {address !== undefined && (
             <MainGame
+              userAddress={address}
               refetchWalletBalance={refetchWalletBalance}
               walletBalance={walletBalance}
               myGameHistory={myGameHistory}

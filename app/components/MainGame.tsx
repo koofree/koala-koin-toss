@@ -1,7 +1,7 @@
-import { useWriteContractSponsored } from '@abstract-foundation/agw-react';
+import { LimitType, SessionConfig } from '@abstract-foundation/agw-client/sessions';
 import { useEffect, useRef, useState } from 'react';
-import { createPublicClient, formatUnits, http, parseEther } from 'viem';
-import { getGeneralPaymasterInput } from 'viem/zksync';
+import { createPublicClient, formatUnits, http, parseEther, toFunctionSelector } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import {
@@ -11,9 +11,11 @@ import {
   functionNames,
   // getGameNumber,
   koalaKoinTossV1Abi,
+  SESSION_PRIVATE_KEY,
 } from '@/config';
 import { GameResult } from '@/database';
 import { generateResult } from '@/utils/generators';
+import { useAbstractClient } from '@abstract-foundation/agw-react';
 import { ActionButtons } from './ActionButtons';
 import { CoinDisplay } from './CoinDisplay';
 import { Image } from './image/image';
@@ -26,9 +28,15 @@ interface MainGameProps {
   walletBalance?: { value: bigint; decimals: number; symbol: string };
   refetchWalletBalance: () => void;
   myGameHistory: GameResult[];
+  userAddress: `0x${string}`;
 }
 
-export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }: MainGameProps) => {
+export const MainGame = ({
+  myGameHistory,
+  walletBalance,
+  refetchWalletBalance,
+  userAddress,
+}: MainGameProps) => {
   const [balance, setBalance] = useState(toBalance(walletBalance));
   const [betAmount, setBetAmount] = useState(0);
   const [selectedSide, setSelectedSide] = useState<'HEADS' | 'TAILS' | null>(null);
@@ -69,11 +77,56 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
   const [payout, setPayout] = useState<number>();
 
-  const {
-    writeContractSponsored,
-    data: transactionHash,
-    error: txError,
-  } = useWriteContractSponsored();
+  const sessionSigner = privateKeyToAccount(SESSION_PRIVATE_KEY);
+
+  const { data: abstractClient } = useAbstractClient();
+
+  const [session, setSession] = useState<SessionConfig | undefined>(undefined);
+
+  const createSession = async () => {
+    if (!abstractClient) return;
+    console.log('sessionSigner.address', sessionSigner.address, userAddress);
+    const session = await abstractClient.createSession({
+      session: {
+        signer: sessionSigner.address,
+        expiresAt: BigInt(Math.floor(Date.now() / 1000) + 60 * 60 * 24),
+        feeLimit: {
+          limitType: LimitType.Lifetime,
+          limit: parseEther('1'),
+          period: BigInt(0),
+        },
+        callPolicies: [
+          {
+            target: contractAddress,
+            selector: toFunctionSelector('function koin_toss_eth(uint256 _gameId)'),
+            maxValuePerUse: BigInt(0),
+            valueLimit: {
+              limitType: LimitType.Unlimited,
+              limit: BigInt(0),
+              period: BigInt(0),
+            },
+            constraints: [],
+          },
+        ],
+        transferPolicies: [],
+      },
+    });
+
+    setTransactionHash(session.transactionHash);
+  };
+
+  useEffect(() => {
+    createSession();
+  }, [abstractClient]);
+
+  // const {
+  //   writeContractSponsored,
+  //   data: transactionHash,
+  //   error: txError,
+  // } = useWriteContractSponsored();
+
+  const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>(undefined);
+  const [txError, setTxError] = useState<Error | undefined>(undefined);
 
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
     hash: transactionHash,
@@ -88,7 +141,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   };
 
   const handleFlip = async () => {
-    if (!selectedSide || isFlipping || balance < betAmount) {
+    if (!abstractClient || !session || !selectedSide || isFlipping || balance < betAmount) {
       if (balance < betAmount) {
         alert('Betting amount was over the your balance!');
       }
@@ -99,18 +152,42 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
     const sendValue = parseEther(betAmount.toString());
 
-    writeContractSponsored({
-      abi: koalaKoinTossV1Abi,
-      address: contractAddress,
-      functionName: functionNames.koinTossEth,
-      args: [gameNumber],
-      value: sendValue,
-      paymaster: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
-      paymasterInput: getGeneralPaymasterInput({
-        innerInput: '0x',
-      }),
-      authorizationList: [],
-    });
+    let result: `0x${string}` | undefined;
+    try {
+      const sessionClient = abstractClient.toSessionClient(sessionSigner, session);
+
+      result = await sessionClient.sendTransaction({
+        ...clientConfig,
+        abi: koalaKoinTossV1Abi,
+        account: sessionClient.account,
+        chain: clientConfig.chain,
+        address: contractAddress,
+        functionName: functionNames.koinTossEth,
+        args: [gameNumber],
+        value: sendValue,
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setTxError(error);
+      } else {
+        setTxError(new Error(String(error)));
+      }
+    }
+
+    setTransactionHash(result);
+
+    // writeContractSponsored({
+    //   abi: koalaKoinTossV1Abi,
+    //   address: contractAddress,
+    //   functionName: functionNames.koinTossEth,
+    //   args: [gameNumber],
+    //   value: sendValue,
+    //   paymaster: ABSTRACT_GLOBAL_WALLET_ADDRESS,
+    //   paymasterInput: getGeneralPaymasterInput({
+    //     innerInput: '0x',
+    //   }),
+    //   authorizationList: [],
+    // });
   };
 
   const checkResult = (
@@ -239,6 +316,8 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
   useEffect(() => {
     if (!transactionReceipt) return;
+
+    console.log('transactionReceipt', transactionReceipt);
 
     if (!selectedSide) {
       alert('select side error');

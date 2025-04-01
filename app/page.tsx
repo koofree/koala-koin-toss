@@ -166,13 +166,14 @@ export default function Home() {
               </div>
             </div>
           </div>
-          {true && (
-            <MainGame
-              refetchWalletBalance={refetchWalletBalance}
-              walletBalance={walletBalance}
-              myGameHistory={myGameHistory}
-            />
-          )}
+
+          <MainGame
+            userAddress={address}
+            refetchWalletBalance={refetchWalletBalance}
+            walletBalance={walletBalance}
+            myGameHistory={myGameHistory}
+          />
+
           <div className="w-2/12 h-full flex flex-col items-center justify-center">
             <Image
               src="/images/koala/dancing/dancing_koala_back.gif"

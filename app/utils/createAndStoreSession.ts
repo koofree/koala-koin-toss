@@ -69,17 +69,7 @@ export const createAndStoreSession = async (
             constraints: [],
           },
         ],
-        transferPolicies: [
-          {
-            target: contractAddress,
-            maxValuePerUse: parseEther('1'),
-            valueLimit: {
-              limitType: LimitType.Unlimited,
-              limit: parseEther('1'),
-              period: BigInt(0),
-            },
-          },
-        ],
+        transferPolicies: [],
       },
     });
 

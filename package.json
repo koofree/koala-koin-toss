@@ -11,9 +11,10 @@
     "wagmi": "2.12.25"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "pnpm prebuild && next dev",
+    "prebuild": "node scripts/set-build-time.js",
     "build": "next build",
-    "start": "next start",
+    "start": "pnpm prebuild && next start",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}"

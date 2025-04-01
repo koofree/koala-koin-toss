@@ -78,3 +78,6 @@ export const eventNames = {
   TossCommitted: 'TossCommitted',
   TossRevealed: 'TossRevealed',
 };
+
+// For build-time timestamp (this will be replaced with actual build time)
+export const BUILD_TIME = process.env.BUILD_TIME || new Date().toISOString();

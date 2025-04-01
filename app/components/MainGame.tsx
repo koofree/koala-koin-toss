@@ -5,6 +5,7 @@ import { getGeneralPaymasterInput } from 'viem/zksync';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import {
+  BUILD_TIME,
   clientConfig,
   contractAddress,
   functionNames,
@@ -87,7 +88,6 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   };
 
   const handleFlip = async () => {
-    console.log('handleFlip!!!', selectedSide, isFlipping, balance, betAmount);
     if (!selectedSide || isFlipping || balance < betAmount) {
       if (balance < betAmount) {
         alert('Betting amount was over the your balance!');
@@ -122,7 +122,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
     );
 
     if (!gameResult) {
-      console.log('game result not found');
+      // game result not found in the history. need to wait for the result.
       return;
     }
 
@@ -149,10 +149,20 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   const [isLoading, setIsLoading] = useState(0);
 
   const initializeAllGameOptions = async () => {
-    const storedAllGameOptions = localStorage.getItem('allGameOptions');
-    const storedAllGameOptionsUpdatedAt = localStorage.getItem('allGameOptionsUpdatedAt');
+    let storedAllGameOptionsUpdatedAt = localStorage.getItem('allGameOptionsUpdatedAt');
+    let storedAllGameOptions = localStorage.getItem('allGameOptions');
 
-    console.log('storedAllGameOptionsUpdatedAt', storedAllGameOptionsUpdatedAt);
+    // check if the allGameOptions is outdated
+    if (
+      storedAllGameOptions &&
+      storedAllGameOptionsUpdatedAt &&
+      new Date(storedAllGameOptionsUpdatedAt) < new Date(BUILD_TIME)
+    ) {
+      localStorage.removeItem('allGameOptionsUpdatedAt');
+      localStorage.removeItem('allGameOptions');
+      storedAllGameOptions = null;
+      storedAllGameOptionsUpdatedAt = null;
+    }
 
     if (storedAllGameOptions) {
       setAllGameOptions(JSON.parse(storedAllGameOptions));
@@ -192,7 +202,6 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
             });
 
             prizePoolMap[Number(gameOption[7])] = prizePools;
-            console.log('prizePools', prizePools);
           }
 
           if (
@@ -215,12 +224,10 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
       setIsLoading(100);
     }
 
-    console.log('newAllGameOptions', newAllGameOptions);
-
     // Type assertion to fix the type error
     setAllGameOptions(newAllGameOptions as Array<[number, number, number, string]>);
     localStorage.setItem('allGameOptions', JSON.stringify(newAllGameOptions));
-    localStorage.setItem('allGameOptionsUpdatedAt', JSON.stringify(new Date().toISOString()));
+    localStorage.setItem('allGameOptionsUpdatedAt', new Date().toISOString());
   };
 
   useEffect(() => {
@@ -276,8 +283,6 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
   useEffect(() => {
     if (gameOptions && Array.isArray(gameOptions)) {
-      console.log('gameOptions', gameOptions);
-
       const winChance: bigint = gameOptions[4];
       setWinningProbability(Number(winChance) / 100_000_000);
 
@@ -300,7 +305,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
   useEffect(() => {
     if (!Array.isArray(betLimits)) {
-      console.log('betLimits is not an array');
+      // betLimits is not an array. need to wait for the betLimits.
       return;
     }
 

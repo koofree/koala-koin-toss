@@ -2,7 +2,7 @@ import NextAbstractWalletProvider from './components/NextAbstractWalletProvider'
 import './globals.css';
 
 export const metadata = {
-  title: 'Firma Flip',
+  title: 'Koala Koin Toss',
   description: 'A blockchain-based coin flipping game',
 };
 

@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'firma-flip',
+      name: 'koala-koin-toss',
       script: 'node_modules/next/dist/bin/next',
       instances: 1,
       autorestart: true,

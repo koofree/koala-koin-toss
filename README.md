@@ -8,6 +8,8 @@
 
 A web-based game built powered by [Abstract](https://abs.xyz/) with Next.js, React and Tailwind.
 
+![entire_screen_1.png](docs/entire_screen_1.png)
+
 ## How to start
 
 ### Install requirements

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Image } from '../image/image';
 
 interface TextFormProps {
   value: number;

@@ -1,11 +1,12 @@
 'use client';
 
-import { useCreateSession, useLoginWithAbstract } from '@abstract-foundation/agw-react';
+import { useLoginWithAbstract } from '@abstract-foundation/agw-react';
 import { useEffect, useState } from 'react';
 import { createPublicClient, formatUnits, http } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
 import { clientConfig, contractAddress, koalaKoinTossV1Abi } from '@/config';
+import { Image } from './components/image/image';
 import { MainGame } from './components/MainGame';
 import { UserPanel } from './components/UserPanel';
 import { GameResult } from './database';
@@ -19,7 +20,6 @@ export default function Home() {
 
   const { login, logout } = useLoginWithAbstract();
   const { address, status } = useAccount();
-  const { createSession } = useCreateSession();
 
   const { data: walletBalance, refetch: refetchWalletBalance } = useBalance({
     address: address,
@@ -48,20 +48,44 @@ export default function Home() {
   const getGameLogs = async (fromBlock: bigint, toBlock: bigint) => {
     // Fetch events
 
-    const logs = await publicClient.getLogs({
-      address: contractAddress,
-      fromBlock: fromBlock,
-      toBlock: toBlock,
-      events: koalaKoinTossV1Abi.filter((v) => v.type === 'event'), // filtering type is event
-    });
+    const logs = await publicClient
+      .getLogs({
+        address: contractAddress,
+        fromBlock: fromBlock,
+        toBlock: toBlock,
+        events: koalaKoinTossV1Abi.filter((v) => v.type === 'event'), // filtering type is event
+      })
+      .then((r) =>
+        r.map(
+          (v) =>
+            v as unknown as {
+              eventName: string;
+              blockTimestamp: bigint;
+              args: {
+                requestId: string;
+                player: string;
+                betAmount: bigint;
+                selectedSide: 'HEADS' | 'TAILS';
+                coinCount: number;
+                minHeads: number;
+                didWin: boolean;
+                payout: bigint;
+              };
+              transactionHash: string;
+              blockNumber: bigint;
+              transactionIndex: bigint;
+              logIndex: bigint;
+            }
+        )
+      );
 
-    const betCommitedEvents: any = logs.filter((v: any) => v.eventName === 'BetCommitted');
-    const betRevealedEvents: any = logs.filter((v: any) => v.eventName === 'BetRevealed');
+    const betCommitedEvents = logs.filter((v) => v.eventName === 'BetCommitted');
+    const betRevealedEvents = logs.filter((v) => v.eventName === 'BetRevealed');
 
-    betCommitedEvents.forEach((v: any) => {
+    betCommitedEvents.forEach((v) => {
       const betCommitedEvent = v;
       const betRevealedEvent = betRevealedEvents.find(
-        (v: any) => v.args.requestId === betCommitedEvent.args.requestId
+        (v) => v.args.requestId === betCommitedEvent.args.requestId
       );
 
       if (betRevealedEvent) {
@@ -120,21 +144,22 @@ export default function Home() {
         login={login}
         logout={logout}
         status={status}
-        createSession={createSession}
+        createSession={() => {
+          // TODO: Implement createSession
+        }}
       />
       <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat relative">
         <div className="w-full h-full flex flex-row items-center">
           <div className="w-2/12 h-full flex flex-col items-center justify-center">
-            <img
+            <Image
               src="/images/koala/dancing/dancing_koala_front.gif"
               alt="Dancing Koala"
               className="w-2/3 mt-[250px]"
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">
-                <img src="/images/footer/ic_cactus1.png" alt="Cactus 1" className="w-6 h-6" />
-                <img src="/images/footer/ic_cactus2.png" alt="Cactus 2" className="w-6 h-6" />
-                <img src="/images/footer/ic_cactus4.png" alt="Cactus 4" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -144,16 +169,16 @@ export default function Home() {
             myGameHistory={myGameHistory}
           />
           <div className="w-2/12 h-full flex flex-col items-center justify-center">
-            <img
+            <Image
               src="/images/koala/dancing/dancing_koala_back.gif"
               alt="Dancing Koala"
               className="w-2/3 mt-[250px]"
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">
-                <img src="/images/footer/ic_cactus1.png" alt="Cactus 1" className="w-6 h-6" />
-                <img src="/images/footer/ic_cactus2.png" alt="Cactus 2" className="w-6 h-6" />
-                <img src="/images/footer/ic_cactus4.png" alt="Cactus 4" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" className="w-6 h-6" />
               </div>
             </div>
           </div>

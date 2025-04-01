@@ -1,41 +1,24 @@
 'use client';
 
-import { useWriteContractSponsored } from '@abstract-foundation/agw-react';
-import Image from 'next/image';
 import { useEffect } from 'react';
 import { formatUnits } from 'viem';
-import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi';
-
+import { Image } from './image/image';
 interface UserPanelProps {
   login: () => void;
   logout: () => void;
   address?: `0x${string}`;
   walletBalance?: { value: bigint; decimals: number; symbol: string };
   status: 'connected' | 'reconnecting' | 'connecting' | 'disconnected';
-  createSession: any; // TODO: Replace with proper type when available
+  createSession: (address: `0x${string}`) => void;
 }
 
-export const UserPanel = ({
-  login,
-  logout,
-  address,
-  walletBalance,
-  status,
-  createSession,
-}: UserPanelProps) => {
-  const { sendTransaction, isPending } = useSendTransaction();
-  const { writeContractSponsored, data: transactionHash } = useWriteContractSponsored();
-  const { data: transactionReceipt } = useWaitForTransactionReceipt({
-    hash: transactionHash,
-  });
-
+export const UserPanel = ({ login, logout, address, walletBalance, status }: UserPanelProps) => {
   const formattedBalance = walletBalance
     ? `${formatUnits(walletBalance.value, walletBalance.decimals)} ${walletBalance.symbol}`
     : '0 ETH';
 
   useEffect(() => {
     if (status === 'connected') {
-      createSession();
     }
   }, [status]);
 
@@ -118,21 +101,6 @@ export const UserPanel = ({
                 </span>
               </button> */}
             </div>
-            {!!transactionReceipt && (
-              <a
-                href={`https://explorer.testnet.abs.xyz/tx/${transactionReceipt?.transactionHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
-                  Transaction Status: {transactionReceipt?.status}
-                </p>
-                <p className="text-xs text-gray-400 font-mono">
-                  {transactionReceipt?.transactionHash?.slice(0, 8)}...
-                  {transactionReceipt?.transactionHash?.slice(-6)}
-                </p>
-              </a>
-            )}
           </div>
         </div>
       ) : status === 'reconnecting' || status === 'connecting' ? (

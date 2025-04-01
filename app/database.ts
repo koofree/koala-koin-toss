@@ -1,6 +1,6 @@
 // Define a type for game results
 export type GameResult = {
-  id: bigint;
+  id: string;
   address: string;
   timestamp: string;
   betAmount: number;

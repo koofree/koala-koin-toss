@@ -1,3 +1,5 @@
+import { Image } from '../image/image';
+
 interface TitlePanelProps {
   selectedSide: 'HEADS' | 'TAILS' | null;
   coinCount: number;
@@ -5,12 +7,7 @@ interface TitlePanelProps {
   winningProbability: number;
 }
 
-export const TitlePanel = ({
-  selectedSide,
-  coinCount,
-  minHeads,
-  winningProbability,
-}: TitlePanelProps) => {
+export const TitlePanel = ({ coinCount, minHeads, winningProbability }: TitlePanelProps) => {
   return coinCount === 1 || minHeads === coinCount ? (
     <div
       className="flex items-center justify-center 
@@ -25,7 +22,7 @@ export const TitlePanel = ({
           "
     >
       <div className="flex items-center gap-2">
-        <img src="/images/middle/coins/ic_koa_20px.png" width={12} alt="1 TO WIN" />
+        <Image src="/images/middle/coins/ic_koa_20px.png" width={12} alt="1 TO WIN" />
         <label htmlFor="1-to-win" className="text-white text-xs">
           {minHeads} TO WIN
         </label>
@@ -48,7 +45,7 @@ export const TitlePanel = ({
           "
     >
       <div className="flex items-center gap-2">
-        <img src="/images/middle/coins/ic_koa_20px.png" width={12} alt="1 TO WIN" />
+        <Image src="/images/middle/coins/ic_koa_20px.png" width={12} alt="1 TO WIN" />
         <label htmlFor="1-to-win" className="text-white text-xs">
           {minHeads} {minHeads === coinCount ? '' : 'OR MORE'} TO WIN
         </label>

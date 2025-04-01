@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { forwardRef, useCallback, useImperativeHandle } from 'react';
 
 import { CheckBox } from './forms/CheckBox';
@@ -7,6 +6,7 @@ import { SelectForm } from './forms/SelectForm';
 import { SliderForm } from './forms/SliderForm';
 import { TextForm } from './forms/TextForm';
 import { TitlePanel } from './forms/TitlePanel';
+import { Image } from './image/image';
 
 interface ActionButtonsProps {
   selectedSide: 'HEADS' | 'TAILS' | null;
@@ -38,7 +38,6 @@ export const ActionButtons = forwardRef(
       setSelectedSide,
       isFlipping,
       autoFlip,
-      setAutoFlip,
       onFlip,
       coinCount,
       setCoinCount,
@@ -87,8 +86,8 @@ export const ActionButtons = forwardRef(
               <div className="flex flex-col items-center">
                 <CheckBox
                   checked={autoFlip}
-                  onChange={(checked) => () => {
-                    // setAutoFlip(checked);
+                  onChange={() => () => {
+                    // TODO: Implement auto flip
                   }}
                   className="absolute -top-8 left-0 w-[10px] h-[10px]"
                 />
@@ -160,7 +159,7 @@ export const ActionButtons = forwardRef(
                 <div className="flex flex-col items-center">
                   <div className="w-[5px] h-[5px] relative">
                     {selectedSide === 'HEADS' ? (
-                      <img
+                      <Image
                         className="w-full"
                         src="/images/middle/coins/ic_front_selected.png"
                         alt="HEADS"
@@ -170,14 +169,16 @@ export const ActionButtons = forwardRef(
                     )}
                   </div>
                   <div className="w-[64px] h-[64px]">
-                    <img
+                    <Image
                       src={
                         selectedSide === 'HEADS'
                           ? '/images/middle/coins/img_koala-coin_front_124px.png'
                           : '/images/middle/coins/img_koala-coin_front_disabled_124px.png'
                       }
                       alt="HEADS"
-                      className={`w-[64px] h-[64px] cursor-pointer
+                      width={64}
+                      height={64}
+                      className={`cursor-pointer
                     ${selectedSide === 'HEADS' ? 'transform scale-[1.3]' : ''}`}
                       onClick={() => !isFlipping && setSelectedSide('HEADS')}
                       style={{ opacity: isFlipping ? 0.5 : 1 }}
@@ -186,23 +187,26 @@ export const ActionButtons = forwardRef(
                 </div>
                 <div className="flex flex-col items-center">
                   {selectedSide === 'TAILS' ? (
-                    <img
-                      className="w-[5px] h-[5px]"
+                    <Image
                       src="/images/middle/coins/ic_back_selected.png"
                       alt="TAILS"
+                      width={5}
+                      height={5}
                     />
                   ) : (
                     <div className="w-[5px] h-[5px]">&nbsp;</div>
                   )}
                   <div className="w-[64px] h-[64px]">
-                    <img
+                    <Image
                       src={
                         selectedSide === 'TAILS'
                           ? '/images/middle/coins/img_koala-coin_back_124px.png'
                           : '/images/middle/coins/img_koala-coin_back_disabled_124px.png'
                       }
                       alt="TAILS"
-                      className={`w-[64px] h-[64px] cursor-pointer 
+                      width={64}
+                      height={64}
+                      className={`cursor-pointer
                     ${selectedSide === 'TAILS' ? 'transform scale-[1.3]' : ''}`}
                       onClick={() => !isFlipping && setSelectedSide('TAILS')}
                       style={{ opacity: isFlipping ? 0.5 : 1 }}
@@ -248,3 +252,5 @@ export const ActionButtons = forwardRef(
     );
   }
 );
+
+ActionButtons.displayName = 'ActionButtons';

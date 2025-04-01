@@ -9,6 +9,7 @@ import { GameResult } from '@/database';
 import { generateResult } from '@/utils/generators';
 import { ActionButtons } from './ActionButtons';
 import { CoinDisplay } from './CoinDisplay';
+import { Image } from './image/image';
 
 const toBalance = (walletBalance?: { value: bigint; decimals: number }) => {
   return parseFloat(walletBalance ? formatUnits(walletBalance.value, walletBalance.decimals) : '0');
@@ -99,7 +100,10 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
     });
   };
 
-  const checkResult = (transactionReceipt: any, selectedSide: 'HEADS' | 'TAILS') => {
+  const checkResult = (
+    transactionReceipt: { transactionHash: string },
+    selectedSide: 'HEADS' | 'TAILS'
+  ) => {
     const gameResult = myGameHistory.find(
       (v) => v.commitTransactionHash === transactionReceipt.transactionHash
     );
@@ -166,10 +170,10 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   }, [gameNumber]);
 
   useEffect(() => {
-    if (gameOptions) {
+    if (gameOptions && Array.isArray(gameOptions)) {
       console.log('gameOptions', gameOptions);
 
-      const winChance: bigint = (gameOptions as any)[4];
+      const winChance: bigint = gameOptions[4];
       setWinningProbability(Number(winChance) / 100_000_000);
 
       publicClient
@@ -180,7 +184,9 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
           args: [gameNumber, parseEther(betAmount.toString())],
         })
         .then((r) => {
-          setPayout(Number((r as any)[2]));
+          if (Array.isArray(r)) {
+            setPayout(Number(r[2]));
+          }
         });
     } else {
       setPayout(0);
@@ -205,7 +211,9 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
           args: [gameNumber, parseEther(betAmount.toString())],
         })
         .then((r) => {
-          setPayout(Number((r as any)[2]));
+          if (Array.isArray(r)) {
+            setPayout(Number(r[2]));
+          }
         });
     }
   }, [betAmount, balance]);
@@ -273,7 +281,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
         <div className="flex justify-end pr-10">
           <div className="text-[9px] text-white flex items-center">ANIMATION</div>
-          <img
+          <Image
             src={
               animationEnabled
                 ? '/images/middle/buttons/btn_toggle_on.png'

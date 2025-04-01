@@ -29,7 +29,7 @@ export const CoinDisplay = ({
         setProgress((prev) => {
           if (prev >= flipCount) {
             clearInterval(interval);
-            return 360;
+            return 0;
           }
           return prev + 100 / (animationDuration / 50);
         });

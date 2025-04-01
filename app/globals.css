@@ -49,33 +49,3 @@
 * {
   font-family: 'Poppins', sans-serif;
 }
-
-@layer components {
-  .game-container {
-    @apply relative w-full h-full bg-background rounded-lg shadow-lg;
-  }
-
-  .game-coin {
-    @apply relative w-[120px] h-[120px] bg-yellow-400 rounded-full shadow-lg transition-transform duration-300;
-  }
-
-  .game-button {
-    @apply px-5 py-2.5 rounded-lg font-bold cursor-pointer transition-all duration-200 hover:transform hover:scale-105 hover:shadow-lg;
-  }
-
-  .game-button.heads {
-    @apply bg-secondary text-white;
-  }
-
-  .game-button.tails {
-    @apply bg-secondary text-white;
-  }
-
-  .game-button.flip {
-    @apply bg-primary text-white;
-  }
-
-  .game-history {
-    @apply bg-opacity-90 bg-gray-900 rounded-lg p-5;
-  }
-}

@@ -1,4 +1,6 @@
+import Image from 'next/image';
 import { forwardRef, useCallback, useImperativeHandle } from 'react';
+
 import { CheckBox } from './forms/CheckBox';
 import { InputForm } from './forms/InputForm';
 import { SelectForm } from './forms/SelectForm';
@@ -25,6 +27,7 @@ interface ActionButtonsProps {
   winningProbability: number;
   expectedValue: number;
   repeatTrying: number;
+  disabled: boolean;
   ref?: React.ForwardedRef<{ triggerFlip: () => boolean }>;
 }
 
@@ -49,6 +52,7 @@ export const ActionButtons = forwardRef(
       winningProbability,
       expectedValue,
       repeatTrying,
+      disabled,
     }: ActionButtonsProps,
     ref
   ) => {
@@ -219,9 +223,23 @@ export const ActionButtons = forwardRef(
                 disabled:opacity-50
               `}
                 onClick={!selectedSide || isFlipping || !betAmount ? undefined : onFlip}
-                disabled={!selectedSide || isFlipping || !betAmount}
+                disabled={disabled || !selectedSide || isFlipping || !betAmount}
               >
-                <span className=" text-white text-[9px]">FLIP COINS - $ {betAmount}</span>
+                {disabled ? (
+                  <span className=" text-white text-[9px]">NOT AVAILABLE BETTING</span>
+                ) : (
+                  <span className=" text-white text-[9px]">
+                    FLIP COINS -{' '}
+                    <Image
+                      src="/images/ethereum-svgrepo-com.svg"
+                      alt="ETH"
+                      className="w-[10px] my-auto inline"
+                      width={12}
+                      height={12}
+                    />{' '}
+                    {betAmount}
+                  </span>
+                )}
               </button>
             </div>
           </div>

@@ -4,11 +4,11 @@ import { useCreateSession, useLoginWithAbstract } from '@abstract-foundation/agw
 import { useEffect, useState } from 'react';
 import { createPublicClient, formatUnits, http } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
+
+import { clientConfig, contractAddress, koalaKoinTossV1Abi } from '@/config';
 import { MainGame } from './components/MainGame';
 import { UserPanel } from './components/UserPanel';
 import { GameResult } from './database';
-
-import { clientConfig, contractAddress, koalaKoinTossV1Abi } from '@/config';
 
 export default function Home() {
   // Create a public client to interact with the blockchain

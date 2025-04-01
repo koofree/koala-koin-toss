@@ -7,10 +7,16 @@ const environments = {
   development: {
     chain: abstractTestnet,
     contractAddress: '0x14444806071625C010f01D5240d379C6247e7428',
-  },
-  test: {
-    chain: abstractTestnet,
-    contractAddress: '0x14444806071625C010f01D5240d379C6247e7428',
+    getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
+      switch (true) {
+        case coinCount === 1 && minHeads === 1:
+          return 0;
+        case coinCount === 2 && minHeads === 2:
+          return 1;
+        default:
+          return undefined;
+      }
+    },
   },
   production: {
     chain: {
@@ -32,6 +38,16 @@ const environments = {
       testnet: false,
     },
     contractAddress: '0x14444806071625C010f01D5240d379C6247e7428', // TODO:Replace with production contract address
+    getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
+      switch (true) {
+        case coinCount === 1 && minHeads === 1:
+          return 0;
+        case coinCount === 2 && minHeads === 2:
+          return 1;
+        default:
+          return undefined;
+      }
+    },
   },
 };
 
@@ -47,3 +63,4 @@ export const contractAddress: `0x${string}` = currentConfig.contractAddress as `
 export const clientConfig = {
   chain: currentConfig.chain,
 };
+export const getGameNumber = currentConfig.getGameNumber;

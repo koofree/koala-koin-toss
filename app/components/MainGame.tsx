@@ -1,14 +1,14 @@
+import { useWriteContractSponsored } from '@abstract-foundation/agw-react';
 import { useEffect, useRef, useState } from 'react';
 import { createPublicClient, formatUnits, http, parseEther } from 'viem';
+import { getGeneralPaymasterInput } from 'viem/zksync';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
-import { ActionButtons } from './ActionButtons';
-import { CoinDisplay } from './CoinDisplay';
 
-import { clientConfig, contractAddress, koalaKoinTossV1Abi } from '@/config';
+import { clientConfig, contractAddress, getGameNumber, koalaKoinTossV1Abi } from '@/config';
 import { GameResult } from '@/database';
 import { generateResult } from '@/utils/generators';
-import { useWriteContractSponsored } from '@abstract-foundation/agw-react';
-import { getGeneralPaymasterInput } from 'viem/zksync';
+import { ActionButtons } from './ActionButtons';
+import { CoinDisplay } from './CoinDisplay';
 
 const toBalance = (walletBalance?: { value: bigint; decimals: number }) => {
   return parseFloat(walletBalance ? formatUnits(walletBalance.value, walletBalance.decimals) : '0');
@@ -29,13 +29,13 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   const [minHeads, setMinHeads] = useState(1);
   const [isFlipping, setIsFlipping] = useState(false);
   const [autoFlip, setAutoFlip] = useState(false);
-  const [isWinning, setIsWinning] = useState<boolean | null>(null);
   const [animationEnabled, setAnimationEnabled] = useState(true);
   const [autoFlipCount, setAutoFlipCount] = useState(1);
   const [winningProbability, setWinningProbability] = useState(0);
   const [expectedValue, setExpectedValue] = useState(0);
   const [gameNumber, setGameNumber] = useState(0);
   const [repeatTrying, setRepeatTrying] = useState(0);
+  const [disabled, setDisabled] = useState(false);
   const flipRef = useRef<{ triggerFlip: () => boolean }>(null);
 
   // Create a public client to interact with the blockchain
@@ -118,7 +118,6 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
       })
     );
 
-    setIsWinning(gameResult.won);
     refetchWalletBalance();
     setIsFlipping(false);
   };
@@ -151,16 +150,13 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
 
   useEffect(() => {
     if (coinCount && minHeads) {
-      switch (true) {
-        case coinCount === 1 && minHeads === 1:
-          setGameNumber(0);
-          break;
-        case coinCount === 2 && minHeads === 2:
-          setGameNumber(1);
-          break;
-        default:
-          setGameNumber(-1);
-          console.log('no game available');
+      const gameNumber = getGameNumber(coinCount, minHeads);
+      if (gameNumber !== undefined) {
+        setGameNumber(gameNumber);
+        setDisabled(false);
+      } else {
+        setGameNumber(-1);
+        setDisabled(true);
       }
     }
   }, [coinCount, minHeads]);
@@ -184,9 +180,10 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
           args: [gameNumber, parseEther(betAmount.toString())],
         })
         .then((r) => {
-          console.log('r', r);
           setPayout(Number((r as any)[2]));
         });
+    } else {
+      setPayout(0);
     }
   }, [gameOptions]);
 
@@ -199,7 +196,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
       setBetAmount(balance);
     }
 
-    if (winningProbability > 0) {
+    if (winningProbability > 0 && gameNumber >= 0) {
       publicClient
         .readContract({
           address: contractAddress,
@@ -208,14 +205,13 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
           args: [gameNumber, parseEther(betAmount.toString())],
         })
         .then((r) => {
-          console.log('r', r);
           setPayout(Number((r as any)[2]));
         });
     }
   }, [betAmount, balance]);
 
   useEffect(() => {
-    if (payout) {
+    if (payout !== undefined) {
       setExpectedValue(Number(Number(formatUnits(BigInt(payout), 18)).toFixed(8)));
     }
   }, [payout]);
@@ -271,6 +267,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
           winningProbability={winningProbability}
           expectedValue={expectedValue}
           repeatTrying={repeatTrying}
+          disabled={disabled}
           ref={flipRef}
         />
 

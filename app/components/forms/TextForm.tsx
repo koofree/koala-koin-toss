@@ -7,13 +7,13 @@ interface TextFormProps {
 export const TextForm = ({ value }: TextFormProps) => {
   return (
     <div className="flex items-center bg-[#1A1832] pl-2 pr-3 rounded-tl-lg rounded-br-lg shadow-lg w-[120px]">
-      <div className="w-[12px] inline-block mr-1">
+      <div className="w-[10px] inline-block mr-1">
         <Image
           src="/images/ethereum-svgrepo-com.svg"
           alt="ETH"
-          className="flex w-[12px] my-auto mr-3"
-          width={12}
-          height={12}
+          className="flex w-[10px] my-auto mr-3"
+          width={10}
+          height={10}
         />
       </div>
       <input

@@ -3,8 +3,7 @@
 import { useWriteContractSponsored } from '@abstract-foundation/agw-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { formatUnits, parseAbi } from 'viem';
-import { getGeneralPaymasterInput } from 'viem/zksync';
+import { formatUnits } from 'viem';
 import { useSendTransaction, useWaitForTransactionReceipt } from 'wagmi';
 
 interface UserPanelProps {
@@ -81,7 +80,7 @@ export const UserPanel = ({
                 </svg>
                 Disconnect
               </button>
-              <button
+              {/* <button
                 className={`rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] w-full sm:flex-1
                         ${
                           !sendTransaction || isPending || transactionReceipt?.status === 'success'
@@ -90,16 +89,6 @@ export const UserPanel = ({
                         }`}
                 onClick={() => {
                   if (address) {
-                    writeContractSponsored({
-                      abi: parseAbi(['function mint(address,uint256) external']),
-                      address: '0xC4822AbB9F05646A9Ce44EFa6dDcda0Bf45595AA',
-                      functionName: 'mint',
-                      args: [address, BigInt(1)],
-                      paymaster: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
-                      paymasterInput: getGeneralPaymasterInput({
-                        innerInput: '0x',
-                      }),
-                    });
                   }
                 }}
                 disabled={
@@ -127,7 +116,7 @@ export const UserPanel = ({
                       ? 'Success'
                       : 'Failed'}
                 </span>
-              </button>
+              </button> */}
             </div>
             {!!transactionReceipt && (
               <a
@@ -149,7 +138,13 @@ export const UserPanel = ({
       ) : status === 'reconnecting' || status === 'connecting' ? (
         <div id="loading-spinner-container" className="flex items-center justify-center w-10 h-10">
           <div id="loading-spinner" className="animate-spin">
-            <Image src="/abs.svg" alt="Loading" width={24} height={24} />
+            <Image
+              src="/abs.svg"
+              alt="Loading"
+              width={24}
+              height={24}
+              style={{ width: 'auto', height: 'auto' }}
+            />
           </div>
         </div>
       ) : (
@@ -163,7 +158,7 @@ export const UserPanel = ({
             alt="Abstract logomark"
             width={20}
             height={20}
-            style={{ filter: 'brightness(0)' }}
+            style={{ width: 'auto', height: 'auto', filter: 'brightness(0)' }}
           />
           Sign in with Abstract
         </button>

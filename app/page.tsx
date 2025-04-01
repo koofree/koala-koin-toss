@@ -154,12 +154,14 @@ export default function Home() {
             <Image
               src="/images/koala/dancing/dancing_koala_front.gif"
               alt="Dancing Koala"
-              className="w-2/3 mt-[250px]"
+              width={80}
+              className="mt-[250px]"
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">
                 <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" className="w-6 h-6" />
                 <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -172,7 +174,8 @@ export default function Home() {
             <Image
               src="/images/koala/dancing/dancing_koala_back.gif"
               alt="Dancing Koala"
-              className="w-2/3 mt-[250px]"
+              width={80}
+              className="mt-[250px]"
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">

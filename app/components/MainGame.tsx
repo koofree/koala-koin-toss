@@ -1,7 +1,6 @@
-import { LimitType, SessionConfig } from '@abstract-foundation/agw-client/sessions';
+import { useAbstractClient, useCreateSession } from '@abstract-foundation/agw-react';
 import { useEffect, useRef, useState } from 'react';
-import { createPublicClient, formatUnits, http, parseEther, toFunctionSelector } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
+import { createPublicClient, formatUnits, http, parseEther } from 'viem';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import {
@@ -11,11 +10,12 @@ import {
   functionNames,
   // getGameNumber,
   koalaKoinTossV1Abi,
-  SESSION_PRIVATE_KEY,
 } from '@/config';
 import { GameResult } from '@/database';
+import { createAndStoreSession } from '@/utils/createAndStoreSession';
 import { generateResult } from '@/utils/generators';
-import { useAbstractClient } from '@abstract-foundation/agw-react';
+import { getStoredSession } from '@/utils/getStoredSession';
+import { privateKeyToAccount } from 'viem/accounts';
 import { ActionButtons } from './ActionButtons';
 import { CoinDisplay } from './CoinDisplay';
 import { Image } from './image/image';
@@ -28,7 +28,7 @@ interface MainGameProps {
   walletBalance?: { value: bigint; decimals: number; symbol: string };
   refetchWalletBalance: () => void;
   myGameHistory: GameResult[];
-  userAddress: `0x${string}`;
+  userAddress?: `0x${string}`;
 }
 
 export const MainGame = ({
@@ -77,47 +77,14 @@ export const MainGame = ({
 
   const [payout, setPayout] = useState<number>();
 
-  const sessionSigner = privateKeyToAccount(SESSION_PRIVATE_KEY);
-
   const { data: abstractClient } = useAbstractClient();
-
-  const [session, setSession] = useState<SessionConfig | undefined>(undefined);
-
-  const createSession = async () => {
-    if (!abstractClient) return;
-    console.log('sessionSigner.address', sessionSigner.address, userAddress);
-    const session = await abstractClient.createSession({
-      session: {
-        signer: sessionSigner.address,
-        expiresAt: BigInt(Math.floor(Date.now() / 1000) + 60 * 60 * 24),
-        feeLimit: {
-          limitType: LimitType.Lifetime,
-          limit: parseEther('1'),
-          period: BigInt(0),
-        },
-        callPolicies: [
-          {
-            target: contractAddress,
-            selector: toFunctionSelector('function koin_toss_eth(uint256 _gameId)'),
-            maxValuePerUse: BigInt(0),
-            valueLimit: {
-              limitType: LimitType.Unlimited,
-              limit: BigInt(0),
-              period: BigInt(0),
-            },
-            constraints: [],
-          },
-        ],
-        transferPolicies: [],
-      },
-    });
-
-    setTransactionHash(session.transactionHash);
-  };
+  const { createSessionAsync } = useCreateSession();
 
   useEffect(() => {
-    createSession();
-  }, [abstractClient]);
+    // if (userAddress) {
+    //   createAndStoreSession(userAddress, createSessionAsync);
+    // }
+  }, [abstractClient, userAddress]);
 
   // const {
   //   writeContractSponsored,
@@ -141,12 +108,21 @@ export const MainGame = ({
   };
 
   const handleFlip = async () => {
-    if (!abstractClient || !session || !selectedSide || isFlipping || balance < betAmount) {
+    if (!abstractClient || !userAddress || !selectedSide || isFlipping || balance < betAmount) {
       if (balance < betAmount) {
         alert('Betting amount was over the your balance!');
       }
       return;
     }
+
+    const sessionData = await getStoredSession(userAddress, createSessionAsync);
+    if (!sessionData) {
+      createAndStoreSession(userAddress, createSessionAsync);
+      return;
+    }
+    const { session, privateKey } = sessionData;
+
+    const sessionSigner = privateKeyToAccount(privateKey);
 
     setIsFlipping(true);
 
@@ -159,9 +135,10 @@ export const MainGame = ({
       result = await sessionClient.sendTransaction({
         ...clientConfig,
         abi: koalaKoinTossV1Abi,
+        to: contractAddress,
+        address: contractAddress,
         account: sessionClient.account,
         chain: clientConfig.chain,
-        address: contractAddress,
         functionName: functionNames.koinTossEth,
         args: [gameNumber],
         value: sendValue,
@@ -448,6 +425,12 @@ export const MainGame = ({
       console.error('unhandledrejection', event);
       setIsFlipping(false);
       refetchWalletBalance();
+
+      if (userAddress && event.reason instanceof Error) {
+        if (event.reason.message.indexOf('Session data not found!') >= 0) {
+          console.log('Session data not found! Creating new session...');
+        }
+      }
     };
 
     window.addEventListener('unhandledrejection', handleUnhandledRejection);

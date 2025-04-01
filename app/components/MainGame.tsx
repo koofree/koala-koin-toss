@@ -8,7 +8,6 @@ import {
   clientConfig,
   contractAddress,
   functionNames,
-  // getGameNumber,
   koalaKoinTossV1Abi,
 } from '@/config';
 import { GameResult } from '@/database';
@@ -76,28 +75,15 @@ export const MainGame = ({
   });
 
   const [payout, setPayout] = useState<number>();
-
-  const { data: abstractClient } = useAbstractClient();
-  const { createSessionAsync } = useCreateSession();
-
-  useEffect(() => {
-    // if (userAddress) {
-    //   createAndStoreSession(userAddress, createSessionAsync);
-    // }
-  }, [abstractClient, userAddress]);
-
-  // const {
-  //   writeContractSponsored,
-  //   data: transactionHash,
-  //   error: txError,
-  // } = useWriteContractSponsored();
-
   const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>(undefined);
   const [txError, setTxError] = useState<Error | undefined>(undefined);
 
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
     hash: transactionHash,
   });
+
+  const { data: abstractClient } = useAbstractClient();
+  const { createSessionAsync } = useCreateSession();
 
   const handleCoinCountChange = (count: number) => {
     setCoinCount(count);
@@ -152,19 +138,6 @@ export const MainGame = ({
     }
 
     setTransactionHash(result);
-
-    // writeContractSponsored({
-    //   abi: koalaKoinTossV1Abi,
-    //   address: contractAddress,
-    //   functionName: functionNames.koinTossEth,
-    //   args: [gameNumber],
-    //   value: sendValue,
-    //   paymaster: ABSTRACT_GLOBAL_WALLET_ADDRESS,
-    //   paymasterInput: getGeneralPaymasterInput({
-    //     innerInput: '0x',
-    //   }),
-    //   authorizationList: [],
-    // });
   };
 
   const checkResult = (

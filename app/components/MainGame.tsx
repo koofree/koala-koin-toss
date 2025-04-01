@@ -30,7 +30,7 @@ interface MainGameProps {
 
 export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }: MainGameProps) => {
   const [balance, setBalance] = useState(toBalance(walletBalance));
-  const [betAmount, setBetAmount] = useState(1);
+  const [betAmount, setBetAmount] = useState(0);
   const [selectedSide, setSelectedSide] = useState<'HEADS' | 'TAILS' | null>(null);
   const [results, setResults] = useState<Array<'HEADS' | 'TAILS' | null>>([null]);
   const [coinCount, setCoinCount] = useState(1);
@@ -328,7 +328,7 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
     }
 
     if (balance < finalBetAmount) {
-      finalBetAmount = balance;
+      finalBetAmount = Number(balance.toFixed(8));
     }
 
     if (maxBet < betAmount) {

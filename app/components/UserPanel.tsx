@@ -1,5 +1,6 @@
 'use client';
 
+import { clientConfig } from '@/config';
 import { useEffect } from 'react';
 import { formatUnits } from 'viem';
 import { Image } from './image/image';
@@ -34,7 +35,7 @@ export const UserPanel = ({ login, logout, address, walletBalance, status }: Use
               <p className="text-xs text-gray-400 font-mono break-all">{address}</p>
               <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
                 <a
-                  href={`https://explorer.testnet.abs.xyz/address/${address}`}
+                  href={`${clientConfig.chain.blockExplorers.default.url}/address/${address}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

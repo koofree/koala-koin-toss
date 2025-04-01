@@ -156,6 +156,7 @@ export default function Home() {
               alt="Dancing Koala"
               width={80}
               className="mt-[250px]"
+              unoptimized
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">
@@ -176,6 +177,7 @@ export default function Home() {
               alt="Dancing Koala"
               width={80}
               className="mt-[250px]"
+              unoptimized
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">

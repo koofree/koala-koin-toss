@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { createPublicClient, formatUnits, http } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
-import { clientConfig, contractAddress, koalaKoinTossV1Abi } from '@/config';
+import { clientConfig, contractAddress, eventNames, koalaKoinTossV1Abi } from '@/config';
 import { Image } from './components/image/image';
 import { MainGame } from './components/MainGame';
 import { UserPanel } from './components/UserPanel';
@@ -79,30 +79,30 @@ export default function Home() {
         )
       );
 
-    const betCommitedEvents = logs.filter((v) => v.eventName === 'BetCommitted');
-    const betRevealedEvents = logs.filter((v) => v.eventName === 'BetRevealed');
+    const tossCommitedEvents = logs.filter((v) => v.eventName === eventNames.TossCommitted);
+    const tossRevealedEvents = logs.filter((v) => v.eventName === eventNames.TossRevealed);
 
-    betCommitedEvents.forEach((v) => {
-      const betCommitedEvent = v;
-      const betRevealedEvent = betRevealedEvents.find(
-        (v) => v.args.requestId === betCommitedEvent.args.requestId
+    tossCommitedEvents.forEach((v) => {
+      const tossCommitedEvent = v;
+      const tossRevealedEvent = tossRevealedEvents.find(
+        (v) => v.args.requestId === tossCommitedEvent.args.requestId
       );
 
-      if (betRevealedEvent) {
-        const date = new Date(Number(betRevealedEvent.blockTimestamp) * 1000);
+      if (tossRevealedEvent) {
+        const date = new Date(Number(tossRevealedEvent.blockTimestamp) * 1000);
         const gameResult: GameResult = {
-          id: betRevealedEvent.args.requestId,
-          address: betCommitedEvent.args.player,
+          id: tossRevealedEvent.args.requestId,
+          address: tossCommitedEvent.args.player,
           timestamp: date.toUTCString(),
-          betAmount: Number(formatUnits(betCommitedEvent.args.betAmount, 18)),
-          selectedSide: betCommitedEvent.args.selectedSide,
-          coinCount: betCommitedEvent.args.coinCount,
-          minHeads: betCommitedEvent.args.minHeads,
+          betAmount: Number(formatUnits(tossCommitedEvent.args.betAmount, 18)),
+          selectedSide: tossCommitedEvent.args.selectedSide,
+          coinCount: tossCommitedEvent.args.coinCount,
+          minHeads: tossCommitedEvent.args.minHeads,
           results: undefined,
-          won: betRevealedEvent.args.didWin,
-          reward: Number(formatUnits(betRevealedEvent.args.payout, 18)),
+          won: tossRevealedEvent.args.didWin,
+          reward: Number(formatUnits(tossRevealedEvent.args.payout, 18)),
           commitTransactionHash: v.transactionHash,
-          revealTransactionHash: betRevealedEvent.transactionHash,
+          revealTransactionHash: tossRevealedEvent.transactionHash,
         };
         appendGameHistory(gameResult);
       }

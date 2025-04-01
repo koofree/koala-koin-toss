@@ -73,3 +73,8 @@ export const functionNames = {
   getGameCount: 'gameCount',
   getPrizePools: 'prizePools',
 };
+
+export const eventNames = {
+  TossCommitted: 'TossCommitted',
+  TossRevealed: 'TossRevealed',
+};

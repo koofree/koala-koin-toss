@@ -237,9 +237,9 @@ export const ActionButtons = forwardRef(
                     <Image
                       src="/images/ethereum-svgrepo-com.svg"
                       alt="ETH"
-                      className="w-[10px] my-auto inline"
-                      width={12}
-                      height={12}
+                      className="my-auto inline mb-[2px]"
+                      width={10}
+                      height={10}
                     />{' '}
                     {betAmount}
                   </span>

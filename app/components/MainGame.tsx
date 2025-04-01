@@ -299,21 +299,38 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
   }, [gameOptions]);
 
   useEffect(() => {
-    let finalBetAmount = betAmount;
-    if (!betAmount) {
-      finalBetAmount = 0;
+    if (!Array.isArray(betLimits)) {
+      console.log('betLimits is not an array');
+      return;
     }
 
-    if (balance < betAmount) {
+    let finalBetAmount = betAmount;
+
+    const minBet = Number(Number(formatUnits(betLimits[0], 18)).toFixed(8));
+    const maxBet = Number(Number(formatUnits(betLimits[1], 18)).toFixed(8));
+
+    if (balance < minBet) {
+      setDisabled(true);
+      return;
+    }
+
+    if (!betAmount) {
+      finalBetAmount = minBet;
+    }
+
+    if (finalBetAmount < minBet) {
+      finalBetAmount = minBet;
+    }
+
+    if (balance < finalBetAmount) {
       finalBetAmount = balance;
     }
-    console.log('betLimits', betLimits);
 
-    if (Array.isArray(betLimits) && betLimits[1] < betAmount) {
-      finalBetAmount = Number(betLimits[1]);
+    if (maxBet < betAmount) {
+      finalBetAmount = maxBet;
     }
 
-    setBetAmount(finalBetAmount);
+    setBetAmount(Number(finalBetAmount));
 
     if (winningProbability > 0 && gameNumber >= 0) {
       publicClient
@@ -412,9 +429,11 @@ export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }:
                 ? '/images/middle/buttons/btn_toggle_on.png'
                 : '/images/middle/buttons/btn_toggle_off.png'
             }
+            width={30}
+            height={12}
             alt={animationEnabled ? 'Toggle On' : 'Toggle Off'}
             onClick={() => setAnimationEnabled(!animationEnabled)}
-            className="w-[30px] h-[12px] mx-2 cursor-pointer"
+            className="mx-2 cursor-pointer"
           />
         </div>
       </div>

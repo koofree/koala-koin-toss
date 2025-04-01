@@ -20,7 +20,6 @@ import { validateSession } from './validateSession';
  * cleared and a new session will be created.
  *
  * @param {Address} address - The wallet address whose session should be retrieved
- * @param {SupportedChain} chain - The blockchain configuration to use for validation
  * @param {(params: { session: SessionConfig }) => Promise<{ transactionHash?: `0x${string}`; session: SessionConfig }>} createSessionAsync - The function to create a new session
  *
  * @returns {Promise<Object|null>} A promise that resolves to:

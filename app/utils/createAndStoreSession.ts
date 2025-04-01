@@ -24,7 +24,6 @@ import { getStorageKey } from './getStorageKey';
  *
  * @param {Address} userAddress - The wallet address that will own the session
  * @param {(params: { session: SessionConfig }) => Promise<{ transactionHash?: `0x${string}`; session: SessionConfig }>} createSessionAsync - The createSessionAsync function from useCreateSession hook
- * @param {SupportedChain} chain - The blockchain configuration to use (determines which factory address to use)
  *
  * @returns {Promise<Object|null>} A promise that resolves to:
  *   - The created session data object (containing `session` and `privateKey`) if successful

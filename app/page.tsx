@@ -3,20 +3,17 @@
 import { useCreateSession, useLoginWithAbstract } from '@abstract-foundation/agw-react';
 import { useEffect, useState } from 'react';
 import { createPublicClient, formatUnits, http } from 'viem';
-import { abstractTestnet } from 'viem/chains';
 import { useAccount, useBalance } from 'wagmi';
-import koalaKoinTossV1 from '../public/abis/KoalaKoinTossV1.json';
 import { MainGame } from './components/MainGame';
 import { UserPanel } from './components/UserPanel';
 import { GameResult } from './database';
 
-const contractAddress = '0x14444806071625C010f01D5240d379C6247e7428';
-const koalaKoinTossV1Abi = koalaKoinTossV1.abi;
+import { clientConfig, contractAddress, koalaKoinTossV1Abi } from '@/config';
 
 export default function Home() {
   // Create a public client to interact with the blockchain
   const publicClient = createPublicClient({
-    chain: abstractTestnet,
+    ...clientConfig,
     transport: http(),
   });
 
@@ -142,7 +139,6 @@ export default function Home() {
             </div>
           </div>
           <MainGame
-            address={address}
             refetchWalletBalance={refetchWalletBalance}
             walletBalance={walletBalance}
             myGameHistory={myGameHistory}

@@ -1,32 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
-import { createPublicClient, encodeFunctionData, formatUnits, http, parseEther } from 'viem';
-import { abstractTestnet } from 'viem/chains';
+import { createPublicClient, formatUnits, http, parseEther } from 'viem';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
 import { ActionButtons } from './ActionButtons';
 import { CoinDisplay } from './CoinDisplay';
 
-import { contractAddress, koalaKoinTossV1Abi } from '@/config';
+import { clientConfig, contractAddress, koalaKoinTossV1Abi } from '@/config';
 import { GameResult } from '@/database';
 import { generateResult } from '@/utils/generators';
-import { useGlobalWalletSignerClient } from '@abstract-foundation/agw-react';
+import { useWriteContractSponsored } from '@abstract-foundation/agw-react';
+import { getGeneralPaymasterInput } from 'viem/zksync';
 
 const toBalance = (walletBalance?: { value: bigint; decimals: number }) => {
   return parseFloat(walletBalance ? formatUnits(walletBalance.value, walletBalance.decimals) : '0');
 };
 
 interface MainGameProps {
-  address?: `0x${string}`;
   walletBalance?: { value: bigint; decimals: number; symbol: string };
   refetchWalletBalance: () => void;
   myGameHistory: GameResult[];
 }
 
-export const MainGame = ({
-  address,
-  myGameHistory,
-  walletBalance,
-  refetchWalletBalance,
-}: MainGameProps) => {
+export const MainGame = ({ myGameHistory, walletBalance, refetchWalletBalance }: MainGameProps) => {
   const [balance, setBalance] = useState(toBalance(walletBalance));
   const [betAmount, setBetAmount] = useState(1);
   const [selectedSide, setSelectedSide] = useState<'HEADS' | 'TAILS' | null>(null);
@@ -46,7 +40,7 @@ export const MainGame = ({
 
   // Create a public client to interact with the blockchain
   const publicClient = createPublicClient({
-    chain: abstractTestnet,
+    ...clientConfig,
     transport: http(),
   });
 
@@ -60,92 +54,11 @@ export const MainGame = ({
 
   const [payout, setPayout] = useState<number>();
 
-  // Check approved amount for the contract
-  const { data: approvedAmount, refetch: refetchApprovedAmount } = useReadContract({
-    address: contractAddress,
-    abi: koalaKoinTossV1Abi,
-    functionName: 'allowance',
-    args: [address, contractAddress],
-  });
-
-  const { data: allowance, refetch: refetchAllowance } = useReadContract({
-    address: '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF',
-    abi: [
-      {
-        constant: true,
-        inputs: [
-          {
-            name: '_owner',
-            type: 'address',
-          },
-          {
-            name: '_spender',
-            type: 'address',
-          },
-        ],
-        name: 'allowance',
-        outputs: [
-          {
-            name: '',
-            type: 'uint256',
-          },
-        ],
-        payable: false,
-        stateMutability: 'view',
-        type: 'function',
-      },
-    ],
-    functionName: 'allowance',
-    args: [address || '0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF', contractAddress],
-  });
-
-  useEffect(() => {
-    console.log('allowance', address, allowance);
-  }, [allowance]);
-
-  useEffect(() => {
-    if (address) {
-      console.log('refetching allowance', address);
-      refetchAllowance();
-    }
-  }, [address, refetchAllowance]);
-
-  useEffect(() => {
-    if (approvedAmount) {
-      console.log('Approved amount:', approvedAmount);
-    }
-  }, [approvedAmount]);
-
-  // Refetch approved amount when address changes
-  useEffect(() => {
-    if (address) {
-      refetchApprovedAmount();
-    }
-  }, [address, refetchApprovedAmount]);
-
-  const { data: client, isLoading, error: txError } = useGlobalWalletSignerClient();
-
-  // const {
-  //   sendTransaction,
-  //   data: transactionHash,
-  //   error,
-  // } = useSendTransaction({
-  //   mutation: {
-  //     onError: (error: any) => {
-  //       console.error('Transaction error:', error);
-  //       setIsFlipping(false);
-  //       refetchWalletBalance();
-  //     },
-  //   },
-  // });
-
-  // const {
-  //   writeContractSponsored,
-  //   data: transactionHash,
-  //   error: txError,
-  // } = useWriteContractSponsored();
-
-  const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>();
+  const {
+    writeContractSponsored,
+    data: transactionHash,
+    error: txError,
+  } = useWriteContractSponsored();
 
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
     hash: transactionHash,
@@ -170,50 +83,20 @@ export const MainGame = ({
 
     setIsFlipping(true);
 
-    // Create a public client to interact with the blockchain
-    // const publicClient = createPublicClient({
-    //   chain: abstractTestnet,
-    //   transport: http(),
-    // });
-
-    // Encode the function call data
-    const data = encodeFunctionData({
-      abi: koalaKoinTossV1Abi,
-      functionName: 'bet_eth',
-      args: [gameNumber],
-    });
-
     const sendValue = parseEther(betAmount.toString());
 
-    const result = await client?.sendTransaction({
+    writeContractSponsored({
+      abi: koalaKoinTossV1Abi,
+      address: contractAddress,
+      functionName: 'bet_eth',
+      args: [gameNumber],
       value: sendValue,
-      to: contractAddress,
-      data: data,
-      account: address,
-      chainId: abstractTestnet.id,
+      paymaster: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
+      paymasterInput: getGeneralPaymasterInput({
+        innerInput: '0x',
+      }),
+      authorizationList: [],
     });
-
-    setTransactionHash(result);
-
-    // sendTransaction({
-    //   value: sendValue,
-    //   to: contractAddress,
-    //   data: data,
-    //   account: address,
-    //   chainId: abstractTestnet.id,
-    // });
-
-    // writeContractSponsored({
-    //   abi: koalaKoinTossV1Abi,
-    //   address: contractAddress,
-    //   functionName: 'bet_eth',
-    //   args: [0],
-    //   paymaster: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
-    //   paymasterInput: getGeneralPaymasterInput({
-    //     innerInput: '0x',
-    //   }),
-    //   authorizationList: [],
-    // });
   };
 
   const checkResult = (transactionReceipt: any, selectedSide: 'HEADS' | 'TAILS') => {
@@ -250,23 +133,6 @@ export const MainGame = ({
 
     checkResult(transactionReceipt, selectedSide);
   }, [myGameHistory, transactionReceipt]);
-
-  // useEffect(() => {
-  //   if (autoFlip && autoFlipCount > 0 && repeatTrying > 0) {
-  //     if (repeatTrying == 1) {
-  //       if (autoFlipCount == 1) {
-  //         setAutoFlip(false);
-  //       } else {
-  //         setAutoFlipCount(autoFlipCount - 1);
-  //       }
-  //     }
-
-  //     setTimeout(() => {
-  //       console.log('restart!!!', repeatTrying);
-  //       flipRef.current?.triggerFlip();
-  //     }, 1000);
-  //   }
-  // }, [repeatTrying]);
 
   useEffect(() => {
     if (txError) {

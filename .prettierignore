@@ -3,4 +3,5 @@ node_modules
 build
 dist
 coverage
-public 
+public
+pnpm-lock.yaml

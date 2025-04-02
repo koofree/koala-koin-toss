@@ -14,7 +14,7 @@
     "dev": "pnpm prebuild && next dev",
     "prebuild": "node scripts/set-build-time.js",
     "build": "next build",
-    "start": "pnpm prebuild && next start",
+    "start": "pnpm prebuild && npx serve@latest out",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}"

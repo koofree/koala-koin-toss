@@ -82,8 +82,6 @@ export default function Home() {
 
     const tossCommitedEvents = logs.filter((v) => v.eventName === eventNames.TossCommitted);
     const tossRevealedEvents = logs.filter((v) => v.eventName === eventNames.TossRevealed);
-    console.log('tossCommitedEvents', tossCommitedEvents);
-    console.log('tossRevealedEvents', tossRevealedEvents);
 
     tossCommitedEvents.forEach((v) => {
       const tossCommitedEvent = v;

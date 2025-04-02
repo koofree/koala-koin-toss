@@ -1,5 +1,6 @@
 # Koala Koin Toss Web3 Game
 
+[![Node.js](https://img.shields.io/badge/Node.js-22.x-green?style=flat-square&logo=node.js)](https://nodejs.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2.13-black?style=flat-square&logo=next.js)](https://nextjs.org/docs/14/getting-started/)
 [![React](https://img.shields.io/badge/React-18.2.0-blue?style=flat-square&logo=react)](https://18.react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-38B2AC?style=flat-square&logo=tailwind-css)](https://v3.tailwindcss.com/)
@@ -34,6 +35,7 @@ To deploy the application in production, first build the project and then serve 
 
 ## Tech Stack
 
+- **Build Framework**: NodeJS 22
 - **Frontend Framework**: React (Next.js)
 - **Styling**: Tailwind CSS
 - **Language**: TypeScript

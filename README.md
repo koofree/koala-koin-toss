@@ -24,6 +24,14 @@ A web-based game built powered by [Abstract](https://abs.xyz/) with Next.js, Rea
 > pnpm dev
 ```
 
+### Deploy in production
+
+To deploy the application in production, first build the project and then serve the static files from the `out` directory:
+
+```
+> pnpm build
+```
+
 ## Tech Stack
 
 - **Frontend Framework**: React (Next.js)

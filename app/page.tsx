@@ -160,9 +160,9 @@ export default function Home() {
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">
-                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" className="w-6 h-6" />
-                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" className="w-6 h-6" />
-                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" width={24} height={24} />
+                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" width={24} height={24} />
+                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" width={24} height={24} />
               </div>
             </div>
           </div>
@@ -184,9 +184,9 @@ export default function Home() {
             />
             <div className="flex flex-col items-center justify-center absolute bottom-0">
               <div className="flex space-x-2">
-                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" className="w-6 h-6" />
-                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" className="w-6 h-6" />
-                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" className="w-6 h-6" />
+                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" width={24} height={24} />
+                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" width={24} height={24} />
+                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" width={24} height={24} />
               </div>
             </div>
           </div>

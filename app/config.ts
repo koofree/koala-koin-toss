@@ -21,21 +21,21 @@ const environments = {
   production: {
     chain: {
       ...abstractTestnet,
-      id: 2_741,
-      name: 'Abstract',
-      rpcUrls: {
-        default: {
-          http: ['https://api.mainnet.abs.xyz'],
-          webSocket: ['wss://api.mainnet.abs.xyz/ws'],
-        },
-      },
-      blockExplorers: {
-        default: {
-          name: 'Abstract Block Explorer',
-          url: 'https://explorer.mainnet.abs.xyz',
-        },
-      },
-      testnet: false,
+      // id: 2_741,
+      // name: 'Abstract',
+      // rpcUrls: {
+      //   default: {
+      //     http: ['https://api.mainnet.abs.xyz'],
+      //     webSocket: ['wss://api.mainnet.abs.xyz/ws'],
+      //   },
+      // },
+      // blockExplorers: {
+      //   default: {
+      //     name: 'Abstract Block Explorer',
+      //     url: 'https://explorer.mainnet.abs.xyz',
+      //   },
+      // },
+      // testnet: false,
     },
     contractAddress: '0x2439D8c9938a9181B17bfb474DC601Aa5d5eff7e', // TODO:Replace with production contract address
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {

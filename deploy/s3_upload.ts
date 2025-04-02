@@ -53,6 +53,29 @@ class S3Uploader {
         Bucket: bucket,
         Key: s3Key,
         Body: fileStream,
+        ContentType: (() => {
+          const extension = s3Key.split('.').pop()?.toLowerCase() || '';
+
+          switch (extension) {
+            case 'html':
+              return 'text/html';
+            case 'css':
+              return 'text/css';
+            case 'js':
+              return 'application/javascript';
+            case 'json':
+              return 'application/json';
+            case 'png':
+              return 'image/png';
+            case 'jpg':
+            case 'jpeg':
+              return 'image/jpeg';
+            case 'svg':
+              return 'image/svg+xml';
+            default:
+              return 'application/octet-stream';
+          }
+        })(),
       });
 
       await this.s3Client.send(command);

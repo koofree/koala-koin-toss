@@ -9,12 +9,15 @@ import {
   contractAddress,
   functionNames,
   koalaKoinTossV1Abi,
+  paymasterAddress,
 } from '@/config';
 import { GameResult } from '@/database';
 import { createAndStoreSession } from '@/utils/createAndStoreSession';
+import { floorNumber } from '@/utils/floorNumber';
 import { generateResult } from '@/utils/generators';
 import { getStoredSession } from '@/utils/getStoredSession';
 import { privateKeyToAccount } from 'viem/accounts';
+import { getGeneralPaymasterInput } from 'viem/zksync';
 import { ActionButtons } from './ActionButtons';
 import { CoinDisplay } from './CoinDisplay';
 import { Image } from './image/image';
@@ -128,6 +131,10 @@ export const MainGame = ({
         functionName: functionNames.koinTossEth,
         args: [gameNumber],
         value: sendValue,
+        paymaster: paymasterAddress,
+        paymasterInput: getGeneralPaymasterInput({
+          innerInput: '0x',
+        }),
       });
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -326,7 +333,7 @@ export const MainGame = ({
         })
         .then((r) => {
           if (Array.isArray(r)) {
-            setPayout(Number(r[2]));
+            setPayout(floorNumber(Number(formatUnits(r[2], 18))));
           }
         });
     } else {
@@ -342,8 +349,8 @@ export const MainGame = ({
 
     let finalBetAmount = betAmount;
 
-    const minBet = Number(Number(formatUnits(betLimits[0], 18)).toFixed(8));
-    const maxBet = Number(Number(formatUnits(betLimits[1], 18)).toFixed(8));
+    const minBet = floorNumber(Number(formatUnits(betLimits[0], 18)));
+    const maxBet = floorNumber(Number(formatUnits(betLimits[1], 18)));
 
     if (balance < minBet) {
       setDisabled(true);
@@ -359,7 +366,7 @@ export const MainGame = ({
     }
 
     if (balance < finalBetAmount) {
-      finalBetAmount = Number(balance.toFixed(8));
+      finalBetAmount = floorNumber(balance);
     }
 
     if (maxBet < betAmount) {
@@ -378,7 +385,7 @@ export const MainGame = ({
         })
         .then((r) => {
           if (Array.isArray(r)) {
-            setPayout(Number(r[2]));
+            setPayout(floorNumber(Number(formatUnits(r[2], 18))));
           }
         });
     }
@@ -386,7 +393,7 @@ export const MainGame = ({
 
   useEffect(() => {
     if (payout !== undefined) {
-      setExpectedValue(Number(Number(formatUnits(BigInt(payout), 18)).toFixed(8)));
+      setExpectedValue(floorNumber(payout));
     }
   }, [payout]);
 

@@ -1,3 +1,4 @@
+import { floorNumber } from '@/utils/floorNumber';
 import { useEffect, useState } from 'react';
 import { Image } from '../image/image';
 
@@ -8,7 +9,7 @@ interface SliderFormProps {
 }
 
 export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
-  const [inputValue, setInputValue] = useState(value.toFixed(8));
+  const [inputValue, setInputValue] = useState(value.toString());
 
   const handleCoinCountChange = (_value: string) => {
     if (!_value) {
@@ -22,7 +23,7 @@ export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
       return;
     }
 
-    let value = parseFloat(parseFloat(_value).toFixed(8));
+    let value = floorNumber(parseFloat(_value));
 
     if (value > max) {
       value = max;

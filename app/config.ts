@@ -7,6 +7,7 @@ const environments = {
   development: {
     chain: abstractTestnet,
     contractAddress: '0x2439D8c9938a9181B17bfb474DC601Aa5d5eff7e',
+    paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
         case coinCount === 1 && minHeads === 1:
@@ -38,6 +39,7 @@ const environments = {
       // testnet: false,
     },
     contractAddress: '0x2439D8c9938a9181B17bfb474DC601Aa5d5eff7e', // TODO:Replace with production contract address
+    paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
         case coinCount === 1 && minHeads === 1:
@@ -59,6 +61,8 @@ const currentConfig = environments[environment] || environments.development;
 export const koalaKoinTossV1Abi = koalaKoinTossV1.abi;
 // Replace with your actual contract address
 export const contractAddress: `0x${string}` = currentConfig.contractAddress as `0x${string}`;
+// Replace with your actual paymaster address
+export const paymasterAddress: `0x${string}` = currentConfig.paymasterAddress as `0x${string}`;
 // client config to specify the chain
 export const clientConfig = {
   chain: currentConfig.chain,

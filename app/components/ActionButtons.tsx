@@ -233,7 +233,7 @@ export const ActionButtons = forwardRef(
                   <span className=" text-white text-[9px]">TOSS OPTION DISABLED</span>
                 ) : (
                   <span className=" text-white text-[9px]">
-                    TOSS COINS -{' '}
+                    TOSS {coinCount > 1 ? 'COINS' : 'COIN'} -{' '}
                     <Image
                       src="/images/ethereum-svgrepo-com.svg"
                       alt="ETH"

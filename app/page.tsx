@@ -10,6 +10,7 @@ import { Image } from './components/image/image';
 import { MainGame } from './components/MainGame';
 import { UserPanel } from './components/UserPanel';
 import { GameResult } from './database';
+import { floorNumber } from './utils/floorNumber';
 
 export default function Home() {
   // Create a public client to interact with the blockchain
@@ -81,6 +82,8 @@ export default function Home() {
 
     const tossCommitedEvents = logs.filter((v) => v.eventName === eventNames.TossCommitted);
     const tossRevealedEvents = logs.filter((v) => v.eventName === eventNames.TossRevealed);
+    console.log('tossCommitedEvents', tossCommitedEvents);
+    console.log('tossRevealedEvents', tossRevealedEvents);
 
     tossCommitedEvents.forEach((v) => {
       const tossCommitedEvent = v;
@@ -216,7 +219,7 @@ export default function Home() {
                       className="text-xs border-t border-white/10 hover:bg-white/5"
                     >
                       <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
-                      <td className="p-2">{game.betAmount.toFixed(8)} ETH</td>
+                      <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
                       {/* <td className="p-2">{game.coinCount} coins</td>
                       <td className="p-2">{game.minHeads} min</td> */}
                       <td className="p-2">
@@ -232,7 +235,7 @@ export default function Home() {
                         {game.won !== undefined ? (
                           <span
                             className={game.won ? 'text-green-400' : 'text-red-400'}
-                          >{`${game.won ? '+ ' + game.reward.toFixed(8) : ''}`}</span>
+                          >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
                         ) : (
                           '-'
                         )}
@@ -264,7 +267,7 @@ export default function Home() {
                       className="text-xs border-t border-white/10 hover:bg-white/5"
                     >
                       <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
-                      <td className="p-2">{game.betAmount.toFixed(8)} ETH</td>
+                      <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
                       {/* <td className="p-2">{game.coinCount} coins</td>
                       <td className="p-2">{game.minHeads} min</td> */}
                       <td className="p-2">
@@ -280,7 +283,7 @@ export default function Home() {
                         {game.won !== undefined ? (
                           <span
                             className={game.won ? 'text-green-400' : 'text-red-400'}
-                          >{`${game.won ? '+ ' + game.reward.toFixed(8) : ''}`}</span>
+                          >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
                         ) : (
                           '-'
                         )}

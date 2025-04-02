@@ -10,12 +10,12 @@ export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: Sel
   const [isOpen, setIsOpen] = useState(false);
 
   const options = [
-    { idx: 0, minHeads: 5, coinCount: 10, label: '10:5 (x1.57)' },
-    { idx: 1, minHeads: 1, coinCount: 1, label: '1:1 (x1.96)' },
-    { idx: 2, minHeads: 3, coinCount: 4, label: '4:3 (x3.14)' },
-    { idx: 3, minHeads: 5, coinCount: 6, label: '6:5 (x8.96)' },
-    { idx: 4, minHeads: 8, coinCount: 9, label: '9:8 (x50.18)' },
-    { idx: 5, minHeads: 10, coinCount: 10, label: '10:10 (x1003.52)' },
+    { idx: 0, minHeads: 5, coinCount: 10, label: '10:5 (x1.31)' },
+    { idx: 1, minHeads: 1, coinCount: 1, label: '1:1 (x1.64)' },
+    { idx: 2, minHeads: 3, coinCount: 4, label: '4:3 (x2.62)' },
+    { idx: 3, minHeads: 5, coinCount: 6, label: '6:5 (x7.49)' },
+    { idx: 4, minHeads: 8, coinCount: 9, label: '9:8 (x41.99)' },
+    { idx: 5, minHeads: 10, coinCount: 10, label: '10:10 (x839.93)' },
     { idx: 6, minHeads: 0, coinCount: 0, label: 'CUSTOM' },
   ];
 

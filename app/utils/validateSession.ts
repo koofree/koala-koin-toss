@@ -47,9 +47,6 @@ export const validateSession = async (
       args: [address as `0x${string}`, sessionHash],
     })) as SessionStatus;
 
-    console.log('status', status);
-    console.log('clientConfig.chain', clientConfig.chain);
-
     // On Abstract testnet, any session is allowed, so we skip the check
     // However, on mainnet, we need to check if the session is both whitelisted and active.
     const isValid =

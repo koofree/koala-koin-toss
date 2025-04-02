@@ -230,10 +230,10 @@ export const ActionButtons = forwardRef(
                 disabled={disabled || !selectedSide || isFlipping || !betAmount}
               >
                 {disabled ? (
-                  <span className=" text-white text-[9px]">NOT AVAILABLE BETTING</span>
+                  <span className=" text-white text-[9px]">TOSS OPTION DISABLED</span>
                 ) : (
                   <span className=" text-white text-[9px]">
-                    FLIP COINS -{' '}
+                    TOSS COINS -{' '}
                     <Image
                       src="/images/ethereum-svgrepo-com.svg"
                       alt="ETH"

@@ -146,9 +146,6 @@ export default function Home() {
           login={login}
           logout={logout}
           status={status}
-          createSession={() => {
-            // TODO: Implement createSession
-          }}
         />
         <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat relative">
           <div className="w-full h-full flex flex-row items-center">

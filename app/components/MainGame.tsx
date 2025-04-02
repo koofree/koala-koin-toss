@@ -50,7 +50,6 @@ export const MainGame = ({
   const [animationEnabled, setAnimationEnabled] = useState(true);
   const [autoFlipCount, setAutoFlipCount] = useState(1);
   const [winningProbability, setWinningProbability] = useState(0);
-  const [expectedValue, setExpectedValue] = useState(0);
   const [gameNumber, setGameNumber] = useState(0);
   const [repeatTrying, setRepeatTrying] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -77,7 +76,7 @@ export const MainGame = ({
     args: [gameNumber],
   });
 
-  const [payout, setPayout] = useState<number>();
+  const [payout, setPayout] = useState<number>(0);
   const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>(undefined);
   const [txError, setTxError] = useState<Error | undefined>(undefined);
 
@@ -388,12 +387,6 @@ export const MainGame = ({
   }, [betAmount, balance]);
 
   useEffect(() => {
-    if (payout !== undefined) {
-      setExpectedValue(floorNumber(payout));
-    }
-  }, [payout]);
-
-  useEffect(() => {
     setBalance(toBalance(walletBalance));
   }, [walletBalance]);
 
@@ -459,7 +452,7 @@ export const MainGame = ({
             autoFlipCount={autoFlipCount}
             setAutoFlipCount={setAutoFlipCount}
             winningProbability={winningProbability}
-            expectedValue={expectedValue}
+            expectedValue={payout}
             repeatTrying={repeatTrying}
             disabled={disabled}
             ref={flipRef}

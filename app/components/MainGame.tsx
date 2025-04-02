@@ -144,8 +144,6 @@ export const MainGame = ({
       }
     }
 
-    console.log('result', result);
-
     setTransactionHash(result);
   };
 
@@ -275,8 +273,6 @@ export const MainGame = ({
 
   useEffect(() => {
     if (!transactionReceipt) return;
-
-    console.log('transactionReceipt', transactionReceipt);
 
     if (!selectedSide) {
       alert('select side error');

@@ -48,13 +48,13 @@ export const validateSession = async (
     })) as SessionStatus;
 
     console.log('status', status);
-    console.log('chain', clientConfig.chain);
+    console.log('clientConfig.chain', clientConfig.chain);
 
     // On Abstract testnet, any session is allowed, so we skip the check
     // However, on mainnet, we need to check if the session is both whitelisted and active.
     const isValid =
       status === SessionStatus.Active ||
-      (clientConfig.chain === abstractTestnet && status === SessionStatus.NotInitialized);
+      (clientConfig.chain.id === abstractTestnet.id && status === SessionStatus.NotInitialized);
 
     if (!isValid) {
       clearStoredSession(address);

@@ -318,7 +318,7 @@ export const MainGame = ({
   useEffect(() => {
     if (gameOptions && Array.isArray(gameOptions)) {
       const winChance: bigint = gameOptions[4];
-      setWinningProbability(Number(winChance) / 100_000_000);
+      setWinningProbability(floorNumber(Number(winChance) / 100_000_000, 4));
 
       publicClient
         .readContract({

@@ -317,7 +317,7 @@ export const MainGame = ({
   useEffect(() => {
     if (gameOptions && Array.isArray(gameOptions)) {
       const winChance: bigint = gameOptions[4];
-      setWinningProbability(floorNumber(Number(winChance) / 100_000_000, 4));
+      setWinningProbability(floorNumber(Number(winChance) / 1_000_000, 2));
 
       publicClient
         .readContract({
@@ -418,6 +418,7 @@ export const MainGame = ({
       <div className="h-[25vh] flex items-center">
         <CoinDisplay
           count={coinCount}
+          minHeads={minHeads}
           isFlipping={isFlipping}
           results={results}
           selectedSide={selectedSide}

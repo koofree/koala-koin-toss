@@ -94,7 +94,7 @@ export const ActionButtons = forwardRef(
                 <label className="block text-left mb-2 absolute -top-4 left-4 right-0 text-gray-500 text-[8px] ">
                   AUTOBET{' '}
                   <b className={repeatTrying > 0 ? 'animate-pulse text-yellow-300' : 'text-[7px]'}>
-                    {repeatTrying > 0 ? '(tap spacebar)' : '(Comming Soon)'}
+                    {repeatTrying > 0 ? '(tap spacebar)' : '(Coming Soon)'}
                   </b>
                 </label>
               </div>

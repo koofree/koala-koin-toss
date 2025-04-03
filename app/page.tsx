@@ -66,6 +66,7 @@ export default function Home() {
                 requestId: string;
                 player: string;
                 betAmount: bigint;
+                feeAmount: bigint;
                 selectedSide: 'HEADS' | 'TAILS';
                 coinCount: number;
                 minHeads: number;
@@ -95,7 +96,10 @@ export default function Home() {
           id: tossRevealedEvent.args.requestId,
           address: tossCommitedEvent.args.player,
           timestamp: date.toUTCString(),
-          betAmount: Number(formatUnits(tossCommitedEvent.args.betAmount, 18)),
+          betAmount: Number(
+            // feeAmount is included in betAmount
+            formatUnits(tossCommitedEvent.args.betAmount + tossCommitedEvent.args.feeAmount, 18)
+          ),
           selectedSide: tossCommitedEvent.args.selectedSide,
           coinCount: tossCommitedEvent.args.coinCount,
           minHeads: tossCommitedEvent.args.minHeads,

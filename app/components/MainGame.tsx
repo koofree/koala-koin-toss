@@ -12,6 +12,7 @@ import {
   paymasterAddress,
 } from '@/config';
 import { GameResult } from '@/database';
+import { clearStoredSession } from '@/utils/clearStoredSession';
 import { createAndStoreSession } from '@/utils/createAndStoreSession';
 import { floorNumber } from '@/utils/floorNumber';
 import { generateResult } from '@/utils/generators';
@@ -286,6 +287,17 @@ export const MainGame = ({
       console.error('txError', txError);
       if (txError.message.indexOf('Bet exceeds max reward limit') >= 0) {
         alert('Bet exceeds max reward limit!');
+      } else if (
+        txError.message.indexOf(
+          'An unknown error occurred while executing the contract function'
+        ) >= 0
+      ) {
+        alert(
+          'Contract function execution failed! It will clear session and try again. If this continues, stop to play game for safety.'
+        );
+        if (userAddress) {
+          clearStoredSession(userAddress);
+        }
       }
 
       refetchWalletBalance();

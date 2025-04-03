@@ -19,7 +19,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:watch": "onchange \"**/*\" -- prettier --write --ignore-unknown {{changed}}",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy:s3": "next build && bash deploy.sh"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.2.4",

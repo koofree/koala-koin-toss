@@ -157,7 +157,7 @@ class S3Uploader {
 async function main() {
   const uploader = new S3Uploader();
 
-  const localFolder = process.argv[2] || '../out';
+  const localFolder = process.argv[2] || process.env.target_path || '../out';
   const bucketName = process.argv[3] || process.env.bucket_name || 'abstract';
   const s3Prefix = process.argv[4] || '';
 

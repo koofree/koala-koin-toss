@@ -115,10 +115,8 @@ export const UserPanel = ({
       ) : status === 'reconnecting' || status === 'connecting' ? (
         <PanelButton
           onClick={login}
-          width={120}
-          height={20}
-          fontSize={9}
-          className="absolute right-[10px]"
+          textClassName="text-[9px]"
+          className="absolute right-[10px] w-[120px] h-[20px]"
         >
           <div id="loading-spinner" className="animate-spin">
             <Image src="/abs.svg" alt="Loading" width={9} height={9} />
@@ -127,10 +125,8 @@ export const UserPanel = ({
       ) : (
         <PanelButton
           onClick={login}
-          width={120}
-          height={20}
-          fontSize={9}
-          className="absolute right-[10px]"
+          textClassName="text-[9px]"
+          className="absolute right-[10px] w-[120px] h-[20px]"
         >
           Sign in with Abstract
         </PanelButton>

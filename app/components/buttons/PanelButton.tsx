@@ -3,9 +3,7 @@ interface PanelButtonProps {
   disabled?: boolean;
   disabledText?: string;
   children: React.ReactNode;
-  width?: number;
-  height?: number;
-  fontSize?: number;
+  textClassName?: string;
   className?: string;
 }
 
@@ -14,18 +12,12 @@ export const PanelButton = ({
   disabled,
   disabledText,
   children,
-  width,
-  height,
-  fontSize,
+  textClassName,
   className,
 }: PanelButtonProps) => {
-  const Width = width || 140;
-  const Height = height || 28;
-  const FontSize = fontSize || 9;
-
   return (
     <button
-      className={`w-[${Width}px] h-[${Height}px] 
+      className={`
                 cursor-pointer 
                 flex items-center justify-center
                 select-none 
@@ -39,9 +31,9 @@ export const PanelButton = ({
       disabled={disabled}
     >
       {disabled ? (
-        <span className={`text-white text-[${FontSize}px]`}>{disabledText}</span>
+        <span className={`text-white ${textClassName}`}>{disabledText}</span>
       ) : (
-        <span className={`text-white text-[${FontSize}px]`}>{children}</span>
+        <span className={`text-white ${textClassName}`}>{children}</span>
       )}
     </button>
   );

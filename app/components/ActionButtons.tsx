@@ -221,6 +221,8 @@ export const ActionButtons = forwardRef(
                 onClick={onFlip}
                 disabled={disabled || !selectedSide || isFlipping || !betAmount}
                 disabledText="TOSS OPTION DISABLED"
+                textClassName="text-[9px]"
+                className="w-[140px] h-[28px]"
               >
                 TOSS {coinCount > 1 ? 'COINS' : 'COIN'} -{' '}
                 <Image

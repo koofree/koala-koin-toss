@@ -183,7 +183,7 @@ export const CoinDisplay = ({
       setCoinDisplay(coinDisplay);
       setSortedCoinDisplay(sortedCoinDisplay);
     }
-  }, [results, isFlipping, selectedSide]);
+  }, [results, isFlipping, selectedSide, count, minHeads]);
 
   useEffect(() => {
     setCoinComponents(

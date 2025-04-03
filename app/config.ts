@@ -7,6 +7,7 @@ const environments = {
   development: {
     chain: abstractTestnet,
     contractAddress: '0xb7732fb08646261f69DAd26f2f2C8b4f8dcC5070',
+    kpAddress: '0xf3E1263c2C0a660f567B5338895C4E7D616a138B',
     paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
@@ -39,6 +40,7 @@ const environments = {
       // testnet: false,
     },
     contractAddress: '0xb7732fb08646261f69DAd26f2f2C8b4f8dcC5070', // TODO:Replace with production contract address
+    kpAddress: '0xf3E1263c2C0a660f567B5338895C4E7D616a138B', // TODO:Replace with production kp address
     paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
@@ -61,6 +63,8 @@ const currentConfig = environments[environment] || environments.development;
 export const koalaKoinTossV1Abi = koalaKoinTossV1.abi;
 // Replace with your actual contract address
 export const contractAddress: `0x${string}` = currentConfig.contractAddress as `0x${string}`;
+// Replace with your actual paymaster address
+export const kpAddress: `0x${string}` = currentConfig.kpAddress as `0x${string}`;
 // Replace with your actual paymaster address
 export const paymasterAddress: `0x${string}` = currentConfig.paymasterAddress as `0x${string}`;
 // client config to specify the chain

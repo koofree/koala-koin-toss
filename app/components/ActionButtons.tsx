@@ -1,5 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle } from 'react';
 
+import { PanelButton } from './buttons/PanelButton';
 import { CheckBox } from './forms/CheckBox';
 import { InputForm } from './forms/InputForm';
 import { SelectForm } from './forms/SelectForm';
@@ -216,35 +217,21 @@ export const ActionButtons = forwardRef(
               </div>
             </div>
             <div className="flex w-full justify-center mt-[10px]">
-              <button
-                className={`w-[140px] h-[28px] cursor-pointer 
-                flex items-center justify-center
-                select-none 
-                touch-none
-                bg-no-repeat bg-cover bg-center
-                bg-[url('/images/middle/buttons/btn_flip-cta_no-txt.png')]
-                active:bg-[url('/images/middle/buttons/btn_flip-cta_pressed_no-txt.png')]
-                disabled:opacity-50
-              `}
-                onClick={!selectedSide || isFlipping || !betAmount ? undefined : onFlip}
+              <PanelButton
+                onClick={onFlip}
                 disabled={disabled || !selectedSide || isFlipping || !betAmount}
+                disabledText="TOSS OPTION DISABLED"
               >
-                {disabled ? (
-                  <span className=" text-white text-[9px]">TOSS OPTION DISABLED</span>
-                ) : (
-                  <span className=" text-white text-[9px]">
-                    TOSS {coinCount > 1 ? 'COINS' : 'COIN'} -{' '}
-                    <Image
-                      src="/images/ethereum-svgrepo-com.svg"
-                      alt="ETH"
-                      className="my-auto inline mb-[2px]"
-                      width={10}
-                      height={10}
-                    />{' '}
-                    {betAmount}
-                  </span>
-                )}
-              </button>
+                TOSS {coinCount > 1 ? 'COINS' : 'COIN'} -{' '}
+                <Image
+                  src="/images/ethereum-svgrepo-com.svg"
+                  alt="ETH"
+                  width={10}
+                  height={10}
+                  className="my-auto inline mb-[2px]"
+                />{' '}
+                {betAmount}
+              </PanelButton>
             </div>
           </div>
         </div>

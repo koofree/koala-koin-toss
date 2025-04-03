@@ -42,7 +42,7 @@ export const MainGame = ({
 }: MainGameProps) => {
   const [balance, setBalance] = useState(toBalance(walletBalance));
   const [betAmount, setBetAmount] = useState(0);
-  const [selectedSide, setSelectedSide] = useState<'HEADS' | 'TAILS' | null>(null);
+  const [selectedSide, setSelectedSide] = useState<'HEADS' | 'TAILS' | null>('HEADS');
   const [results, setResults] = useState<Array<'HEADS' | 'TAILS' | null>>([null]);
   const [coinCount, setCoinCount] = useState(1);
   const [minHeads, setMinHeads] = useState(1);
@@ -442,7 +442,9 @@ export const MainGame = ({
         {isLoading < 100 && (
           <div className="text-white mt-[100px] min-h-[200px]">
             <div className="flex justify-center items-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+              <div id="loading-spinner" className="animate-spin">
+                <Image src="/abs.svg" alt="Loading" width={40} height={40} />
+              </div>
               <span className="ml-3">Loading game... ({isLoading}/100)</span>
             </div>
           </div>

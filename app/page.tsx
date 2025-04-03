@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { createPublicClient, formatUnits, http } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
-import { clientConfig, contractAddress, eventNames, koalaKoinTossV1Abi } from '@/config';
+import { clientConfig, contractAddress, eventNames, koalaKoinTossV1Abi, kpAddress } from '@/config';
+import Link from 'next/link';
 import { Image } from './components/image/image';
 import { MainGame } from './components/MainGame';
 import { UserPanel } from './components/UserPanel';
@@ -24,6 +25,11 @@ export default function Home() {
 
   const { data: walletBalance, refetch: refetchWalletBalance } = useBalance({
     address: address,
+  });
+
+  const { data: kpBalance, refetch: refetchKpBalance } = useBalance({
+    address: address,
+    token: kpAddress,
   });
 
   const [allGameHistory, setAllGameHistory] = useState<GameResult[]>([]);
@@ -144,21 +150,23 @@ export default function Home() {
   return (
     <main className="inline-block text-left">
       <div className="flex flex-col items-center relative">
-        <UserPanel
-          address={address}
-          walletBalance={walletBalance}
-          login={login}
-          logout={logout}
-          status={status}
-        />
         <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat relative">
           <div className="w-full h-full flex flex-row items-center">
-            <div className="w-2/12 h-full flex flex-col items-center justify-center">
+            <div className="w-2/12 h-full flex flex-col items-center">
+              <Link href="/">
+                <Image
+                  src="/images/header/lg_koala_koin-toss_original.png"
+                  alt="Dancing Koala"
+                  width={80}
+                  className="mt-[20px]"
+                  unoptimized
+                />
+              </Link>
               <Image
                 src="/images/koala/dancing/dancing_koala_front.gif"
                 alt="Dancing Koala"
                 width={80}
-                className="mt-[250px]"
+                className="mt-[300px]"
                 unoptimized
               />
               <div className="flex flex-col items-center justify-center absolute bottom-0">
@@ -187,17 +195,28 @@ export default function Home() {
 
             <MainGame
               userAddress={address}
-              refetchWalletBalance={refetchWalletBalance}
+              refetchWalletBalance={() => {
+                refetchWalletBalance();
+                refetchKpBalance();
+              }}
               walletBalance={walletBalance}
               myGameHistory={myGameHistory}
             />
 
-            <div className="w-2/12 h-full flex flex-col items-center justify-center">
+            <div className="w-2/12 h-full flex flex-col items-center">
+              <UserPanel
+                address={address}
+                walletBalance={walletBalance}
+                kpBalance={kpBalance}
+                login={login}
+                logout={logout}
+                status={status}
+              />
               <Image
                 src="/images/koala/dancing/dancing_koala_back.gif"
                 alt="Dancing Koala"
                 width={80}
-                className="mt-[250px]"
+                className="mt-[340px]"
                 unoptimized
               />
               <div className="flex flex-col items-center justify-center absolute bottom-0">

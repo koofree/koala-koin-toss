@@ -1,136 +1,140 @@
 'use client';
 
 import { clientConfig } from '@/config';
+import { floorNumber } from '@/utils/floorNumber';
 import { useEffect } from 'react';
 import { formatUnits } from 'viem';
+import { PanelButton } from './buttons/PanelButton';
 import { Image } from './image/image';
+
+const formatAddress = (address: `0x${string}` | undefined) => {
+  if (!address) return '';
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+};
+
 interface UserPanelProps {
   login: () => void;
   logout: () => void;
   address?: `0x${string}`;
   walletBalance?: { value: bigint; decimals: number; symbol: string };
+  kpBalance?: { value: bigint; decimals: number; symbol: string };
   status: 'connected' | 'reconnecting' | 'connecting' | 'disconnected';
 }
 
-export const UserPanel = ({ login, logout, address, walletBalance, status }: UserPanelProps) => {
+export const UserPanel = ({
+  login,
+  logout,
+  address,
+  walletBalance,
+  kpBalance,
+  status,
+}: UserPanelProps) => {
   const formattedBalance = walletBalance
-    ? `${formatUnits(walletBalance.value, walletBalance.decimals)} ${walletBalance.symbol}`
-    : '0 ETH';
+    ? Number(formatUnits(walletBalance.value, walletBalance.decimals))
+    : 0;
+  const formattedKpBalance = kpBalance
+    ? Number(formatUnits(kpBalance.value, kpBalance.decimals))
+    : 0;
 
   useEffect(() => {
     if (status === 'connected') {
     }
   }, [status]);
 
+  const moveToExplorer = () => {
+    window.open(`${clientConfig.chain.blockExplorers.default.url}/address/${address}`, '_blank');
+  };
+
   return (
-    <>
+    <div className="mt-[10px]">
       {status === 'connected' ? (
-        <div className="bg-white/5 border border-white/10 rounded-lg p-6 shadow-lg backdrop-blur-sm w-full max-w-sm">
-          <div className="flex flex-col items-center gap-4">
-            <div className="text-center">
-              <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
-                Connected to Abstract Global Wallet
-              </p>
-              <p className="text-xs text-gray-400 font-mono break-all">{address}</p>
-              <p className="text-sm sm:text-base font-medium font-[family-name:var(--font-roobert)] mb-1">
-                <a
-                  href={`${clientConfig.chain.blockExplorers.default.url}/address/${address}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View on Explorer (Balance: {formattedBalance})
-                </a>
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2 w-full">
-              <button
-                className="rounded-full border border-solid border-white/20 transition-colors flex items-center justify-center bg-gray-800 text-white gap-2 hover:bg-white/20 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] w-full sm:flex-1"
-                onClick={logout}
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-                Disconnect
-              </button>
-              {/* <button
-                className={`rounded-full border border-solid transition-colors flex items-center justify-center text-white gap-2 text-sm h-10 px-5 font-[family-name:var(--font-roobert)] w-full sm:flex-1
-                        ${
-                          !sendTransaction || isPending || transactionReceipt?.status === 'success'
-                            ? 'bg-gray-500 cursor-not-allowed opacity-50'
-                            : 'bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 border-transparent'
-                        }`}
-                onClick={() => {
-                  if (address) {
-                  }
-                }}
-                disabled={
-                  !writeContractSponsored || isPending || transactionReceipt?.status === 'success'
-                }
-              >
-                <svg
-                  className="w-4 h-4 flex-shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-                <span className="w-full text-center">
-                  {!transactionReceipt
-                    ? 'Submit tx'
-                    : transactionReceipt.status === 'success'
-                      ? 'Success'
-                      : 'Failed'}
-                </span>
-              </button> */}
-            </div>
+        <div
+          className="absolute right-2 
+            flex flex-row 
+            h-7
+            max-w-sm
+            rounded-full 
+            bg-white/15 
+            pl-3 px-2 pb-1 
+            shadow-lg 
+            backdrop-blur-sm
+          "
+        >
+          <div className="mr-[10px]">
+            <Image
+              src="/images/ethereum-svgrepo-com.svg"
+              alt="ETH"
+              width={10}
+              height={10}
+              className="my-auto inline mb-[-1px] mr-[3px]"
+            />
+            <span className="text-white text-[10px]">
+              {floorNumber(formattedBalance)} {walletBalance?.symbol}
+            </span>
           </div>
-        </div>
-      ) : status === 'reconnecting' || status === 'connecting' ? (
-        <div id="loading-spinner-container" className="flex items-center justify-center w-10 h-10">
-          <div id="loading-spinner" className="animate-spin">
+          <div className="my-auto pt-[3px]">
+            <div className="h-3 w-[1px] bg-white/30 mr-[8px]" about="bar"></div>
+          </div>
+          <div className="mr-[10px]">
+            <Image
+              src="/images/middle/coins/ic_koa_20px.png"
+              width={12}
+              alt="1 TO WIN"
+              className="my-auto inline mb-[-1px] mr-[5px]"
+            />
+            <span className="text-white text-[10px]">
+              {floorNumber(formattedKpBalance, 2)} {kpBalance?.symbol}
+            </span>
+          </div>
+          <div className="bg-black/40 rounded-full px-2 my-1 flex items-center h-5 font-extralight">
             <Image
               src="/abs.svg"
               alt="Loading"
-              width={24}
-              height={24}
-              style={{ width: 'auto', height: 'auto' }}
+              width={10}
+              height={10}
+              className="opacity-50 my-auto inline mr-[3px] cursor-pointer"
+              onClick={moveToExplorer}
+            />
+            <span
+              className="text-white/50 text-[9px] font-thin cursor-pointer"
+              onClick={moveToExplorer}
+            >
+              {formatAddress(address)}
+            </span>
+            <Image
+              style={{ zIndex: 10, position: 'relative' }}
+              onClick={logout}
+              src="/images/header/ic_log-out_20px.png"
+              alt="Loading"
+              width={12}
+              height={12}
+              className="opacity-50 my-auto inline cursor-pointer ml-[3px]"
             />
           </div>
         </div>
-      ) : (
-        <button
-          className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] hover:text-white dark:hover:bg-[#e0e0e0] dark:hover:text-black text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 font-[family-name:var(--font-roobert)]"
+      ) : status === 'reconnecting' || status === 'connecting' ? (
+        <PanelButton
           onClick={login}
+          width={120}
+          height={20}
+          fontSize={9}
+          className="absolute right-[10px]"
         >
-          <Image
-            className="dark:invert"
-            src="/abs.svg"
-            alt="Abstract logomark"
-            width={20}
-            height={20}
-            style={{ width: 'auto', height: 'auto', filter: 'brightness(0)' }}
-          />
+          <div id="loading-spinner" className="animate-spin">
+            <Image src="/abs.svg" alt="Loading" width={9} height={9} />
+          </div>
+        </PanelButton>
+      ) : (
+        <PanelButton
+          onClick={login}
+          width={120}
+          height={20}
+          fontSize={9}
+          className="absolute right-[10px]"
+        >
           Sign in with Abstract
-        </button>
+        </PanelButton>
       )}
-    </>
+    </div>
   );
 };

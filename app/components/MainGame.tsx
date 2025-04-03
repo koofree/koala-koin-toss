@@ -293,7 +293,7 @@ export const MainGame = ({
         ) >= 0
       ) {
         alert(
-          'Contract function execution failed! It will clear session and try again. If this continues, stop to play game for safety.'
+          'Contract function execution failed. The session will be cleared and retried. If the issue persists, please stop the game for safety reasons.'
         );
         if (userAddress) {
           clearStoredSession(userAddress);

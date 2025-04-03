@@ -65,7 +65,7 @@ const Coin = ({
     <MotionDiv
       key={idx}
       className={`relative ${count === 1 ? 'w-[128px] h-[128px]' : 'w-[64px] h-[64px]'} ${
-        idx % 5 === 0 ? 'basis-full sm:basis-auto' : ''
+        idx % 5 === 0 ? 'sm:basis-auto' : ''
       }`}
       layout
     >

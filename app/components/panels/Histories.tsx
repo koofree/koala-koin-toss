@@ -73,7 +73,12 @@ const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesP
             </table>
           </div>
         </div>
-        <div className="w-[3px] bg-white/50 h-[180px] -top-[8px] absolute left-[355px] bg-[#353345]"></div>
+        <div
+          className="w-[3px] h-[180px] -top-[8px] absolute left-[355px]"
+          style={{
+            backgroundColor: '#353345',
+          }}
+        ></div>
         <div className="w-1/2 h-full flex flex-col pl-[14px]">
           <p className="text-white text-[10px]">Recent Games</p>
           <div className="w-full text-white mt-2 overflow-scroll">

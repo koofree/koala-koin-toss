@@ -17,7 +17,7 @@ const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesP
       <div className="w-full h-full flex flex-row">
         <div className="w-1/2 h-full flex flex-col">
           <p className="text-white text-[10px]">My Wins</p>
-          <div className="w-full text-white mt-2 overflow-scroll">
+          <div className="w-full text-white mt-2">
             <table className="w-full border-collapse text-[7px]">
               <thead className="sticky top-0">
                 <tr className="font-thin">
@@ -81,7 +81,7 @@ const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesP
         ></div>
         <div className="w-1/2 h-full flex flex-col pl-[14px]">
           <p className="text-white text-[10px]">Recent Games</p>
-          <div className="w-full text-white mt-2 overflow-scroll">
+          <div className="w-full text-white mt-2">
             <table className="w-full border-collapse text-[7px]">
               <thead className="sticky top-0">
                 <tr className="font-thin">

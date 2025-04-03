@@ -12,6 +12,7 @@ import {
   paymasterAddress,
 } from '@/config';
 import { GameResult } from '@/database';
+import { clearStoredSession } from '@/utils/clearStoredSession';
 import { createAndStoreSession } from '@/utils/createAndStoreSession';
 import { floorNumber } from '@/utils/floorNumber';
 import { generateResult } from '@/utils/generators';
@@ -50,7 +51,6 @@ export const MainGame = ({
   const [animationEnabled, setAnimationEnabled] = useState(true);
   const [autoFlipCount, setAutoFlipCount] = useState(1);
   const [winningProbability, setWinningProbability] = useState(0);
-  const [expectedValue, setExpectedValue] = useState(0);
   const [gameNumber, setGameNumber] = useState(0);
   const [repeatTrying, setRepeatTrying] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -77,7 +77,7 @@ export const MainGame = ({
     args: [gameNumber],
   });
 
-  const [payout, setPayout] = useState<number>();
+  const [payout, setPayout] = useState<number>(0);
   const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>(undefined);
   const [txError, setTxError] = useState<Error | undefined>(undefined);
 
@@ -287,6 +287,17 @@ export const MainGame = ({
       console.error('txError', txError);
       if (txError.message.indexOf('Bet exceeds max reward limit') >= 0) {
         alert('Bet exceeds max reward limit!');
+      } else if (
+        txError.message.indexOf(
+          'An unknown error occurred while executing the contract function'
+        ) >= 0
+      ) {
+        alert(
+          'Contract function execution failed. The session will be cleared and retried. If the issue persists, please stop the game for safety reasons.'
+        );
+        if (userAddress) {
+          clearStoredSession(userAddress);
+        }
       }
 
       refetchWalletBalance();
@@ -318,7 +329,7 @@ export const MainGame = ({
   useEffect(() => {
     if (gameOptions && Array.isArray(gameOptions)) {
       const winChance: bigint = gameOptions[4];
-      setWinningProbability(Number(winChance) / 100_000_000);
+      setWinningProbability(floorNumber(Number(winChance) / 1_000_000, 2));
 
       publicClient
         .readContract({
@@ -388,12 +399,6 @@ export const MainGame = ({
   }, [betAmount, balance]);
 
   useEffect(() => {
-    if (payout !== undefined) {
-      setExpectedValue(floorNumber(payout));
-    }
-  }, [payout]);
-
-  useEffect(() => {
     setBalance(toBalance(walletBalance));
   }, [walletBalance]);
 
@@ -425,6 +430,7 @@ export const MainGame = ({
       <div className="h-[25vh] flex items-center">
         <CoinDisplay
           count={coinCount}
+          minHeads={minHeads}
           isFlipping={isFlipping}
           results={results}
           selectedSide={selectedSide}
@@ -459,7 +465,7 @@ export const MainGame = ({
             autoFlipCount={autoFlipCount}
             setAutoFlipCount={setAutoFlipCount}
             winningProbability={winningProbability}
-            expectedValue={expectedValue}
+            expectedValue={payout}
             repeatTrying={repeatTrying}
             disabled={disabled}
             ref={flipRef}

@@ -10,7 +10,6 @@ interface UserPanelProps {
   address?: `0x${string}`;
   walletBalance?: { value: bigint; decimals: number; symbol: string };
   status: 'connected' | 'reconnecting' | 'connecting' | 'disconnected';
-  createSession: (address: `0x${string}`) => void;
 }
 
 export const UserPanel = ({ login, logout, address, walletBalance, status }: UserPanelProps) => {

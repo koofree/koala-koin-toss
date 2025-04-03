@@ -66,6 +66,7 @@ export default function Home() {
                 requestId: string;
                 player: string;
                 betAmount: bigint;
+                feeAmount: bigint;
                 selectedSide: 'HEADS' | 'TAILS';
                 coinCount: number;
                 minHeads: number;
@@ -95,7 +96,10 @@ export default function Home() {
           id: tossRevealedEvent.args.requestId,
           address: tossCommitedEvent.args.player,
           timestamp: date.toUTCString(),
-          betAmount: Number(formatUnits(tossCommitedEvent.args.betAmount, 18)),
+          betAmount: Number(
+            // feeAmount is included in betAmount
+            formatUnits(tossCommitedEvent.args.betAmount + tossCommitedEvent.args.feeAmount, 18)
+          ),
           selectedSide: tossCommitedEvent.args.selectedSide,
           coinCount: tossCommitedEvent.args.coinCount,
           minHeads: tossCommitedEvent.args.minHeads,
@@ -138,158 +142,187 @@ export default function Home() {
   }, [address]);
 
   return (
-    <main className="flex flex-col items-center relative">
-      <UserPanel
-        address={address}
-        walletBalance={walletBalance}
-        login={login}
-        logout={logout}
-        status={status}
-        createSession={() => {
-          // TODO: Implement createSession
-        }}
-      />
-      <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat relative">
-        <div className="w-full h-full flex flex-row items-center">
-          <div className="w-2/12 h-full flex flex-col items-center justify-center">
-            <Image
-              src="/images/koala/dancing/dancing_koala_front.gif"
-              alt="Dancing Koala"
-              width={80}
-              className="mt-[250px]"
-              unoptimized
-            />
-            <div className="flex flex-col items-center justify-center absolute bottom-0">
-              <div className="flex space-x-2">
-                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" width={24} height={24} />
-                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" width={24} height={24} />
-                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" width={24} height={24} />
+    <main className="inline-block text-left">
+      <div className="flex flex-col items-center relative">
+        <UserPanel
+          address={address}
+          walletBalance={walletBalance}
+          login={login}
+          logout={logout}
+          status={status}
+        />
+        <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat relative">
+          <div className="w-full h-full flex flex-row items-center">
+            <div className="w-2/12 h-full flex flex-col items-center justify-center">
+              <Image
+                src="/images/koala/dancing/dancing_koala_front.gif"
+                alt="Dancing Koala"
+                width={80}
+                className="mt-[250px]"
+                unoptimized
+              />
+              <div className="flex flex-col items-center justify-center absolute bottom-0">
+                <div className="flex space-x-2">
+                  <Image
+                    src="/images/footer/ic_cactus1.png"
+                    alt="Cactus 1"
+                    width={24}
+                    height={24}
+                  />
+                  <Image
+                    src="/images/footer/ic_cactus2.png"
+                    alt="Cactus 2"
+                    width={24}
+                    height={24}
+                  />
+                  <Image
+                    src="/images/footer/ic_cactus4.png"
+                    alt="Cactus 4"
+                    width={24}
+                    height={24}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <MainGame
-            userAddress={address}
-            refetchWalletBalance={refetchWalletBalance}
-            walletBalance={walletBalance}
-            myGameHistory={myGameHistory}
-          />
-
-          <div className="w-2/12 h-full flex flex-col items-center justify-center">
-            <Image
-              src="/images/koala/dancing/dancing_koala_back.gif"
-              alt="Dancing Koala"
-              width={80}
-              className="mt-[250px]"
-              unoptimized
+            <MainGame
+              userAddress={address}
+              refetchWalletBalance={refetchWalletBalance}
+              walletBalance={walletBalance}
+              myGameHistory={myGameHistory}
             />
-            <div className="flex flex-col items-center justify-center absolute bottom-0">
-              <div className="flex space-x-2">
-                <Image src="/images/footer/ic_cactus1.png" alt="Cactus 1" width={24} height={24} />
-                <Image src="/images/footer/ic_cactus2.png" alt="Cactus 2" width={24} height={24} />
-                <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" width={24} height={24} />
+
+            <div className="w-2/12 h-full flex flex-col items-center justify-center">
+              <Image
+                src="/images/koala/dancing/dancing_koala_back.gif"
+                alt="Dancing Koala"
+                width={80}
+                className="mt-[250px]"
+                unoptimized
+              />
+              <div className="flex flex-col items-center justify-center absolute bottom-0">
+                <div className="flex space-x-2">
+                  <Image
+                    src="/images/footer/ic_cactus1.png"
+                    alt="Cactus 1"
+                    width={24}
+                    height={24}
+                  />
+                  <Image
+                    src="/images/footer/ic_cactus2.png"
+                    alt="Cactus 2"
+                    width={24}
+                    height={24}
+                  />
+                  <Image
+                    src="/images/footer/ic_cactus4.png"
+                    alt="Cactus 4"
+                    width={24}
+                    height={24}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="h-[300px] w-[1024px]">
-        <div className="w-full h-full flex flex-row items-center">
-          <div className="w-1/2 h-full flex flex-col items-center">
-            <p>My Game History</p>
+        <div className="h-[300px] w-[1024px]">
+          <div className="w-full h-full flex flex-row items-center">
+            <div className="w-1/2 h-full flex flex-col items-center">
+              <p>My Game History</p>
 
-            <div className="w-full max-h-[300px] overflow-y-auto">
-              <table className="w-full border-collapse">
-                <thead className="bg-white/10 sticky top-0">
-                  <tr className="text-xs font-medium">
-                    <th className="p-2 text-left">Time</th>
-                    <th className="p-2 text-left">Amount</th>
-                    {/* <th className="p-2 text-left">Coins</th>
+              <div className="w-full max-h-[300px] overflow-y-auto">
+                <table className="w-full border-collapse">
+                  <thead className="bg-white/10 sticky top-0">
+                    <tr className="text-xs font-medium">
+                      <th className="p-2 text-left">Time</th>
+                      <th className="p-2 text-left">Amount</th>
+                      {/* <th className="p-2 text-left">Coins</th>
                     <th className="p-2 text-left">Min</th> */}
-                    <th className="p-2 text-left">Outcome</th>
-                    <th className="p-2 text-left">Reward</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {myGameHistory.map((game) => (
-                    <tr
-                      key={game.timestamp}
-                      className="text-xs border-t border-white/10 hover:bg-white/5"
-                    >
-                      <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
-                      <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
-                      {/* <td className="p-2">{game.coinCount} coins</td>
-                      <td className="p-2">{game.minHeads} min</td> */}
-                      <td className="p-2">
-                        {game.won !== undefined ? (
-                          <span className={game.won ? 'text-green-400' : 'text-red-400'}>
-                            {game.won ? 'Won' : 'Lost'}
-                          </span>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-                      <td className="p-2">
-                        {game.won !== undefined ? (
-                          <span
-                            className={game.won ? 'text-green-400' : 'text-red-400'}
-                          >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
+                      <th className="p-2 text-left">Outcome</th>
+                      <th className="p-2 text-left">Reward</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {myGameHistory.map((game) => (
+                      <tr
+                        key={game.timestamp}
+                        className="text-xs border-t border-white/10 hover:bg-white/5"
+                      >
+                        <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
+                        <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
+                        {/* <td className="p-2">{game.coinCount} coins</td>
+                      <td className="p-2">{game.minHeads} min</td> */}
+                        <td className="p-2">
+                          {game.won !== undefined ? (
+                            <span className={game.won ? 'text-green-400' : 'text-red-400'}>
+                              {game.won ? 'Won' : 'Lost'}
+                            </span>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {game.won !== undefined ? (
+                            <span
+                              className={game.won ? 'text-green-400' : 'text-red-400'}
+                            >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-          <div className="w-1/2 h-full flex flex-col items-center">
-            <p>Game Logs</p>
-            <div className="w-full max-h-[300px] overflow-y-auto">
-              <table className="w-full border-collapse">
-                <thead className="bg-white/10 sticky top-0">
-                  <tr className="text-xs font-medium">
-                    <th className="p-2 text-left">Time</th>
-                    <th className="p-2 text-left">Amount</th>
-                    {/* <th className="p-2 text-left">Coins</th>
+            <div className="w-1/2 h-full flex flex-col items-center">
+              <p>Game Logs</p>
+              <div className="w-full max-h-[300px] overflow-y-auto">
+                <table className="w-full border-collapse">
+                  <thead className="bg-white/10 sticky top-0">
+                    <tr className="text-xs font-medium">
+                      <th className="p-2 text-left">Time</th>
+                      <th className="p-2 text-left">Amount</th>
+                      {/* <th className="p-2 text-left">Coins</th>
                     <th className="p-2 text-left">Min</th> */}
-                    <th className="p-2 text-left">Outcome</th>
-                    <th className="p-2 text-left">Reward</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allGameHistory.map((game) => (
-                    <tr
-                      key={game.timestamp}
-                      className="text-xs border-t border-white/10 hover:bg-white/5"
-                    >
-                      <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
-                      <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
-                      {/* <td className="p-2">{game.coinCount} coins</td>
-                      <td className="p-2">{game.minHeads} min</td> */}
-                      <td className="p-2">
-                        {game.won !== undefined ? (
-                          <span className={game.won ? 'text-green-400' : 'text-red-400'}>
-                            {game.won ? 'Won' : 'Lost'}
-                          </span>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-                      <td className="p-2">
-                        {game.won !== undefined ? (
-                          <span
-                            className={game.won ? 'text-green-400' : 'text-red-400'}
-                          >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
+                      <th className="p-2 text-left">Outcome</th>
+                      <th className="p-2 text-left">Reward</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {allGameHistory.map((game) => (
+                      <tr
+                        key={game.timestamp}
+                        className="text-xs border-t border-white/10 hover:bg-white/5"
+                      >
+                        <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
+                        <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
+                        {/* <td className="p-2">{game.coinCount} coins</td>
+                      <td className="p-2">{game.minHeads} min</td> */}
+                        <td className="p-2">
+                          {game.won !== undefined ? (
+                            <span className={game.won ? 'text-green-400' : 'text-red-400'}>
+                              {game.won ? 'Won' : 'Lost'}
+                            </span>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
+                        <td className="p-2">
+                          {game.won !== undefined ? (
+                            <span
+                              className={game.won ? 'text-green-400' : 'text-red-400'}
+                            >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

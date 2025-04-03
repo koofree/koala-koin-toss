@@ -1,4 +1,3 @@
-import { floorNumber } from '@/utils/floorNumber';
 import { Image } from '../image/image';
 
 interface TitlePanelProps {
@@ -28,7 +27,7 @@ export const TitlePanel = ({ coinCount, minHeads, winningProbability }: TitlePan
           {minHeads} TO WIN
         </label>
         <label htmlFor="50% CHANCE" className="text-gray-400 text-[9px]">
-          {floorNumber(winningProbability * 100)}% CHANCE
+          {winningProbability}% CHANCE
         </label>
       </div>
     </div>
@@ -51,7 +50,7 @@ export const TitlePanel = ({ coinCount, minHeads, winningProbability }: TitlePan
           {minHeads} {minHeads === coinCount ? '' : 'OR MORE'} TO WIN
         </label>
         <label htmlFor="50% CHANCE" className="text-gray-400 text-[9px]">
-          {floorNumber(winningProbability * 100)}% CHANCE
+          {winningProbability}% CHANCE
         </label>
       </div>
     </div>

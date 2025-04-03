@@ -1,7 +1,8 @@
 // Define a type for game results
 export type GameResult = {
-  id: string;
-  address: string;
+  id: bigint;
+  gameId: bigint;
+  address: `0x${string}`;
   timestamp: string;
   betAmount: number;
   selectedSide: 'HEADS' | 'TAILS';

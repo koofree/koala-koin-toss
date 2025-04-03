@@ -6,9 +6,10 @@ interface SliderFormProps {
   value: number;
   setValue: (count: number) => void;
   max: number;
+  disabled?: boolean;
 }
 
-export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
+export const InputForm = ({ value, setValue, max, disabled }: SliderFormProps) => {
   const [inputValue, setInputValue] = useState(value.toString());
 
   const handleCoinCountChange = (_value: string) => {
@@ -70,17 +71,18 @@ export const InputForm = ({ value, setValue, max }: SliderFormProps) => {
                     [&::-moz-range-thumb]:bg-no-repeat
                     [&::-moz-range-thumb]:cursor-pointer
                     "
+        disabled={disabled}
       />
       <div className="flex flex-row absolute gap-1 right-[20px]">
         <button
-          onClick={() => handleCoinCountChange((value / 2).toString())}
+          onClick={() => !disabled && handleCoinCountChange((value / 2).toString())}
           className="w-[16px] h-[14px] text-white 
                     bg-[url('/images/middle/buttons/btn_1_2.png')] 
                     bg-cover bg-center bg-no-repeat
                     hover:opacity-90 active:opacity-70 transition-opacity"
         ></button>
         <button
-          onClick={() => handleCoinCountChange((value * 2).toString())}
+          onClick={() => !disabled && handleCoinCountChange((value * 2).toString())}
           className="w-[16px] h-[14px] text-white 
                     bg-[url('/images/middle/buttons/btn_x2.png')] 
                     bg-cover bg-center bg-no-repeat

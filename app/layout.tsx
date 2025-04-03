@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <NextAbstractWalletProvider>
-        <body className="bg-gray-100 text-center min-w-screen">{children}</body>
+        <body className="bg-gray-900 text-center min-w-screen">{children}</body>
       </NextAbstractWalletProvider>
     </html>
   );

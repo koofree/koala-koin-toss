@@ -19,8 +19,8 @@ import { generateResult } from '@/utils/generators';
 import { getStoredSession } from '@/utils/getStoredSession';
 import { privateKeyToAccount } from 'viem/accounts';
 import { getGeneralPaymasterInput } from 'viem/zksync';
-import { ActionButtons } from './ActionButtons';
 import { CoinDisplay } from './CoinDisplay';
+import { ControlPanel } from './ControlPanel';
 import { Image } from './image/image';
 
 const toBalance = (walletBalance?: { value: bigint; decimals: number }) => {
@@ -31,11 +31,13 @@ interface MainGameProps {
   walletBalance?: { value: bigint; decimals: number; symbol: string };
   refetchWalletBalance: () => void;
   myGameHistory: GameResult[];
+  allGameHistory: GameResult[];
   userAddress?: `0x${string}`;
 }
 
 export const MainGame = ({
   myGameHistory,
+  allGameHistory,
   walletBalance,
   refetchWalletBalance,
   userAddress,
@@ -173,7 +175,16 @@ export const MainGame = ({
     setIsFlipping(false);
   };
 
-  const [allGameOptions, setAllGameOptions] = useState<Array<[number, number, number, string]>>([]);
+  const [allGameOptions, setAllGameOptions] = useState<
+    Array<
+      [
+        number, // gameId
+        number, // coinCount
+        number, // minHeads
+        string, // prizePool
+      ]
+    >
+  >([]);
 
   const getGameNumber = (coinCount: number, minHeads: number): number | undefined => {
     return allGameOptions.find((v) => v[1] === coinCount && v[2] === minHeads)?.[0];
@@ -450,7 +461,7 @@ export const MainGame = ({
           </div>
         )}
         {isLoading >= 100 && (
-          <ActionButtons
+          <ControlPanel
             selectedSide={selectedSide}
             setSelectedSide={setSelectedSide}
             isFlipping={isFlipping}
@@ -470,6 +481,9 @@ export const MainGame = ({
             expectedValue={payout}
             repeatTrying={repeatTrying}
             disabled={disabled}
+            myGameHistory={myGameHistory}
+            allGameHistory={allGameHistory}
+            allGameOptions={allGameOptions}
             ref={flipRef}
           />
         )}

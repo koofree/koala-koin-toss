@@ -2,15 +2,11 @@
 
 import { clientConfig } from '@/config';
 import { floorNumber } from '@/utils/floorNumber';
+import { formatAddress } from '@/utils/format';
 import { useEffect } from 'react';
 import { formatUnits } from 'viem';
 import { PanelButton } from './buttons/PanelButton';
 import { Image } from './image/image';
-
-const formatAddress = (address: `0x${string}` | undefined) => {
-  if (!address) return '';
-  return `${address.slice(0, 4)}...${address.slice(-4)}`;
-};
 
 interface UserPanelProps {
   login: () => void;

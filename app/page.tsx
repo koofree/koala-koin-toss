@@ -5,13 +5,19 @@ import { useEffect, useState } from 'react';
 import { createPublicClient, formatUnits, http } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
-import { clientConfig, contractAddress, eventNames, koalaKoinTossV1Abi, kpAddress } from '@/config';
+import {
+  BLOCK_NUMBER_TO_FETCH,
+  clientConfig,
+  contractAddress,
+  eventNames,
+  koalaKoinTossV1Abi,
+  kpAddress,
+} from '@/config';
 import Link from 'next/link';
 import { Image } from './components/image/image';
 import { MainGame } from './components/MainGame';
 import { UserPanel } from './components/UserPanel';
 import { GameResult } from './database';
-import { floorNumber } from './utils/floorNumber';
 
 export default function Home() {
   // Create a public client to interact with the blockchain
@@ -69,8 +75,9 @@ export default function Home() {
               eventName: string;
               blockTimestamp: bigint;
               args: {
-                requestId: string;
-                player: string;
+                requestId: bigint;
+                gameId: bigint;
+                player: `0x${string}`;
                 betAmount: bigint;
                 feeAmount: bigint;
                 selectedSide: 'HEADS' | 'TAILS';
@@ -100,6 +107,7 @@ export default function Home() {
         const date = new Date(Number(tossRevealedEvent.blockTimestamp) * 1000);
         const gameResult: GameResult = {
           id: tossRevealedEvent.args.requestId,
+          gameId: tossCommitedEvent.args.gameId,
           address: tossCommitedEvent.args.player,
           timestamp: date.toUTCString(),
           betAmount: Number(
@@ -128,7 +136,11 @@ export default function Home() {
       onBlockNumber: (blockNumber) => {
         if (blockNumber > lastBlockNumber) {
           getGameLogs(
-            lastBlockNumber > BigInt(5) ? lastBlockNumber - BigInt(5) : lastBlockNumber,
+            lastBlockNumber > BigInt(5)
+              ? lastBlockNumber - BigInt(5)
+              : blockNumber > BigInt(BLOCK_NUMBER_TO_FETCH)
+                ? blockNumber - BigInt(BLOCK_NUMBER_TO_FETCH)
+                : BigInt(0), // 1000000 is the number of blocks to fetch
             blockNumber
           );
         }
@@ -148,7 +160,7 @@ export default function Home() {
   }, [address]);
 
   return (
-    <main className="inline-block text-left">
+    <main className="inline-block text-left mt-10">
       <div className="flex flex-col items-center relative">
         <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat relative">
           <div className="w-full h-full flex flex-row items-center">
@@ -201,6 +213,7 @@ export default function Home() {
               }}
               walletBalance={walletBalance}
               myGameHistory={myGameHistory}
+              allGameHistory={allGameHistory}
             />
 
             <div className="w-2/12 h-full flex flex-col items-center">
@@ -240,107 +253,6 @@ export default function Home() {
                     height={24}
                   />
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="h-[300px] w-[1024px]">
-          <div className="w-full h-full flex flex-row items-center">
-            <div className="w-1/2 h-full flex flex-col items-center">
-              <p>My Game History</p>
-
-              <div className="w-full max-h-[300px] overflow-y-auto">
-                <table className="w-full border-collapse">
-                  <thead className="bg-white/10 sticky top-0">
-                    <tr className="text-xs font-medium">
-                      <th className="p-2 text-left">Time</th>
-                      <th className="p-2 text-left">Amount</th>
-                      {/* <th className="p-2 text-left">Coins</th>
-                    <th className="p-2 text-left">Min</th> */}
-                      <th className="p-2 text-left">Outcome</th>
-                      <th className="p-2 text-left">Reward</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {myGameHistory.map((game) => (
-                      <tr
-                        key={game.timestamp}
-                        className="text-xs border-t border-white/10 hover:bg-white/5"
-                      >
-                        <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
-                        <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
-                        {/* <td className="p-2">{game.coinCount} coins</td>
-                      <td className="p-2">{game.minHeads} min</td> */}
-                        <td className="p-2">
-                          {game.won !== undefined ? (
-                            <span className={game.won ? 'text-green-400' : 'text-red-400'}>
-                              {game.won ? 'Won' : 'Lost'}
-                            </span>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                        <td className="p-2">
-                          {game.won !== undefined ? (
-                            <span
-                              className={game.won ? 'text-green-400' : 'text-red-400'}
-                            >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="w-1/2 h-full flex flex-col items-center">
-              <p>Game Logs</p>
-              <div className="w-full max-h-[300px] overflow-y-auto">
-                <table className="w-full border-collapse">
-                  <thead className="bg-white/10 sticky top-0">
-                    <tr className="text-xs font-medium">
-                      <th className="p-2 text-left">Time</th>
-                      <th className="p-2 text-left">Amount</th>
-                      {/* <th className="p-2 text-left">Coins</th>
-                    <th className="p-2 text-left">Min</th> */}
-                      <th className="p-2 text-left">Outcome</th>
-                      <th className="p-2 text-left">Reward</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {allGameHistory.map((game) => (
-                      <tr
-                        key={game.timestamp}
-                        className="text-xs border-t border-white/10 hover:bg-white/5"
-                      >
-                        <td className="p-2">{new Date(game.timestamp).toLocaleString()}</td>
-                        <td className="p-2">{floorNumber(game.betAmount)} ETH</td>
-                        {/* <td className="p-2">{game.coinCount} coins</td>
-                      <td className="p-2">{game.minHeads} min</td> */}
-                        <td className="p-2">
-                          {game.won !== undefined ? (
-                            <span className={game.won ? 'text-green-400' : 'text-red-400'}>
-                              {game.won ? 'Won' : 'Lost'}
-                            </span>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                        <td className="p-2">
-                          {game.won !== undefined ? (
-                            <span
-                              className={game.won ? 'text-green-400' : 'text-red-400'}
-                            >{`${game.won ? '+ ' + floorNumber(game.reward) : ''}`}</span>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>

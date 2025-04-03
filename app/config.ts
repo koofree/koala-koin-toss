@@ -140,3 +140,5 @@ export const ENCRYPTION_KEY_PREFIX = 'kkt_encryption_key_';
  * other wallets.
  */
 export const STORAGE_KEY_PREFIX = 'kkt_session_';
+
+export const BLOCK_NUMBER_TO_FETCH = 1000000;

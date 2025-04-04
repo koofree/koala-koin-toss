@@ -13,11 +13,10 @@ import {
   koalaKoinTossV1Abi,
   kpAddress,
 } from '@/config';
-import Link from 'next/link';
-import { Image } from './components/image/image';
 import { MainGame } from './components/MainGame';
-import { UserPanel } from './components/UserPanel';
-import { GameResult } from './database';
+import { HeaderLayout } from './layout/HeaderLayout';
+import { SideLayout } from './layout/SideLayout';
+import { GameResult } from './types';
 
 export default function Home() {
   // Create a public client to interact with the blockchain
@@ -43,16 +42,20 @@ export default function Home() {
   const [lastBlockNumber, setLastBlockNumber] = useState<bigint>(BigInt(0));
 
   const appendGameHistory = (result: GameResult) => {
-    setAllGameHistory((prev) =>
-      prev.find((v) => v.timestamp === result.timestamp) === undefined
-        ? [result, ...(prev.length > 10 ? prev.slice(0, 9) : prev)]
-        : prev
-    );
+    // only add to allGameHistory if the result is won
+    if (result.won) {
+      setAllGameHistory((prev) =>
+        prev.find((v) => v.timestamp === result.timestamp) === undefined
+          ? [result, ...(prev.length > 100 ? prev.slice(0, 99) : prev)]
+          : prev
+      );
+    }
 
+    // only add to myGameHistory if the address is the same as the user's address
     if (result.address === address) {
       setMyGameHistory((prev) =>
         prev.find((v) => v.timestamp === result.timestamp) === undefined
-          ? [result, ...(prev.length > 10 ? prev.slice(0, 9) : prev)]
+          ? [result, ...(prev.length > 100 ? prev.slice(0, 99) : prev)]
           : prev
       );
     }
@@ -123,6 +126,7 @@ export default function Home() {
           commitTransactionHash: v.transactionHash,
           revealTransactionHash: tossRevealedEvent.transactionHash,
         };
+
         appendGameHistory(gameResult);
       }
     });
@@ -160,102 +164,29 @@ export default function Home() {
   }, [address]);
 
   return (
-    <main className="inline-block text-left mt-10">
-      <div className="flex flex-col items-center relative">
-        <div className="w-[1024px] h-[512px] bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat relative">
-          <div className="w-full h-full flex flex-row items-center">
-            <div className="w-2/12 h-full flex flex-col items-center">
-              <Link href="/">
-                <Image
-                  src="/images/header/lg_koala_koin-toss_original.png"
-                  alt="Dancing Koala"
-                  width={80}
-                  className="mt-[20px]"
-                  unoptimized
-                />
-              </Link>
-              <Image
-                src="/images/koala/dancing/dancing_koala_front.gif"
-                alt="Dancing Koala"
-                width={80}
-                className="mt-[300px]"
-                unoptimized
-              />
-              <div className="flex flex-col items-center justify-center absolute bottom-0">
-                <div className="flex space-x-2">
-                  <Image
-                    src="/images/footer/ic_cactus1.png"
-                    alt="Cactus 1"
-                    width={24}
-                    height={24}
-                  />
-                  <Image
-                    src="/images/footer/ic_cactus2.png"
-                    alt="Cactus 2"
-                    width={24}
-                    height={24}
-                  />
-                  <Image
-                    src="/images/footer/ic_cactus4.png"
-                    alt="Cactus 4"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <MainGame
-              userAddress={address}
-              refetchWalletBalance={() => {
-                refetchWalletBalance();
-                refetchKpBalance();
-              }}
-              walletBalance={walletBalance}
-              myGameHistory={myGameHistory}
-              allGameHistory={allGameHistory}
-            />
-
-            <div className="w-2/12 h-full flex flex-col items-center">
-              <UserPanel
-                address={address}
-                walletBalance={walletBalance}
-                kpBalance={kpBalance}
-                login={login}
-                logout={logout}
-                status={status}
-              />
-              <Image
-                src="/images/koala/dancing/dancing_koala_back.gif"
-                alt="Dancing Koala"
-                width={80}
-                className="mt-[340px]"
-                unoptimized
-              />
-              <div className="flex flex-col items-center justify-center absolute bottom-0">
-                <div className="flex space-x-2">
-                  <Image
-                    src="/images/footer/ic_cactus1.png"
-                    alt="Cactus 1"
-                    width={24}
-                    height={24}
-                  />
-                  <Image
-                    src="/images/footer/ic_cactus2.png"
-                    alt="Cactus 2"
-                    width={24}
-                    height={24}
-                  />
-                  <Image
-                    src="/images/footer/ic_cactus4.png"
-                    alt="Cactus 4"
-                    width={24}
-                    height={24}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+    <main className="flex justify-center bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat absolute h-full w-full">
+      <div className="flex flex-col max-w-[1920px] w-full">
+        <HeaderLayout
+          address={address}
+          walletBalance={walletBalance}
+          kpBalance={kpBalance}
+          login={login}
+          logout={logout}
+          status={status}
+        />
+        <div className="flex flex-row justify-center w-full h-full">
+          <SideLayout side="left" />
+          <MainGame
+            userAddress={address}
+            refetchWalletBalance={() => {
+              refetchWalletBalance();
+              refetchKpBalance();
+            }}
+            walletBalance={walletBalance}
+            myGameHistory={myGameHistory}
+            allGameHistory={allGameHistory}
+          />
+          <SideLayout side="right" />
         </div>
       </div>
     </main>

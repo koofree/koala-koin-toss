@@ -42,59 +42,59 @@ export const UserPanel = ({
   };
 
   return (
-    <div className="mt-[10px]">
+    <div className="mr-10 mt-8">
       {status === 'connected' ? (
         <div
-          className="absolute right-2 
-            flex flex-row 
-            h-7
-            max-w-sm
+          className=" 
+            flex flex-row justify-center items-center space-x-3
+            h-[48px]
             rounded-full 
             bg-white/15 
-            pl-3 px-2 pb-1 
+            p-3 px-3
             shadow-lg 
             backdrop-blur-sm
           "
         >
-          <div className="mr-[10px]">
+          <div className="flex flex-row items-center">
             <Image
               src="/images/ethereum-svgrepo-com.svg"
               alt="ETH"
-              width={10}
-              height={10}
-              className="my-auto inline mb-[-1px] mr-[3px]"
+              width={16}
+              height={16}
+              className="my-auto inline mr-[3px]"
             />
-            <span className="text-white text-[10px]">
+            <span className="text-white">
               {floorNumber(formattedBalance)} {walletBalance?.symbol}
             </span>
           </div>
-          <div className="my-auto pt-[3px]">
-            <div className="h-3 w-[1px] bg-white/30 mr-[8px]" about="bar"></div>
+          <div className="my-auto ">
+            <div className="h-4 w-[1px] bg-white/30" about="bar"></div>
           </div>
-          <div className="mr-[10px]">
+          <div className="flex flex-row items-center">
             <Image
-              src="/images/middle/coins/ic_koa_20px.png"
-              width={12}
+              src="/images/koala/ic_kp_small.png"
+              width={16}
               alt="1 TO WIN"
-              className="my-auto inline mb-[-1px] mr-[5px]"
+              className="my-auto inline mr-[5px]"
             />
-            <span className="text-white text-[10px]">
+            <span className="text-white">
               {floorNumber(formattedKpBalance, 2)} {kpBalance?.symbol}
             </span>
           </div>
-          <div className="bg-black/40 rounded-full px-2 my-1 flex items-center h-5 font-extralight">
+          <div
+            className="bg-black/40 rounded-full px-3 py-1 flex items-center h-[32px] 
+            space-x-2
+            font-extralight"
+          >
             <Image
               src="/abs.svg"
               alt="Loading"
-              width={10}
-              height={10}
-              className="opacity-50 my-auto inline mr-[3px] cursor-pointer"
+              width={16}
+              height={16}
+              className="opacity-50 my-auto inline cursor-pointer"
               onClick={moveToExplorer}
             />
-            <span
-              className="text-white/50 text-[9px] font-thin cursor-pointer"
-              onClick={moveToExplorer}
-            >
+            <span className="text-white/50 font-thin cursor-pointer" onClick={moveToExplorer}>
               {formatAddress(address)}
             </span>
             <Image
@@ -102,28 +102,20 @@ export const UserPanel = ({
               onClick={logout}
               src="/images/header/ic_log-out_20px.png"
               alt="Loading"
-              width={12}
-              height={12}
-              className="opacity-50 my-auto inline cursor-pointer ml-[3px]"
+              width={16}
+              height={16}
+              className="opacity-50 my-auto inline cursor-pointer"
             />
           </div>
         </div>
       ) : status === 'reconnecting' || status === 'connecting' ? (
-        <PanelButton
-          onClick={login}
-          textClassName="text-[9px]"
-          className="absolute right-[10px] w-[120px] h-[20px]"
-        >
+        <PanelButton onClick={login} textClassName="" className="w-[222px] h-[46px]">
           <div id="loading-spinner" className="animate-spin">
-            <Image src="/abs.svg" alt="Loading" width={9} height={9} />
+            <Image src="/abs.svg" alt="Loading" width={16} height={16} />
           </div>
         </PanelButton>
       ) : (
-        <PanelButton
-          onClick={login}
-          textClassName="text-[9px]"
-          className="absolute right-[10px] w-[120px] h-[20px]"
-        >
+        <PanelButton onClick={login} textClassName="" className="w-[222px] h-[46px]">
           Sign in with Abstract
         </PanelButton>
       )}

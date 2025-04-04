@@ -1,9 +1,7 @@
-import { forwardRef, useState } from 'react';
-
-import { GameResult } from '@/database';
-import { TitlePanel } from './forms/TitlePanel';
+import { GameResult } from '@/types';
 import Histories from './panels/Histories';
 import Settings from './panels/Settings';
+import { TitlePanel } from './panels/TitlePanel';
 
 interface ActionButtonsProps {
   selectedSide: 'HEADS' | 'TAILS' | null;
@@ -27,83 +25,83 @@ interface ActionButtonsProps {
   disabled: boolean;
   myGameHistory: GameResult[];
   allGameHistory: GameResult[];
-  allGameOptions: Array<[number, number, number, string]>;
-  ref?: React.ForwardedRef<{ triggerFlip: () => boolean }>;
+  allGameOptions: Array<[number, number, number, string, number]>;
+  isHistoryOpen: boolean;
+  setIsHistoryOpen: (open: boolean) => void;
 }
 
-export const ControlPanel = forwardRef(
-  ({
-    selectedSide,
-    setSelectedSide,
-    isFlipping,
-    autoFlip,
-    onFlip,
-    coinCount,
-    setCoinCount,
-    minHeads,
-    setMinHeads,
-    autoFlipCount = 1,
-    setAutoFlipCount,
-    betAmount,
-    setBetAmount,
-    balance,
-    winningProbability,
-    expectedValue,
-    repeatTrying,
-    disabled,
-    myGameHistory,
-    allGameHistory,
-    allGameOptions,
-  }: ActionButtonsProps) => {
-    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-
-    return (
-      <div
-        className="h-[260px] mx-[-10px] 
+export const ControlPanel = ({
+  selectedSide,
+  setSelectedSide,
+  isFlipping,
+  autoFlip,
+  onFlip,
+  coinCount,
+  setCoinCount,
+  minHeads,
+  setMinHeads,
+  autoFlipCount = 1,
+  setAutoFlipCount,
+  betAmount,
+  setBetAmount,
+  balance,
+  winningProbability,
+  expectedValue,
+  repeatTrying,
+  disabled,
+  myGameHistory,
+  allGameHistory,
+  allGameOptions,
+  isHistoryOpen,
+  setIsHistoryOpen,
+}: ActionButtonsProps) => {
+  return (
+    <div
+      className="
+                  flex flex-col items-center
+                  h-[450px]
                   bg-[url('/images/middle/img_main-board.png')] 
                   bg-cover bg-center bg-no-repeat 
-                  rounded-lg 
-                  flex flex-col items-center"
-      >
-        <TitlePanel
+        "
+    >
+      <TitlePanel
+        selectedSide={selectedSide}
+        coinCount={coinCount}
+        minHeads={minHeads}
+        winningProbability={winningProbability}
+        onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+        isHistoryOpen={isHistoryOpen}
+      />
+      {!isHistoryOpen ? (
+        <Settings
+          autoFlip={autoFlip}
+          setAutoFlip={() => {}}
+          autoFlipCount={autoFlipCount}
+          setAutoFlipCount={setAutoFlipCount}
           selectedSide={selectedSide}
-          coinCount={coinCount}
+          setSelectedSide={setSelectedSide}
+          isFlipping={isFlipping}
+          onFlip={onFlip}
+          betAmount={betAmount}
+          setBetAmount={setBetAmount}
+          balance={balance}
           minHeads={minHeads}
-          winningProbability={winningProbability}
-          onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-          isHistoryOpen={isHistoryOpen}
+          setMinHeads={setMinHeads}
+          coinCount={coinCount}
+          setCoinCount={setCoinCount}
+          expectedValue={expectedValue}
+          disabled={disabled}
+          repeatTrying={repeatTrying}
         />
-        {!isHistoryOpen ? (
-          <Settings
-            autoFlip={autoFlip}
-            setAutoFlip={() => {}}
-            autoFlipCount={autoFlipCount}
-            setAutoFlipCount={setAutoFlipCount}
-            selectedSide={selectedSide}
-            setSelectedSide={setSelectedSide}
-            isFlipping={isFlipping}
-            onFlip={onFlip}
-            betAmount={betAmount}
-            setBetAmount={setBetAmount}
-            balance={balance}
-            minHeads={minHeads}
-            setMinHeads={setMinHeads}
-            coinCount={coinCount}
-            setCoinCount={setCoinCount}
-            expectedValue={expectedValue}
-            disabled={disabled}
-            repeatTrying={repeatTrying}
-          />
-        ) : (
-          <Histories
-            myGameHistory={myGameHistory}
-            allGameHistory={allGameHistory}
-            allGameOptions={allGameOptions}
-          />
-        )}
-      </div>
-    );
-  }
-);
+      ) : (
+        <Histories
+          myGameHistory={myGameHistory}
+          allGameHistory={allGameHistory}
+          allGameOptions={allGameOptions}
+        />
+      )}
+    </div>
+  );
+};
 
 ControlPanel.displayName = 'ActionButtons';

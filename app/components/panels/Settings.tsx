@@ -66,19 +66,19 @@ const Settings = forwardRef(
 
     return (
       <div className="flex flex-row items-center px-10">
-        <div className="flex items-center justify-between w-8/12 flex-wrap pl-8">
-          <div className="relative flex items-center w-1/3 mt-10">
-            <div className="flex flex-col items-center">
+        <div className="flex items-center justify-between w-8/12 flex-wrap pl-14">
+          <div className="flex flex-col space-y-2 w-1/3 mt-6">
+            <div className="flex flex-row">
               <CheckBox
                 checked={autoFlip}
                 onChange={() => () => {
                   // TODO: Implement auto flip
                 }}
-                className="absolute -top-8 left-0 w-[10px] h-[10px]"
+                className="w-[16px] h-[16px]"
               />
-              <label className="block text-left mb-2 absolute -top-4 left-4 right-0 text-gray-500 text-[8px] ">
+              <label className="text-gray-500">
                 AUTOBET{' '}
-                <b className={repeatTrying > 0 ? 'animate-pulse text-yellow-300' : 'text-[7px]'}>
+                <b className={repeatTrying > 0 ? 'animate-pulse text-yellow-300' : 'text-sm'}>
                   {repeatTrying > 0 ? '(tap spacebar)' : '(Coming Soon)'}
                 </b>
               </label>
@@ -89,25 +89,23 @@ const Settings = forwardRef(
               active={autoFlip}
             />
           </div>
-          <div className="relative flex items-center w-1/3 mt-10">
-            <label className="block text-left mb-2 absolute -top-4 left-0 right-0 text-gray-300 text-[8px] ">
-              COINS AMOUNT
-            </label>
+          <div className="flex flex-col space-y-2 w-1/3 mt-6">
+            <label className="text-gray-300">COINS AMOUNT</label>
             <SliderForm value={coinCount} setValue={(v) => !isFlipping && setCoinCount(v)} />
           </div>
 
-          <div className="relative flex items-center w-1/3 mt-10">
-            <label className="block text-left mb-2 absolute -top-4 left-0 right-0 text-gray-300 text-[8px] ">
-              WAGER
-            </label>
-            <button
-              onClick={() => !isFlipping && setBetAmount(balance)}
-              className="absolute -top-4 right-4 w-[40px] h-[12px]
+          <div className="flex flex-col space-y-2 w-1/3 mt-6">
+            <div className="flex flex-row justify-between">
+              <label className="text-gray-300">WAGER</label>
+              <button
+                onClick={() => !isFlipping && setBetAmount(balance)}
+                className="w-[82px] h-[28px] mr-2
                 bg-[url('/images/middle/buttons/btn_max.png')] bg-contain bg-no-repeat bg-center
                 hover:opacity-90 active:opacity-70 transition-opacity
                 active:bg-[url('/images/middle/buttons/btn_max_pressed.png')]"
-              aria-label="Max Bet"
-            ></button>
+                aria-label="Max Bet"
+              ></button>
+            </div>
             <InputForm
               value={betAmount}
               setValue={(v) => !isFlipping && setBetAmount(v)}
@@ -116,10 +114,8 @@ const Settings = forwardRef(
             />
           </div>
 
-          <div className="relative flex items-center w-1/3 mt-10">
-            <label className="block text-left mb-2 absolute -top-4 left-0 right-0 text-gray-300 text-[8px]  ">
-              PRESETS
-            </label>
+          <div className="flex flex-col space-y-2 w-1/3 mt-10">
+            <label className="text-gray-300">PRESETS</label>
             <SelectForm
               minHeads={minHeads}
               coinCount={coinCount}
@@ -132,32 +128,28 @@ const Settings = forwardRef(
             />
           </div>
 
-          <div className="relative flex items-center w-1/3 mt-10">
-            <label className="block text-left mb-2 absolute -top-4 left-0 right-0 text-gray-300 text-[8px] ">
-              MIN HEADS / TAILS
-            </label>
+          <div className="flex flex-col space-y-2 w-1/3 mt-10">
+            <label className="text-gray-300">MIN HEADS / TAILS</label>
             <SliderForm
               value={minHeads}
               setValue={(v) => !isFlipping && setMinHeads(v)}
               max={coinCount}
             />
           </div>
-          <div className="relative flex items-center w-1/3 mt-10">
-            <label className="block text-left mb-2 absolute -top-4 left-0 right-0 text-gray-300 text-[8px] ">
-              POTENTIAL WIN
-            </label>
+          <div className="flex flex-col space-y-2 w-1/3 mt-10">
+            <label className="text-gray-300">POTENTIAL WIN</label>
             <TextForm value={expectedValue} />
           </div>
         </div>
 
         <div className="flex justify-center items-center w-4/12 flex-wrap relative">
           <div className="flex flex-col items-center pt-[40px]">
-            <label className="block text-left absolute top-[25px] left-[42px] text-gray-300 text-[8px]">
+            <label className="block text-left absolute top-[25px] left-[42px] text-gray-300">
               PICK SIDE
             </label>
-            <div className="flex flex-row items-center gap-1 w-full">
+            <div className="flex flex-row items-center gap-4 w-full py-2 mt-2">
               <div className="flex flex-col items-center">
-                <div className="w-[5px] h-[5px] relative">
+                <div className="w-[8px] h-[8px] relative">
                   {selectedSide === 'HEADS' ? (
                     <Image
                       className="w-full"
@@ -168,7 +160,7 @@ const Settings = forwardRef(
                     <>&nbsp;</>
                   )}
                 </div>
-                <div className="w-[64px] h-[64px]">
+                <div className="w-[124px] h-[124px]">
                   <Image
                     src={
                       selectedSide === 'HEADS'
@@ -176,8 +168,8 @@ const Settings = forwardRef(
                         : '/images/middle/coins/img_koala-coin_front_disabled_124px.png'
                     }
                     alt="HEADS"
-                    width={64}
-                    height={64}
+                    width={124}
+                    height={124}
                     className={`cursor-pointer
             ${selectedSide === 'HEADS' ? 'transform scale-[1.3]' : ''}`}
                     onClick={() => !isFlipping && setSelectedSide('HEADS')}
@@ -190,13 +182,13 @@ const Settings = forwardRef(
                   <Image
                     src="/images/middle/coins/ic_back_selected.png"
                     alt="TAILS"
-                    width={5}
-                    height={5}
+                    width={8}
+                    height={8}
                   />
                 ) : (
-                  <div className="w-[5px] h-[5px]">&nbsp;</div>
+                  <div className="w-[8px] h-[8px]">&nbsp;</div>
                 )}
-                <div className="w-[64px] h-[64px]">
+                <div className="w-[124px] h-[124px]">
                   <Image
                     src={
                       selectedSide === 'TAILS'
@@ -204,8 +196,8 @@ const Settings = forwardRef(
                         : '/images/middle/coins/img_koala-coin_back_disabled_124px.png'
                     }
                     alt="TAILS"
-                    width={64}
-                    height={64}
+                    width={124}
+                    height={124}
                     className={`cursor-pointer
             ${selectedSide === 'TAILS' ? 'transform scale-[1.3]' : ''}`}
                     onClick={() => !isFlipping && setSelectedSide('TAILS')}
@@ -220,15 +212,15 @@ const Settings = forwardRef(
               onClick={onFlip}
               disabled={disabled || !selectedSide || isFlipping || !betAmount}
               disabledText="TOSS OPTION DISABLED"
-              textClassName="text-[9px]"
-              className="w-[140px] h-[28px]"
+              textClassName=""
+              className="w-[258px] h-[52px]"
             >
               TOSS {coinCount > 1 ? 'COINS' : 'COIN'} -{' '}
               <Image
                 src="/images/ethereum-svgrepo-com.svg"
                 alt="ETH"
-                width={10}
-                height={10}
+                width={16}
+                height={16}
                 className="my-auto inline mb-[2px]"
               />{' '}
               {betAmount}

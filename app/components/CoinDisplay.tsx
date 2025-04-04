@@ -6,15 +6,6 @@ import { Image } from './image/image';
 
 const MotionDiv = motion.div;
 
-interface CoinDisplayProps {
-  count: number;
-  minHeads: number;
-  isFlipping: boolean;
-  results: Array<'HEADS' | 'TAILS' | null>;
-  selectedSide: 'HEADS' | 'TAILS' | null;
-  animationEnabled: boolean;
-}
-
 interface CoinProps {
   idx: number;
   count: number;
@@ -64,7 +55,7 @@ const Coin = ({
   return (
     <MotionDiv
       key={idx}
-      className={`relative ${count === 1 ? 'w-[128px] h-[128px]' : 'w-[64px] h-[64px]'} ${
+      className={`relative ${count === 1 ? 'w-[264px] h-[264px]' : 'w-[128px] h-[128px]'} ${
         idx % 5 === 0 ? 'sm:basis-auto' : ''
       }`}
       layout
@@ -84,8 +75,8 @@ const Coin = ({
                 <Image
                   src="/images/middle/coins/img_koala-coin_front_124px-1.png"
                   alt="Coin Front"
-                  width={count === 1 ? 128 : 64}
-                  height={count === 1 ? 128 : 64}
+                  width={count === 1 ? 264 : 128}
+                  height={count === 1 ? 264 : 128}
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -94,8 +85,8 @@ const Coin = ({
                 <Image
                   src="/images/middle/coins/img_koala-coin_back_124px-1.png"
                   alt="Coin Back"
-                  width={count === 1 ? 128 : 64}
-                  height={count === 1 ? 128 : 64}
+                  width={count === 1 ? 264 : 128}
+                  height={count === 1 ? 264 : 128}
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -121,8 +112,8 @@ const Coin = ({
                     : '/images/middle/coins/img_koala-coin_back_disabled_124px.png'
             }
             alt={isResultHeads ? 'Coin Front' : 'Coin Back'}
-            width={count === 1 ? 128 : 64}
-            height={count === 1 ? 128 : 64}
+            width={count === 1 ? 264 : 128}
+            height={count === 1 ? 264 : 128}
             className="w-full h-full object-contain"
           />
         )}
@@ -131,6 +122,64 @@ const Coin = ({
   );
 };
 
+interface WinningMessageProps {
+  payout: number;
+}
+
+const WinningMessage = ({ payout }: WinningMessageProps) => {
+  return (
+    <MotionDiv
+      className="
+            h-[400px]
+            w-[704px]
+            absolute flex flex-col items-center justify-center 
+            bg-[url('/images/middle/ellipse_win.png')]
+            bg-cover bg-center bg-no-repeat"
+      layout="size"
+      animate={{ opacity: [0, 1] }}
+      transition={{ duration: 0.5 }}
+    >
+      <p className="text-white text-4xl font-['Press_Start_2P']">You Win!!</p>
+      <p className="text-white text-[28px] font-['Press_Start_2P']">+ {payout} ETH</p>
+    </MotionDiv>
+  );
+};
+
+interface LosingMessageProps {
+  payout: number;
+}
+
+const LosingMessage = ({ payout }: LosingMessageProps) => {
+  return (
+    <MotionDiv
+      className="
+            h-[400px]
+            w-[704px]
+            absolute flex flex-col items-center justify-center overflow-visible
+            bg-[url('/images/middle/ellipse_lose.png')]
+            bg-cover bg-center bg-no-repeat
+            "
+      layout="size"
+      animate={{ opacity: [0, 1] }}
+      transition={{ duration: 0.5 }}
+    >
+      <p className="text-white text-4xl font-['Press_Start_2P']">You Lose</p>
+      <p className="text-white text-[28px] font-['Press_Start_2P']">BUT YOU RECEIVED +0.3 KP</p>
+    </MotionDiv>
+  );
+};
+
+interface CoinDisplayProps {
+  count: number;
+  minHeads: number;
+  isFlipping: boolean;
+  results: Array<'HEADS' | 'TAILS' | null>;
+  selectedSide: 'HEADS' | 'TAILS' | null;
+  animationEnabled: boolean;
+  isWin: boolean | null;
+  reward: number;
+}
+
 export const CoinDisplay = ({
   count,
   minHeads,
@@ -138,6 +187,8 @@ export const CoinDisplay = ({
   results,
   selectedSide,
   animationEnabled,
+  isWin,
+  reward: payout,
 }: CoinDisplayProps) => {
   const [coinDisplay, setCoinDisplay] = useState<
     Array<{
@@ -209,12 +260,19 @@ export const CoinDisplay = ({
   }, [coinDisplay, isFlipping, selectedSide, animationEnabled]);
 
   return (
-    <div className="flex flex-wrap gap-2 justify-center items-center max-w-[400px] mx-auto">
+    <div className="flex flex-wrap gap-2 justify-center items-center w-[704px] mx-auto relative">
       {coinComponents.sort((a, b) => {
         const aIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === a.key?.toString());
         const bIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === b.key?.toString());
         return aIndex - bIndex;
       })}
+      {isWin === null ? (
+        <></>
+      ) : isWin ? (
+        <WinningMessage payout={payout} />
+      ) : (
+        <LosingMessage payout={payout} />
+      )}
     </div>
   );
 };

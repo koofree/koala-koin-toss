@@ -1,3 +1,7 @@
+export type Address = `0x${string}`;
+export type UserStatus = 'connected' | 'disconnected' | 'reconnecting' | 'connecting';
+export type WalletBalance = { value: bigint; decimals: number; symbol: string };
+
 // Define a type for game results
 export type GameResult = {
   id: bigint;

@@ -1,5 +1,5 @@
 import { useAbstractClient, useCreateSession } from '@abstract-foundation/agw-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPublicClient, formatUnits, http, parseEther } from 'viem';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
 
@@ -10,8 +10,9 @@ import {
   functionNames,
   koalaKoinTossV1Abi,
   paymasterAddress,
+  POOL_EDGE_DISCRIMINATOR,
 } from '@/config';
-import { GameResult } from '@/database';
+import { GameResult } from '@/types';
 import { clearStoredSession } from '@/utils/clearStoredSession';
 import { createAndStoreSession } from '@/utils/createAndStoreSession';
 import { floorNumber } from '@/utils/floorNumber';
@@ -56,7 +57,8 @@ export const MainGame = ({
   const [gameNumber, setGameNumber] = useState(0);
   const [repeatTrying, setRepeatTrying] = useState(0);
   const [disabled, setDisabled] = useState(false);
-  const flipRef = useRef<{ triggerFlip: () => boolean }>(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isWin, setIsWin] = useState<boolean | null>(null);
 
   // Create a public client to interact with the blockchain
   const publicClient = createPublicClient({
@@ -82,6 +84,7 @@ export const MainGame = ({
   const [payout, setPayout] = useState<number>(0);
   const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>(undefined);
   const [txError, setTxError] = useState<Error | undefined>(undefined);
+  const [reward, setReward] = useState<number>(0);
 
   const { data: transactionReceipt } = useWaitForTransactionReceipt({
     hash: transactionHash,
@@ -162,6 +165,8 @@ export const MainGame = ({
       return;
     }
 
+    setIsWin(gameResult.won);
+    setReward(gameResult.reward);
     setResults(
       generateResult({
         won: gameResult.won,
@@ -182,6 +187,7 @@ export const MainGame = ({
         number, // coinCount
         number, // minHeads
         string, // prizePool
+        number, // expectedRate
       ]
     >
   >([]);
@@ -228,6 +234,7 @@ export const MainGame = ({
 
     try {
       for (let i = 0; i < Number(gameCount); i++) {
+        // Reference: /public/abis/KoalaKoinTossV1.json gameOptions()
         const gameOption = await publicClient.readContract({
           address: contractAddress,
           abi: koalaKoinTossV1Abi,
@@ -259,6 +266,10 @@ export const MainGame = ({
               Number(gameOption[1]),
               Number(gameOption[2]),
               String(prizePools[1]).toUpperCase(),
+              floorNumber(
+                Number(formatUnits(gameOption[5], 8)) * (1 - 0.035) * POOL_EDGE_DISCRIMINATOR,
+                2
+              ),
             ]);
           }
         }
@@ -270,7 +281,7 @@ export const MainGame = ({
     }
 
     // Type assertion to fix the type error
-    setAllGameOptions(newAllGameOptions as Array<[number, number, number, string]>);
+    setAllGameOptions(newAllGameOptions as Array<[number, number, number, string, number]>);
     localStorage.setItem('allGameOptions', JSON.stringify(newAllGameOptions));
     localStorage.setItem('allGameOptionsUpdatedAt', new Date().toISOString());
   };
@@ -330,7 +341,7 @@ export const MainGame = ({
         setDisabled(true);
       }
     }
-  }, [coinCount, minHeads, allGameOptions]);
+  }, [coinCount, minHeads, allGameOptions, userAddress]);
 
   useEffect(() => {
     refetchGameOptions();
@@ -357,6 +368,10 @@ export const MainGame = ({
     } else {
       setPayout(0);
     }
+
+    // Initialize the win state
+    setIsWin(null);
+    setReward(0);
   }, [gameOptions]);
 
   useEffect(() => {
@@ -407,6 +422,10 @@ export const MainGame = ({
           }
         });
     }
+
+    // Initialize the win state
+    setIsWin(null);
+    setReward(0);
   }, [betAmount, balance]);
 
   useEffect(() => {
@@ -437,8 +456,8 @@ export const MainGame = ({
   }, []);
 
   return (
-    <div className="w-full h-full p-5 pt-8 flex flex-col">
-      <div className="h-[25vh] flex items-center">
+    <div className="flex flex-col max-w-screen-xl min-w-[1280px] h-full">
+      <div className="h-[35vh] flex items-center">
         <CoinDisplay
           count={coinCount}
           minHeads={minHeads}
@@ -446,10 +465,12 @@ export const MainGame = ({
           results={results}
           selectedSide={selectedSide}
           animationEnabled={animationEnabled}
+          isWin={isWin}
+          reward={reward}
         />
       </div>
 
-      <div className="space-y-4">
+      <div>
         {isLoading < 100 && (
           <div className="text-white mt-[100px] min-h-[200px]">
             <div className="flex justify-center items-center">
@@ -484,20 +505,43 @@ export const MainGame = ({
             myGameHistory={myGameHistory}
             allGameHistory={allGameHistory}
             allGameOptions={allGameOptions}
-            ref={flipRef}
+            isHistoryOpen={isHistoryOpen}
+            setIsHistoryOpen={setIsHistoryOpen}
           />
         )}
 
-        <div className="flex justify-end pr-10">
-          <div className="text-[9px] text-white flex items-center">ANIMATION</div>
+        <div className="flex justify-end pr-20 pt-2">
+          <div className="flex items-center mr-6 cursor-pointer">
+            <div
+              className="text-white flex items-center font-['Press_Start_2P'] text-sm"
+              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+            >
+              {isHistoryOpen ? 'RETURN TO GAME' : 'WIN HISTORY'}
+            </div>
+            <Image
+              src={
+                isHistoryOpen
+                  ? '/images/middle/back_button.png'
+                  : '/images/middle/ic_trophy_28px.png'
+              }
+              width={28}
+              height={24}
+              alt={'WIN HISTORY'}
+              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+              className="mx-2"
+            />
+          </div>
+          <div className="text-white flex items-center font-['Press_Start_2P'] text-sm">
+            ANIMATION
+          </div>
           <Image
             src={
               animationEnabled
                 ? '/images/middle/buttons/btn_toggle_on.png'
                 : '/images/middle/buttons/btn_toggle_off.png'
             }
-            width={30}
-            height={12}
+            width={60}
+            height={30}
             alt={animationEnabled ? 'Toggle On' : 'Toggle Off'}
             onClick={() => setAnimationEnabled(!animationEnabled)}
             className="mx-2 cursor-pointer"

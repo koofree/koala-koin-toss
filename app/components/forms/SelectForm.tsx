@@ -29,17 +29,21 @@ export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: Sel
   };
 
   return (
-    <div className="relative  w-[120px]">
+    <div
+      className="relative w-[216px] h-[60px] bg-[#24223D] 
+      rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg shadow-2xl
+    "
+    >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full
+        className="flex items-center justify-between w-full h-[60px]
         bg-[url('/images/middle/dropdown/btn_dropdown.png')] 
         bg-cover bg-center bg-no-repeat 
-        px-3 py-2 rounded-tl-lg rounded-br-lg shadow-lg
-        text-white text-xs hover:opacity-90 transition-opacity"
+        px-3 py-1 rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg shadow-2xl
+        text-white hover:opacity-90 transition-opacity"
       >
-        <span className="text-[9px]">{selectedOption.label}</span>
+        <span>{selectedOption.label}</span>
         <div
           className={`w-0 h-0 ml-2 transform transition-transform ${isOpen ? 'rotate-180' : ''}
           absolute top-1/2 right-3 -translate-x-1/2 -translate-y-1/2
@@ -55,17 +59,17 @@ export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: Sel
       {isOpen && (
         <div className="absolute z-10 w-full mt-1 shadow-xl">
           <div
-            className="py-1 
+            className="py-2
             bg-[url('/images/middle/dropdown/dropdown_list_middle.png')] 
-            bg-cover bg-center text-xs"
+            bg-cover bg-center rounded-lg"
           >
             {options.map((option) => (
               <button
                 key={option.idx}
                 onClick={() => handleOptionSelect(option)}
                 className="
-                    w-[105px] mx-2 pl-2 text-left text-[9px] text-white
-                     hover:bg-white hover:bg-opacity-10"
+                    w-[200px] mx-2 pl-2 py-2 text-left text-white
+                     hover:bg-white hover:bg-opacity-10 rounded-md"
               >
                 {option.label}
               </button>

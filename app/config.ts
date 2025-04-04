@@ -1,4 +1,5 @@
 // Configuration based on environment
+import { formatUnits } from 'viem';
 import { abstractTestnet } from 'viem/chains';
 import koalaKoinTossV1 from '../public/abis/KoalaKoinTossV1.json';
 
@@ -142,3 +143,21 @@ export const ENCRYPTION_KEY_PREFIX = 'kkt_encryption_key_';
 export const STORAGE_KEY_PREFIX = 'kkt_session_';
 
 export const BLOCK_NUMBER_TO_FETCH = 1000000;
+
+/**
+ * @constant {number} POOL_EDGE
+ * @description The edge of the pool
+ *
+ * The edge of the pool is the amount of money that is added to the pool each time a player wins
+ * This value could be updated by the contract owner, so we need to fetch it depending on the updated block number.
+ *
+ */
+const getPoolEdge = (blockNumber?: number): number => {
+  switch (true) {
+    // TODO: Add more cases when the pool edge is updated
+    default:
+      return 15000000;
+  }
+};
+export const POOL_EDGE: bigint = BigInt(getPoolEdge());
+export const POOL_EDGE_DISCRIMINATOR = 1 - Number(formatUnits(POOL_EDGE, 8));

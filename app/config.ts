@@ -155,6 +155,8 @@ export const BLOCK_NUMBER_TO_FETCH = 1000000;
 const getPoolEdge = (blockNumber?: number): number => {
   switch (true) {
     // TODO: Add more cases when the pool edge is updated
+    case blockNumber === undefined:
+      return 15000000;
     default:
       return 15000000;
   }

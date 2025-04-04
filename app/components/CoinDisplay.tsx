@@ -149,7 +149,7 @@ interface LosingMessageProps {
   payout: number;
 }
 
-const LosingMessage = ({ payout }: LosingMessageProps) => {
+const LosingMessage = ({}: LosingMessageProps) => {
   return (
     <MotionDiv
       className="

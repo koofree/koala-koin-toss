@@ -15,6 +15,7 @@ import {
 } from '@/config';
 import { Stars } from './components/image/Stars';
 import { MainGame } from './components/MainGame';
+import { FooterLayout } from './layout/FooterLayout';
 import { HeaderLayout } from './layout/HeaderLayout';
 import { SideLayout } from './layout/SideLayout';
 import { GameResult } from './types';
@@ -165,39 +166,42 @@ export default function Home() {
   }, [address]);
 
   return (
-    <main
-      className="
+    <div className="flex flex-col items-start relative">
+      <main
+        className="
         flex justify-center 
-        h-full w-full min-h-[900px] min-w-[1280px]
+        w-full min-h-[900px] min-w-[1280px]
         bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat 
-        absolute 
+        relative
       "
-    >
-      <div className="flex flex-col max-w-[1920px] w-full">
-        <HeaderLayout
-          address={address}
-          walletBalance={walletBalance}
-          kpBalance={kpBalance}
-          login={login}
-          logout={logout}
-          status={status}
-        />
-        <div className="flex flex-row justify-center w-full h-full relative">
-          <SideLayout side="left" />
-          <SideLayout side="right" />
-          <MainGame
-            userAddress={address}
-            refetchWalletBalance={() => {
-              refetchWalletBalance();
-              refetchKpBalance();
-            }}
+      >
+        <div className="flex flex-col max-w-[1920px] w-full">
+          <HeaderLayout
+            address={address}
             walletBalance={walletBalance}
-            myGameHistory={myGameHistory}
-            allGameHistory={allGameHistory}
+            kpBalance={kpBalance}
+            login={login}
+            logout={logout}
+            status={status}
           />
+          <div className="flex flex-row justify-center w-full h-full relative">
+            <SideLayout side="left" />
+            <SideLayout side="right" />
+            <MainGame
+              userAddress={address}
+              refetchWalletBalance={() => {
+                refetchWalletBalance();
+                refetchKpBalance();
+              }}
+              walletBalance={walletBalance}
+              myGameHistory={myGameHistory}
+              allGameHistory={allGameHistory}
+            />
+          </div>
         </div>
-      </div>
-      <Stars />
-    </main>
+        <Stars />
+      </main>
+      <FooterLayout />
+    </div>
   );
 }

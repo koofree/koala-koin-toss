@@ -166,42 +166,40 @@ export default function Home() {
   }, [address]);
 
   return (
-    <div className="flex flex-col items-start relative">
-      <main
-        className="
-        flex justify-center 
-        w-full min-h-[900px] min-w-[1280px]
+    <main
+      className="
+        flex flex-col justify-between
+        w-full h-dvh min-w-[1280px] min-h-[1088px]
         bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat 
         relative
       "
-      >
-        <div className="flex flex-col max-w-[1920px] w-full">
-          <HeaderLayout
-            address={address}
+    >
+      <div className="flex flex-col max-w-[1920px] min-h-[1000px] w-full h-full">
+        <HeaderLayout
+          address={address}
+          walletBalance={walletBalance}
+          kpBalance={kpBalance}
+          login={login}
+          logout={logout}
+          status={status}
+        />
+        <div className="flex flex-row justify-center w-full h-full overflow-hidden relative">
+          <SideLayout side="left" />
+          <SideLayout side="right" />
+          <MainGame
+            userAddress={address}
+            refetchWalletBalance={() => {
+              refetchWalletBalance();
+              refetchKpBalance();
+            }}
             walletBalance={walletBalance}
-            kpBalance={kpBalance}
-            login={login}
-            logout={logout}
-            status={status}
+            myGameHistory={myGameHistory}
+            allGameHistory={allGameHistory}
           />
-          <div className="flex flex-row justify-center w-full h-full relative">
-            <SideLayout side="left" />
-            <SideLayout side="right" />
-            <MainGame
-              userAddress={address}
-              refetchWalletBalance={() => {
-                refetchWalletBalance();
-                refetchKpBalance();
-              }}
-              walletBalance={walletBalance}
-              myGameHistory={myGameHistory}
-              allGameHistory={allGameHistory}
-            />
-          </div>
         </div>
-        <Stars />
-      </main>
+      </div>
       <FooterLayout />
-    </div>
+      <Stars />
+    </main>
   );
 }

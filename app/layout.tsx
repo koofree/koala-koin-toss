@@ -3,7 +3,7 @@ import NextAbstractWalletProvider from './components/NextAbstractWalletProvider'
 import './globals.css';
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: '1280px',
   userScalable: true,
   viewportFit: 'auto',
   interactiveWidget: 'resizes-visual',
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <NextAbstractWalletProvider>
-        <body className="bg-gray-900">{children}</body>
+        <body className="bg-[#251639]">{children}</body>
       </NextAbstractWalletProvider>
     </html>
   );

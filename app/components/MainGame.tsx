@@ -492,7 +492,7 @@ export const MainGame = ({
         />
       </div>
 
-      <div>
+      <div className="flex flex-col justify-center min-h-[600px]">
         {isLoading < 100 && (
           <div className="text-white mt-[100px] min-h-[200px]">
             <div className="flex justify-center items-center">

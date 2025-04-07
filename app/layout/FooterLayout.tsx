@@ -4,6 +4,7 @@ export const FooterLayout = () => {
       className="
         flex flex-row justify-center
         w-full h-[88px] min-h-[88px] 
+        min-w-[1024px]
         bg-gradient-to-b from-[#433555] via-[#322346] to-[#251639]"
     >
       <div
@@ -18,7 +19,7 @@ export const FooterLayout = () => {
             2xl:space-x-2 
             2xl:space-y-0
             items-end
-            text-white text-xs"
+            text-white/70 text-xs"
         >
           <span className="font-['Press_Start_2P']">© 2025 Koala Koin Toss</span>
           <span className="hidden 2xl:inline text-white/20 font-['Press_Start_2P']">|</span>
@@ -30,7 +31,7 @@ export const FooterLayout = () => {
             2xl:space-x-2
             2xl:space-y-0
             items-end
-            text-white text-xs flex "
+            text-white/70 text-xs flex "
         >
           <span className="font-['Press_Start_2P']">
             Fair randomness powered with Proof of Play

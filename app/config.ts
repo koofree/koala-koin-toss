@@ -57,7 +57,7 @@ const environments = {
 };
 
 // Select configuration based on NODE_ENV
-const environment = (process.env.NODE_ENV || 'development') as keyof typeof environments;
+export const environment = (process.env.NODE_ENV || 'development') as keyof typeof environments;
 const currentConfig = environments[environment] || environments.development;
 
 // Import KoalaKoinTossV1 ABI from the JSON file

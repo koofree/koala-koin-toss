@@ -7,6 +7,7 @@ import {
   BUILD_TIME,
   clientConfig,
   contractAddress,
+  environment,
   functionNames,
   koalaKoinTossV1Abi,
   paymasterAddress,
@@ -319,6 +320,12 @@ export const MainGame = ({
         );
         if (userAddress) {
           clearStoredSession(userAddress);
+        }
+      } else {
+        if (environment !== 'production') {
+          alert(txError.message);
+        } else {
+          alert('An unknown error occurred while executing the contract function');
         }
       }
 

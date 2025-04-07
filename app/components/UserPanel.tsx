@@ -1,6 +1,5 @@
 'use client';
 
-import { clientConfig } from '@/config';
 import { floorNumber } from '@/utils/floorNumber';
 import { formatAddress } from '@/utils/format';
 import { useEffect } from 'react';
@@ -38,7 +37,7 @@ export const UserPanel = ({
   }, [status]);
 
   const moveToExplorer = () => {
-    window.open(`${clientConfig.chain.blockExplorers.default.url}/address/${address}`, '_blank');
+    // window.open(`${clientConfig.chain.blockExplorers.default.url}/address/${address}`, '_blank');
   };
 
   return (
@@ -92,9 +91,9 @@ export const UserPanel = ({
               width={16}
               height={16}
               className="opacity-50 my-auto inline cursor-pointer"
-              onClick={moveToExplorer}
+              onClick={logout}
             />
-            <span className="text-white/50 font-thin cursor-pointer" onClick={moveToExplorer}>
+            <span className="text-white/50 font-thin cursor-pointer" onClick={logout}>
               {formatAddress(address)}
             </span>
             <Image

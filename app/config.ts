@@ -66,6 +66,8 @@ export const koalaKoinTossV1Abi = koalaKoinTossV1.abi;
 export const contractAddress: `0x${string}` = currentConfig.contractAddress as `0x${string}`;
 // Replace with your actual paymaster address
 export const kpAddress: `0x${string}` = currentConfig.kpAddress as `0x${string}`;
+export const kpSymbol = 'XT';
+
 // Replace with your actual paymaster address
 export const paymasterAddress: `0x${string}` = currentConfig.paymasterAddress as `0x${string}`;
 // client config to specify the chain

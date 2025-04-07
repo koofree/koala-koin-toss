@@ -1,9 +1,12 @@
 import Link from 'next/link';
 
-import { clientConfig } from '@/config';
+import { clientConfig, kpSymbol } from '@/config';
 import { GameResult } from '@/types';
 import { floorNumber } from '@/utils/floorNumber';
 import { dateFormat, formatAddress } from '@/utils/format';
+import { getErc20Transfer } from '@/utils/getLogs';
+import { useEffect, useState } from 'react';
+import { createPublicClient, http, PublicClient, TransactionReceipt } from 'viem';
 
 interface HistoriesProps {
   myGameHistory: GameResult[];
@@ -11,7 +14,79 @@ interface HistoriesProps {
   allGameOptions: Array<[number, number, number, string, number]>;
 }
 
+const MyHistoryRow = ({
+  publicClient,
+  address,
+  game,
+  gameOption,
+}: {
+  publicClient: PublicClient;
+  address: `0x${string}`;
+  game: GameResult;
+  gameOption?: [number, number, number, string, number];
+}) => {
+  const [reward, setReward] = useState('');
+
+  const setRewardAsync = async () => {
+    // Get token transfers for this transaction if it exists
+    if (game.revealTransactionHash && !game.won) {
+      const receipt: TransactionReceipt = (await publicClient.getTransactionReceipt({
+        hash: game.revealTransactionHash,
+      })) as TransactionReceipt;
+
+      const reward: number | undefined = receipt
+        ? await getErc20Transfer(receipt, address)
+        : undefined;
+
+      setReward(reward ? `${reward} ${kpSymbol}` : '');
+    }
+  };
+
+  useEffect(() => {
+    if (game.won === true) {
+      setReward(floorNumber(game.reward) + ' ETH');
+    } else {
+      setRewardAsync();
+    }
+  }, [game]);
+
+  return (
+    <tr key={game.timestamp} className="">
+      <td className="pt-2 w-[60px]">
+        {game.won !== undefined ? (
+          <span className="text-white/50">{game.won ? 'WIN' : 'LOSE'}</span>
+        ) : (
+          ''
+        )}
+      </td>
+      <td className="pt-2 w-[140px]">
+        <Link
+          href={`${clientConfig.chain.blockExplorers.default.url}/tx/${game.revealTransactionHash}`}
+          target="_blank"
+          className="text-white/50 hover:text-white"
+        >
+          {game.won !== undefined ? (
+            <span className={game.won ? 'text-green-400' : 'text-red-400'}>{reward}</span>
+          ) : (
+            '-'
+          )}
+        </Link>
+      </td>
+      <td className="pt-2 w-[160px] text-white/50">{dateFormat(new Date(game.timestamp))}</td>
+      <td className="pt-2">
+        {gameOption?.[1]}:{gameOption?.[2]} (x{gameOption?.[4]})
+      </td>
+    </tr>
+  );
+};
+
 const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesProps) => {
+  // Create a public client to interact with the blockchain
+  const publicClient = createPublicClient({
+    ...clientConfig,
+    transport: http(),
+  });
+
   return (
     <div className="flex flex-row items-center px-10 mt-2 h-[280px] w-[1160px] relative">
       <div className="w-full h-full flex flex-row">
@@ -39,36 +114,13 @@ const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesP
                     (option) => BigInt(option[0]) === game.gameId
                   );
                   return (
-                    <tr key={game.timestamp} className="">
-                      <td className="pt-2 w-[60px]">
-                        {game.won !== undefined ? (
-                          <span className="text-white/50">{game.won ? 'WIN' : 'LOSE'}</span>
-                        ) : (
-                          ''
-                        )}
-                      </td>
-                      <td className="pt-2 w-[140px]">
-                        <Link
-                          href={`${clientConfig.chain.blockExplorers.default.url}/tx/${game.revealTransactionHash}`}
-                          target="_blank"
-                          className="text-white/50 hover:text-white"
-                        >
-                          {game.won !== undefined ? (
-                            <span
-                              className={game.won ? 'text-green-400' : 'text-red-400'}
-                            >{`${game.won ? floorNumber(game.reward) + ' ETH' : ''}`}</span>
-                          ) : (
-                            '-'
-                          )}
-                        </Link>
-                      </td>
-                      <td className="pt-2 w-[160px] text-white/50">
-                        {dateFormat(new Date(game.timestamp))}
-                      </td>
-                      <td className="pt-2">
-                        {gameOption?.[1]}:{gameOption?.[2]} (x{gameOption?.[4]})
-                      </td>
-                    </tr>
+                    <MyHistoryRow
+                      key={game.timestamp}
+                      publicClient={publicClient as PublicClient}
+                      address={game.address}
+                      game={game}
+                      gameOption={gameOption}
+                    />
                   );
                 })}
               </tbody>

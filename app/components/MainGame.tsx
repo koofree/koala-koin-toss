@@ -1,6 +1,6 @@
 import { useAbstractClient, useCreateSession } from '@abstract-foundation/agw-react';
 import { useEffect, useState } from 'react';
-import { createPublicClient, formatUnits, http, parseEther } from 'viem';
+import { createPublicClient, formatUnits, http, parseEther, TransactionReceipt } from 'viem';
 import { useReadContract, useWaitForTransactionReceipt } from 'wagmi';
 
 import {
@@ -13,11 +13,12 @@ import {
   paymasterAddress,
   POOL_EDGE_DISCRIMINATOR,
 } from '@/config';
-import { GameResult } from '@/types';
+import { GameResult, WalletBalance } from '@/types';
 import { clearStoredSession } from '@/utils/clearStoredSession';
 import { createAndStoreSession } from '@/utils/createAndStoreSession';
 import { floorNumber } from '@/utils/floorNumber';
 import { generateResult } from '@/utils/generators';
+import { getErc20Transfer } from '@/utils/getLogs';
 import { getStoredSession } from '@/utils/getStoredSession';
 import { privateKeyToAccount } from 'viem/accounts';
 import { getGeneralPaymasterInput } from 'viem/zksync';
@@ -30,7 +31,7 @@ const toBalance = (walletBalance?: { value: bigint; decimals: number }) => {
 };
 
 interface MainGameProps {
-  walletBalance?: { value: bigint; decimals: number; symbol: string };
+  walletBalance?: WalletBalance;
   refetchWalletBalance: () => void;
   myGameHistory: GameResult[];
   allGameHistory: GameResult[];
@@ -157,7 +158,7 @@ export const MainGame = ({
     setTransactionHash(result);
   };
 
-  const checkResult = (
+  const checkResult = async (
     transactionReceipt: { transactionHash: string },
     selectedSide: 'HEADS' | 'TAILS'
   ) => {
@@ -171,7 +172,19 @@ export const MainGame = ({
     }
 
     setIsWin(gameResult.won);
-    setReward(gameResult.reward);
+    if (gameResult.won) {
+      setReward(gameResult.reward);
+    } else {
+      const receipt: TransactionReceipt = (await publicClient.getTransactionReceipt({
+        hash: gameResult.revealTransactionHash,
+      })) as TransactionReceipt;
+
+      const reward: number | undefined =
+        receipt && userAddress ? await getErc20Transfer(receipt, userAddress) : undefined;
+
+      setReward(reward ? reward : 0);
+    }
+
     setResults(
       generateResult({
         won: gameResult.won,

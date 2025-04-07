@@ -2,7 +2,7 @@
 
 import { useLoginWithAbstract } from '@abstract-foundation/agw-react';
 import { useEffect, useState } from 'react';
-import { createPublicClient, formatUnits, http } from 'viem';
+import { createPublicClient, formatUnits, Hash, http } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
 import {
@@ -41,7 +41,7 @@ export default function Home() {
   const [myGameHistory, setMyGameHistory] = useState<GameResult[]>([]);
   const [lastBlockNumber, setLastBlockNumber] = useState<bigint>(BigInt(0));
 
-  const appendGameHistory = (result: GameResult) => {
+  const appendGameHistory = async (result: GameResult) => {
     // only add to allGameHistory if the result is won
     if (result.won) {
       setAllGameHistory((prev) =>
@@ -123,8 +123,8 @@ export default function Home() {
           results: undefined,
           won: tossRevealedEvent.args.didWin,
           reward: Number(formatUnits(tossRevealedEvent.args.payout, 18)),
-          commitTransactionHash: v.transactionHash,
-          revealTransactionHash: tossRevealedEvent.transactionHash,
+          commitTransactionHash: v.transactionHash as Hash,
+          revealTransactionHash: tossRevealedEvent.transactionHash as Hash,
         };
 
         appendGameHistory(gameResult);

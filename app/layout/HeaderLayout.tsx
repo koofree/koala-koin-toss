@@ -2,7 +2,8 @@ import Link from 'next/link';
 
 import { Image } from '@/components/image/image';
 import { UserPanel } from '@/components/UserPanel';
-import { Address, UserStatus, WalletBalance } from '@/types';
+import { UserStatus, WalletBalance } from '@/types';
+import { Address } from 'viem';
 
 interface HeaderLayoutProps {
   address?: Address;

@@ -1,5 +1,6 @@
 'use client';
 
+import { kpSymbol } from '@/config';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { Image } from './image/image';
@@ -149,7 +150,7 @@ interface LosingMessageProps {
   payout: number;
 }
 
-const LosingMessage = ({}: LosingMessageProps) => {
+const LosingMessage = ({ payout }: LosingMessageProps) => {
   return (
     <MotionDiv
       className="
@@ -164,7 +165,9 @@ const LosingMessage = ({}: LosingMessageProps) => {
       transition={{ duration: 0.5 }}
     >
       <p className="text-white text-4xl font-['Press_Start_2P']">You Lose</p>
-      <p className="text-white text-[28px] font-['Press_Start_2P']">BUT YOU RECEIVED +0.3 KP</p>
+      <p className="text-white text-[28px] font-['Press_Start_2P']">
+        BUT YOU RECEIVED +{payout} {kpSymbol}
+      </p>
     </MotionDiv>
   );
 };

@@ -1,4 +1,6 @@
-export type Address = `0x${string}`;
+import { Address, Hash as _Hash } from 'viem';
+
+export type Hash = _Hash;
 export type UserStatus = 'connected' | 'disconnected' | 'reconnecting' | 'connecting';
 export type WalletBalance = { value: bigint; decimals: number; symbol: string };
 
@@ -6,7 +8,7 @@ export type WalletBalance = { value: bigint; decimals: number; symbol: string };
 export type GameResult = {
   id: bigint;
   gameId: bigint;
-  address: `0x${string}`;
+  address: Address;
   timestamp: string;
   betAmount: number;
   selectedSide: 'HEADS' | 'TAILS';
@@ -15,6 +17,6 @@ export type GameResult = {
   results?: Array<'HEADS' | 'TAILS'>;
   won: boolean;
   reward: number;
-  commitTransactionHash: string;
-  revealTransactionHash: string;
+  commitTransactionHash: Hash;
+  revealTransactionHash: Hash;
 };

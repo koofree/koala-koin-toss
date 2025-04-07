@@ -211,7 +211,7 @@ const Settings = forwardRef(
             <PanelButton
               onClick={onFlip}
               disabled={disabled || !selectedSide || isFlipping || !betAmount}
-              disabledText="TOSS OPTION DISABLED"
+              disabledText={isFlipping ? 'TOSSING...' : 'TOSS OPTION DISABLED'}
               textClassName=""
               className="w-[258px] h-[52px]"
             >

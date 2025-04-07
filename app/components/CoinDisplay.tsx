@@ -201,8 +201,6 @@ export const CoinDisplay = ({
   isWin,
   reward: payout,
 }: CoinDisplayProps) => {
-  isWin = true;
-
   const [coinDisplay, setCoinDisplay] = useState<
     Array<{
       key: number;

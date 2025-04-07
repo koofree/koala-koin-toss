@@ -26,6 +26,7 @@ import { getGeneralPaymasterInput } from 'viem/zksync';
 import { CoinDisplay } from './CoinDisplay';
 import { ControlPanel } from './ControlPanel';
 import { Image } from './image/image';
+import { SpinningCoin } from './image/SpinningCoin';
 
 const toBalance = (walletBalance?: { value: bigint; decimals: number }) => {
   return parseFloat(walletBalance ? formatUnits(walletBalance.value, walletBalance.decimals) : '0');
@@ -305,8 +306,6 @@ export const MainGame = ({
     localStorage.setItem('allGameOptions', JSON.stringify(newAllGameOptions));
     localStorage.setItem('allGameOptionsUpdatedAt', new Date().toISOString());
 
-    setCoinCount(newAllGameOptions[0][1] as number);
-    setMinHeads(newAllGameOptions[0][2] as number);
     setBetAmount(INITIAL_BET_AMOUNT);
   };
 
@@ -501,11 +500,11 @@ export const MainGame = ({
       <div className="flex flex-col justify-center min-h-[600px]">
         {isLoading < 100 && (
           <div className="text-white mt-[100px] min-h-[200px]">
-            <div className="flex justify-center items-center">
-              <div id="loading-spinner" className="animate-spin">
-                <Image src="/abs.svg" alt="Loading" width={40} height={40} />
+            <div className="flex flex-row justify-center items-center space-x-4">
+              <SpinningCoin width={60} height={60} />
+              <div>
+                <span className="text-2xl ml-3">Loading game... ({isLoading}/100)</span>
               </div>
-              <span className="ml-3">Loading game... ({isLoading}/100)</span>
             </div>
           </div>
         )}
@@ -537,44 +536,45 @@ export const MainGame = ({
             setIsHistoryOpen={setIsHistoryOpen}
           />
         )}
-
-        <div className="flex justify-end pr-20 pt-2">
-          <div className="flex items-center mr-6 cursor-pointer">
-            <div
-              className="text-white flex items-center font-['Press_Start_2P'] text-sm"
-              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-            >
-              {isHistoryOpen ? 'RETURN TO GAME' : 'WIN HISTORY'}
+        {isLoading >= 100 && (
+          <div className="flex justify-end pr-20 pt-2">
+            <div className="flex items-center mr-6 cursor-pointer">
+              <div
+                className="text-white flex items-center font-['Press_Start_2P'] text-sm"
+                onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+              >
+                {isHistoryOpen ? 'RETURN TO GAME' : 'WIN HISTORY'}
+              </div>
+              <Image
+                src={
+                  isHistoryOpen
+                    ? '/images/middle/back_button.png'
+                    : '/images/replaces/ic_trophy_28px.png'
+                }
+                width={28}
+                height={24}
+                alt={'WIN HISTORY'}
+                onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+                className="mx-2"
+              />
+            </div>
+            <div className="text-white flex items-center font-['Press_Start_2P'] text-sm">
+              ANIMATION
             </div>
             <Image
               src={
-                isHistoryOpen
-                  ? '/images/middle/back_button.png'
-                  : '/images/replaces/ic_trophy_28px.png'
+                animationEnabled
+                  ? '/images/replaces/btn_toggle_on.png'
+                  : '/images/replaces/btn_toggle_off.png'
               }
-              width={28}
-              height={24}
-              alt={'WIN HISTORY'}
-              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-              className="mx-2"
+              width={60}
+              height={30}
+              alt={animationEnabled ? 'Toggle On' : 'Toggle Off'}
+              onClick={() => setAnimationEnabled(!animationEnabled)}
+              className="mx-2 cursor-pointer"
             />
           </div>
-          <div className="text-white flex items-center font-['Press_Start_2P'] text-sm">
-            ANIMATION
-          </div>
-          <Image
-            src={
-              animationEnabled
-                ? '/images/replaces/btn_toggle_on.png'
-                : '/images/replaces/btn_toggle_off.png'
-            }
-            width={60}
-            height={30}
-            alt={animationEnabled ? 'Toggle On' : 'Toggle Off'}
-            onClick={() => setAnimationEnabled(!animationEnabled)}
-            className="mx-2 cursor-pointer"
-          />
-        </div>
+        )}
       </div>
     </div>
   );

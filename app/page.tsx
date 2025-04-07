@@ -167,7 +167,7 @@ export default function Home() {
     <main
       className="
         flex justify-center 
-        h-full w-full min-h-[900px]
+        h-full w-full min-h-[900px] min-w-[1280px]
         bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat 
         absolute 
       "

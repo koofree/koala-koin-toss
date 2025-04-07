@@ -168,7 +168,7 @@ export default function Home() {
   return (
     <main
       className="
-        flex flex-col justify-between
+        flex flex-col justify-between items-center
         w-full h-dvh min-w-[1280px] min-h-[1088px]
         bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat 
         relative

@@ -8,14 +8,14 @@ export const SideLayout = ({ side }: SideLayoutProps) => {
   return (
     <div
       className={`
-        flex-col h-full min-w-[320px]
+        flex flex-col h-full min-w-[320px]
         absolute 
         ${side === 'left' ? 'left-0' : 'right-0'}
         z-0
       `}
     >
       <div className="h-[35vh] min-h-[300px]">&nbsp;</div>
-      <div className="flex flex-row justify-center pt-32">
+      <div className="flex flex-row justify-center min-h-[600px] pt-40">
         <Image
           src={
             side === 'left'
@@ -23,8 +23,8 @@ export const SideLayout = ({ side }: SideLayoutProps) => {
               : '/images/koala/dancing/dancing_koala_back.gif'
           }
           alt="Dancing Koala"
-          width={0}
-          className="max-w-48 min-w-0"
+          width={200}
+          height={200}
           unoptimized
         />
       </div>

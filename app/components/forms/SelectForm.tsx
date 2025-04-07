@@ -3,20 +3,68 @@ import { useState } from 'react';
 interface SelectFormProps {
   minHeads: number;
   coinCount: number;
+  allGameOptions: Array<[number, number, number, string, number]>;
   setMinHeadsAndCoinCount: (minHeads: number, coinCount: number) => void;
 }
 
-export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: SelectFormProps) => {
+export const SelectForm = ({
+  minHeads,
+  coinCount,
+  allGameOptions,
+  setMinHeadsAndCoinCount,
+}: SelectFormProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const options = [
-    { idx: 0, minHeads: 5, coinCount: 10, label: '10:5 (x1.31)' },
-    { idx: 1, minHeads: 1, coinCount: 1, label: '1:1 (x1.64)' },
-    { idx: 2, minHeads: 3, coinCount: 4, label: '4:3 (x2.62)' },
-    { idx: 3, minHeads: 5, coinCount: 6, label: '6:5 (x7.49)' },
-    { idx: 4, minHeads: 8, coinCount: 9, label: '9:8 (x41.99)' },
-    { idx: 5, minHeads: 10, coinCount: 10, label: '10:10 (x839.93)' },
-    { idx: 6, minHeads: 0, coinCount: 0, label: 'CUSTOM' },
+    {
+      idx: 0,
+      minHeads: 5,
+      coinCount: 10,
+      label: `10:5 (x${allGameOptions.find((option) => option[1] === 10 && option[2] === 5)?.[4]})`,
+      isActive:
+        allGameOptions.find((option) => option[1] === 10 && option[2] === 5)?.[4] !== undefined,
+    },
+    {
+      idx: 1,
+      minHeads: 1,
+      coinCount: 1,
+      label: `1:1 (x${allGameOptions.find((option) => option[1] === 1 && option[2] === 1)?.[4]})`,
+      isActive:
+        allGameOptions.find((option) => option[1] === 1 && option[2] === 1)?.[4] !== undefined,
+    },
+    {
+      idx: 2,
+      minHeads: 3,
+      coinCount: 4,
+      label: `4:3 (x${allGameOptions.find((option) => option[1] === 4 && option[2] === 3)?.[4]})`,
+      isActive:
+        allGameOptions.find((option) => option[1] === 4 && option[2] === 3)?.[4] !== undefined,
+    },
+    {
+      idx: 3,
+      minHeads: 5,
+      coinCount: 6,
+      label: `6:5 (x${allGameOptions.find((option) => option[1] === 6 && option[2] === 5)?.[4]})`,
+      isActive:
+        allGameOptions.find((option) => option[1] === 6 && option[2] === 5)?.[4] !== undefined,
+    },
+    {
+      idx: 4,
+      minHeads: 8,
+      coinCount: 9,
+      label: `9:8 (x${allGameOptions.find((option) => option[1] === 9 && option[2] === 8)?.[4]})`,
+      isActive:
+        allGameOptions.find((option) => option[1] === 9 && option[2] === 8)?.[4] !== undefined,
+    },
+    {
+      idx: 5,
+      minHeads: 10,
+      coinCount: 10,
+      label: `10:10 (x${allGameOptions.find((option) => option[1] === 10 && option[2] === 10)?.[4]})`,
+      isActive:
+        allGameOptions.find((option) => option[1] === 10 && option[2] === 10)?.[4] !== undefined,
+    },
+    { idx: 6, minHeads: 0, coinCount: 0, label: 'CUSTOM', isActive: true },
   ];
 
   const selectedOption =
@@ -24,7 +72,10 @@ export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: Sel
     options[6];
 
   const handleOptionSelect = (option: (typeof options)[0]) => {
-    setMinHeadsAndCoinCount(option.minHeads, option.coinCount);
+    if (option.minHeads && option.coinCount) {
+      setMinHeadsAndCoinCount(option.minHeads, option.coinCount);
+    }
+
     setIsOpen(false);
   };
 
@@ -63,17 +114,19 @@ export const SelectForm = ({ minHeads, coinCount, setMinHeadsAndCoinCount }: Sel
             bg-[url('/images/middle/dropdown/dropdown_list_middle.png')] 
             bg-cover bg-center rounded-lg"
           >
-            {options.map((option) => (
-              <button
-                key={option.idx}
-                onClick={() => handleOptionSelect(option)}
-                className="
+            {options
+              .filter((option) => option.isActive)
+              .map((option) => (
+                <button
+                  key={option.idx}
+                  onClick={() => handleOptionSelect(option)}
+                  className="
                     w-[200px] mx-2 pl-2 py-2 text-left text-white
                      hover:bg-white hover:bg-opacity-10 rounded-md"
-              >
-                {option.label}
-              </button>
-            ))}
+                >
+                  {option.label}
+                </button>
+              ))}
           </div>
         </div>
       )}

@@ -97,6 +97,7 @@ export const ControlPanel = ({
           expectedValue={expectedValue}
           disabled={disabled}
           repeatTrying={repeatTrying}
+          allGameOptions={allGameOptions}
         />
       ) : (
         <Histories

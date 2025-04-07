@@ -9,6 +9,7 @@ import {
   contractAddress,
   environment,
   functionNames,
+  INITIAL_BET_AMOUNT,
   koalaKoinTossV1Abi,
   paymasterAddress,
   POOL_EDGE_DISCRIMINATOR,
@@ -299,9 +300,14 @@ export const MainGame = ({
     }
 
     // Type assertion to fix the type error
+
     setAllGameOptions(newAllGameOptions as Array<[number, number, number, string, number]>);
     localStorage.setItem('allGameOptions', JSON.stringify(newAllGameOptions));
     localStorage.setItem('allGameOptionsUpdatedAt', new Date().toISOString());
+
+    setCoinCount(newAllGameOptions[0][1] as number);
+    setMinHeads(newAllGameOptions[0][2] as number);
+    setBetAmount(INITIAL_BET_AMOUNT);
   };
 
   useEffect(() => {
@@ -417,7 +423,7 @@ export const MainGame = ({
     }
 
     if (!betAmount) {
-      finalBetAmount = minBet;
+      finalBetAmount = Math.max(minBet, INITIAL_BET_AMOUNT);
     }
 
     if (finalBetAmount < minBet) {
@@ -428,7 +434,7 @@ export const MainGame = ({
       finalBetAmount = floorNumber(balance);
     }
 
-    if (maxBet < betAmount) {
+    if (maxBet < finalBetAmount) {
       finalBetAmount = maxBet;
     }
 

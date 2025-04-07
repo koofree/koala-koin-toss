@@ -27,6 +27,7 @@ interface SettingsProps {
   expectedValue: number;
   disabled: boolean;
   repeatTrying: number;
+  allGameOptions: Array<[number, number, number, string, number]>;
 }
 
 const Settings = forwardRef(
@@ -49,6 +50,7 @@ const Settings = forwardRef(
       expectedValue,
       disabled,
       repeatTrying,
+      allGameOptions,
     }: SettingsProps,
     ref
   ) => {
@@ -116,16 +118,19 @@ const Settings = forwardRef(
 
           <div className="flex flex-col space-y-2 w-1/3 mt-10">
             <label className="text-gray-300">PRESETS</label>
-            <SelectForm
-              minHeads={minHeads}
-              coinCount={coinCount}
-              setMinHeadsAndCoinCount={(minHeads, coinCount) => {
-                if (!isFlipping) {
-                  setCoinCount(coinCount);
-                  setMinHeads(minHeads);
-                }
-              }}
-            />
+            {allGameOptions && allGameOptions.length > 0 && (
+              <SelectForm
+                minHeads={minHeads}
+                coinCount={coinCount}
+                allGameOptions={allGameOptions}
+                setMinHeadsAndCoinCount={(minHeads, coinCount) => {
+                  if (!isFlipping) {
+                    setCoinCount(coinCount);
+                    setMinHeads(minHeads);
+                  }
+                }}
+              />
+            )}
           </div>
 
           <div className="flex flex-col space-y-2 w-1/3 mt-10">
@@ -211,7 +216,9 @@ const Settings = forwardRef(
             <PanelButton
               onClick={onFlip}
               disabled={disabled || !selectedSide || isFlipping || !betAmount}
-              disabledText={isFlipping ? 'TOSSING...' : 'TOSS OPTION DISABLED'}
+              disabledText={
+                isFlipping ? 'TOSSING...' : betAmount ? 'WAGER IS NOT SET' : 'TOSS OPTION DISABLED'
+              }
               textClassName=""
               className="w-[258px] h-[52px]"
             >

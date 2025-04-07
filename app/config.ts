@@ -165,3 +165,5 @@ const getPoolEdge = (blockNumber?: number): number => {
 };
 export const POOL_EDGE: bigint = BigInt(getPoolEdge());
 export const POOL_EDGE_DISCRIMINATOR = 1 - Number(formatUnits(POOL_EDGE, 8));
+
+export const INITIAL_BET_AMOUNT = 0.001;

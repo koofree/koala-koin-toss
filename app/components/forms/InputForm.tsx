@@ -58,7 +58,7 @@ export const InputForm = ({ value, setValue, max, disabled }: SliderFormProps) =
         value={inputValue}
         onChange={(e) => handleCoinCountChange(e.target.value)}
         className="w-[120px] h-[60px] appearance-none bg-transparent cursor-pointer
-                    bg-contain text-white"
+                    bg-contain text-white focus:outline-none"
         disabled={disabled}
       />
       <div className="flex flex-row gap-1 right-[20px]">

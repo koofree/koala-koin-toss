@@ -133,15 +133,20 @@ const WinningMessage = ({ payout }: WinningMessageProps) => {
       className="
             h-[400px]
             w-[704px]
-            absolute flex flex-col items-center justify-center 
+            absolute flex flex-col items-center justify-center space-y-4
             bg-[url('/images/middle/ellipse_win.png')]
             bg-cover bg-center bg-no-repeat"
       layout="size"
       animate={{ opacity: [0, 1] }}
       transition={{ duration: 0.5 }}
     >
-      <p className="text-white text-4xl font-['Press_Start_2P']">You Win!!</p>
-      <p className="text-white text-[28px] font-['Press_Start_2P']">+ {payout} ETH</p>
+      {/* border: 3px solid #EC6600 */}
+      <p className="text-white text-4xl font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500">
+        You Win!!
+      </p>
+      <p className="text-white text-[28px] font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500">
+        + {payout} ETH
+      </p>
     </MotionDiv>
   );
 };
@@ -164,8 +169,11 @@ const LosingMessage = ({ payout }: LosingMessageProps) => {
       animate={{ opacity: [0, 1] }}
       transition={{ duration: 0.5 }}
     >
-      <p className="text-white text-4xl font-['Press_Start_2P']">You Lose</p>
-      <p className="text-white text-[28px] font-['Press_Start_2P']">
+      {/* border: 3px solid #1A1A1A */}
+      <p className="text-white text-4xl font-['Press_Start_2P'] text-stroke-2 text-stroke-zinc-900">
+        You Lose
+      </p>
+      <p className="text-white text-[28px] font-['Press_Start_2P'] text-stroke-2 text-stroke-zinc-900">
         BUT YOU RECEIVED +{payout} {kpSymbol}
       </p>
     </MotionDiv>
@@ -193,6 +201,8 @@ export const CoinDisplay = ({
   isWin,
   reward: payout,
 }: CoinDisplayProps) => {
+  isWin = true;
+
   const [coinDisplay, setCoinDisplay] = useState<
     Array<{
       key: number;

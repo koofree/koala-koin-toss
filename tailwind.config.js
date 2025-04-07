@@ -1,3 +1,4 @@
+import textStroke from '@designbycode/tailwindcss-text-stroke';
 import scrollbarHide from 'tailwind-scrollbar-hide';
 import plugin from 'tailwindcss/plugin';
 
@@ -17,5 +18,5 @@ module.exports = {
       },
     },
   },
-  plugins: [plugin(scrollbarHide)],
+  plugins: [plugin(scrollbarHide), textStroke],
 };

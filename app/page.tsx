@@ -164,7 +164,14 @@ export default function Home() {
   }, [address]);
 
   return (
-    <main className="flex justify-center bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat absolute h-full w-full">
+    <main
+      className="
+        flex justify-center 
+        h-full w-full min-h-[900px]
+        bg-[url('/images/bg.jpg')] bg-cover bg-center bg-no-repeat 
+        absolute 
+      "
+    >
       <div className="flex flex-col max-w-[1920px] w-full">
         <HeaderLayout
           address={address}

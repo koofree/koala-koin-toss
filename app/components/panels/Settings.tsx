@@ -70,7 +70,7 @@ const Settings = forwardRef(
       <div className="flex flex-row items-center px-10">
         <div className="flex items-center justify-between w-8/12 flex-wrap pl-14">
           <div className="flex flex-col space-y-2 w-1/3 mt-6">
-            <div className="flex flex-row">
+            <div className="flex flex-row min-h-[28px]">
               <CheckBox
                 checked={autoFlip}
                 onChange={() => () => {
@@ -92,12 +92,12 @@ const Settings = forwardRef(
             />
           </div>
           <div className="flex flex-col space-y-2 w-1/3 mt-6">
-            <label className="text-gray-300">COINS AMOUNT</label>
+            <label className="text-gray-300 min-h-[28px]">COINS AMOUNT</label>
             <SliderForm value={coinCount} setValue={(v) => !isFlipping && setCoinCount(v)} />
           </div>
 
           <div className="flex flex-col space-y-2 w-1/3 mt-6">
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between min-h-[28px]">
               <label className="text-gray-300">WAGER</label>
               <button
                 onClick={() => !isFlipping && setBetAmount(balance)}
@@ -117,7 +117,7 @@ const Settings = forwardRef(
           </div>
 
           <div className="flex flex-col space-y-2 w-1/3 mt-10">
-            <label className="text-gray-300">PRESETS</label>
+            <label className="text-gray-300 min-h-[28px]">PRESETS</label>
             {allGameOptions && allGameOptions.length > 0 && (
               <SelectForm
                 minHeads={minHeads}
@@ -134,7 +134,7 @@ const Settings = forwardRef(
           </div>
 
           <div className="flex flex-col space-y-2 w-1/3 mt-10">
-            <label className="text-gray-300">MIN HEADS / TAILS</label>
+            <label className="text-gray-300 min-h-[28px]">MIN HEADS / TAILS</label>
             <SliderForm
               value={minHeads}
               setValue={(v) => !isFlipping && setMinHeads(v)}
@@ -142,7 +142,7 @@ const Settings = forwardRef(
             />
           </div>
           <div className="flex flex-col space-y-2 w-1/3 mt-10">
-            <label className="text-gray-300">POTENTIAL WIN</label>
+            <label className="text-gray-300 min-h-[28px]">POTENTIAL WIN</label>
             <TextForm value={expectedValue} />
           </div>
         </div>

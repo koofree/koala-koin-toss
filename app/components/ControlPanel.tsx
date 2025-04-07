@@ -1,3 +1,4 @@
+import { Image } from '@/components/image/image';
 import { GameResult } from '@/types';
 import Histories from './panels/Histories';
 import Settings from './panels/Settings';
@@ -61,9 +62,13 @@ export const ControlPanel = ({
                   flex flex-col items-center
                   h-[450px]
                   bg-[url('/images/middle/img_main-board.png')] 
-                  bg-cover bg-center bg-no-repeat 
+                  bg-cover bg-center bg-no-repeat
+                  relative
         "
     >
+      <div className="absolute top-[-45px] left-[100px]">
+        <Image src="/images/gif/bird.gif" alt="Star" width={60} height={70} />
+      </div>
       <TitlePanel
         selectedSide={selectedSide}
         coinCount={coinCount}

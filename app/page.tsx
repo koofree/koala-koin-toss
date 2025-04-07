@@ -13,6 +13,7 @@ import {
   koalaKoinTossV1Abi,
   kpAddress,
 } from '@/config';
+import { Stars } from './components/image/Stars';
 import { MainGame } from './components/MainGame';
 import { HeaderLayout } from './layout/HeaderLayout';
 import { SideLayout } from './layout/SideLayout';
@@ -181,8 +182,9 @@ export default function Home() {
           logout={logout}
           status={status}
         />
-        <div className="flex flex-row justify-center w-full h-full">
+        <div className="flex flex-row justify-center w-full h-full relative">
           <SideLayout side="left" />
+          <SideLayout side="right" />
           <MainGame
             userAddress={address}
             refetchWalletBalance={() => {
@@ -193,9 +195,9 @@ export default function Home() {
             myGameHistory={myGameHistory}
             allGameHistory={allGameHistory}
           />
-          <SideLayout side="right" />
         </div>
       </div>
+      <Stars />
     </main>
   );
 }

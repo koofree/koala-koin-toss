@@ -478,8 +478,8 @@ export const MainGame = ({
   }, []);
 
   return (
-    <div className="flex flex-col max-w-screen-xl min-w-[1280px] h-full">
-      <div className="h-[35vh] flex items-center">
+    <div className="flex flex-col max-w-screen-xl min-w-[1280px] h-full z-10">
+      <div className="h-[35vh] min-h-[300px] flex items-center">
         <CoinDisplay
           count={coinCount}
           minHeads={minHeads}

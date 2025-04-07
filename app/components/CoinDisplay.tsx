@@ -74,7 +74,7 @@ const Coin = ({
             {(progress * 10) % 360 < 180 ? (
               <div className="absolute inset-0 backface-hidden">
                 <Image
-                  src="/images/middle/coins/img_koala-coin_front_124px-1.png"
+                  src="/images/replaces/img_koala-coin_front_264px.png"
                   alt="Coin Front"
                   width={count === 1 ? 264 : 128}
                   height={count === 1 ? 264 : 128}
@@ -102,11 +102,11 @@ const Coin = ({
                     ? '/images/middle/coins/img_koala-coin_back_124px-1.png'
                     : '/images/middle/coins/img_koala-coin_front_disabled_124px.png'
                   : idx < minHeads
-                    ? '/images/middle/coins/img_koala-coin_front_124px-1.png'
+                    ? '/images/replaces/img_koala-coin_front_264px.png'
                     : '/images/middle/coins/img_koala-coin_back_disabled_124px.png'
                 : isResultHeads
                   ? selectedSide === 'HEADS'
-                    ? '/images/middle/coins/img_koala-coin_front_124px-1.png'
+                    ? '/images/replaces/img_koala-coin_front_264px.png'
                     : '/images/middle/coins/img_koala-coin_front_disabled_124px.png'
                   : selectedSide === 'TAILS'
                     ? '/images/middle/coins/img_koala-coin_back_124px-1.png'

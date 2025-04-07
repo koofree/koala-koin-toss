@@ -65,14 +65,14 @@ export const InputForm = ({ value, setValue, max, disabled }: SliderFormProps) =
         <button
           onClick={() => !disabled && handleCoinCountChange((value / 2).toString())}
           className="w-[36px] h-[28px] text-white 
-                    bg-[url('/images/middle/buttons/btn_1_2.png')] 
+                    bg-[url('/images/replaces/btn_1:2.png')] 
                     bg-cover bg-center bg-no-repeat
                     hover:opacity-90 active:opacity-70 transition-opacity"
         ></button>
         <button
           onClick={() => !disabled && handleCoinCountChange((value * 2).toString())}
           className="w-[36px] h-[28px] text-white 
-                    bg-[url('/images/middle/buttons/btn_x2.png')] 
+                    bg-[url('/images/replaces/btn_x2.png')] 
                     bg-cover bg-center bg-no-repeat
                     hover:opacity-90 active:opacity-70 transition-opacity"
         ></button>

@@ -100,7 +100,7 @@ const Settings = forwardRef(
               <button
                 onClick={() => !isFlipping && setBetAmount(balance)}
                 className="w-[82px] h-[28px] mr-2
-                bg-[url('/images/middle/buttons/btn_max.png')] bg-contain bg-no-repeat bg-center
+                bg-[url('/images/replaces/btn_max.png')] bg-contain bg-no-repeat bg-center
                 hover:opacity-90 active:opacity-70 transition-opacity
                 active:bg-[url('/images/middle/buttons/btn_max_pressed.png')]"
                 aria-label="Max Bet"

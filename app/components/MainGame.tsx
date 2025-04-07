@@ -544,7 +544,7 @@ export const MainGame = ({
               src={
                 isHistoryOpen
                   ? '/images/middle/back_button.png'
-                  : '/images/middle/ic_trophy_28px.png'
+                  : '/images/replaces/ic_trophy_28px.png'
               }
               width={28}
               height={24}
@@ -559,8 +559,8 @@ export const MainGame = ({
           <Image
             src={
               animationEnabled
-                ? '/images/middle/buttons/btn_toggle_on.png'
-                : '/images/middle/buttons/btn_toggle_off.png'
+                ? '/images/replaces/btn_toggle_on.png'
+                : '/images/replaces/btn_toggle_off.png'
             }
             width={60}
             height={30}

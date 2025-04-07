@@ -34,7 +34,7 @@ export const TitlePanel = ({
       >
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <Image src="/images/middle/ic_trophy_28px.png" width={24} alt="1 TO WIN" />
+            <Image src="/images/replaces/ic_trophy_28px.png" width={24} alt="1 TO WIN" />
             <label
               htmlFor="Win History"
               className="text-white text-2xl cursor-pointer font-semibold"
@@ -42,7 +42,7 @@ export const TitlePanel = ({
               WIN HISTORY
             </label>
           </div>
-          <Image src="/images/middle/ic_trophy_28px.png" width={24} alt="1 TO WIN" />
+          <Image src="/images/replaces/ic_trophy_28px.png" width={24} alt="1 TO WIN" />
         </div>
       </div>
     );

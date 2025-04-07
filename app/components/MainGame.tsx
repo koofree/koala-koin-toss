@@ -64,6 +64,45 @@ export const MainGame = ({
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isWin, setIsWin] = useState<boolean | null>(null);
 
+  const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null);
+
+  const playMusic = () => {
+    const audio = new Audio('/sounds/8bit-mix-56351.mp3');
+    audio.addEventListener('ended', () => {
+      const nextAudio = new Audio('/sounds/8-bit-heaven-26287.mp3');
+      nextAudio.addEventListener('ended', () => {
+        if (animationEnabled) {
+          playMusic();
+        }
+      });
+      setAudioRef(nextAudio);
+      nextAudio.play().catch((err) => console.error('Error playing audio:', err));
+    });
+    setAudioRef(audio);
+    audio.play().catch((err) => console.error('Error playing audio:', err));
+  };
+
+  useEffect(() => {
+    if (animationEnabled === true) {
+      playMusic();
+    } else {
+      // Stop the music when animation is disabled
+      if (audioRef) {
+        audioRef.pause();
+        audioRef.currentTime = 0;
+        setAudioRef(null);
+      }
+    }
+
+    // Cleanup function to stop audio when component unmounts or animation state changes
+    return () => {
+      if (audioRef) {
+        audioRef.pause();
+        audioRef.currentTime = 0;
+      }
+    };
+  }, [animationEnabled]);
+
   // Create a public client to interact with the blockchain
   const publicClient = createPublicClient({
     ...clientConfig,

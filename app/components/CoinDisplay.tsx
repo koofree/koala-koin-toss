@@ -125,9 +125,17 @@ const Coin = ({
 
 interface WinningMessageProps {
   payout: number;
+  animationEnabled: boolean;
 }
 
-const WinningMessage = ({ payout }: WinningMessageProps) => {
+const WinningMessage = ({ payout, animationEnabled }: WinningMessageProps) => {
+  useEffect(() => {
+    if (animationEnabled) {
+      const audio = new Audio('/sounds/win.mp3');
+      audio.play();
+    }
+  }, []);
+
   return (
     <MotionDiv
       className="
@@ -153,9 +161,17 @@ const WinningMessage = ({ payout }: WinningMessageProps) => {
 
 interface LosingMessageProps {
   payout: number;
+  animationEnabled: boolean;
 }
 
-const LosingMessage = ({ payout }: LosingMessageProps) => {
+const LosingMessage = ({ payout, animationEnabled }: LosingMessageProps) => {
+  useEffect(() => {
+    if (animationEnabled) {
+      const audio = new Audio('/sounds/lose.mp3');
+      audio.play();
+    }
+  }, []);
+
   return (
     <MotionDiv
       className="
@@ -280,9 +296,9 @@ export const CoinDisplay = ({
       {isWin === null ? (
         <></>
       ) : isWin ? (
-        <WinningMessage payout={payout} />
+        <WinningMessage payout={payout} animationEnabled={animationEnabled} />
       ) : (
-        <LosingMessage payout={payout} />
+        <LosingMessage payout={payout} animationEnabled={animationEnabled} />
       )}
     </div>
   );

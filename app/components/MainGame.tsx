@@ -103,6 +103,10 @@ export const MainGame = ({
   };
 
   const handleFlip = async () => {
+    // Initialize the win state
+    setIsWin(null);
+    setReward(0);
+
     if (!abstractClient || !userAddress || !selectedSide || isFlipping || balance < betAmount) {
       if (balance < betAmount) {
         alert('Betting amount was over the your balance!');
@@ -114,7 +118,7 @@ export const MainGame = ({
 
     setIsFlipping(true);
 
-    const sessionData = await getStoredSession(userAddress, createSessionAsync);
+    const sessionData = await getStoredSession(userAddress, abstractClient, createSessionAsync);
     if (!sessionData) {
       createAndStoreSession(userAddress, createSessionAsync);
       setIsFlipping(false);
@@ -319,7 +323,9 @@ export const MainGame = ({
           'Contract function execution failed. The session will be cleared and retried. If the issue persists, please stop the game for safety reasons.'
         );
         if (userAddress) {
-          clearStoredSession(userAddress);
+          clearStoredSession(userAddress).then(() => {
+            createAndStoreSession(userAddress, createSessionAsync);
+          });
         }
       } else {
         if (environment !== 'production') {
@@ -429,10 +435,6 @@ export const MainGame = ({
           }
         });
     }
-
-    // Initialize the win state
-    setIsWin(null);
-    setReward(0);
   }, [betAmount, balance]);
 
   useEffect(() => {

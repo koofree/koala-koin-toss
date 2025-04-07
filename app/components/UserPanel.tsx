@@ -36,9 +36,9 @@ export const UserPanel = ({
     }
   }, [status]);
 
-  const moveToExplorer = () => {
-    // window.open(`${clientConfig.chain.blockExplorers.default.url}/address/${address}`, '_blank');
-  };
+  // const moveToExplorer = () => {
+  // window.open(`${clientConfig.chain.blockExplorers.default.url}/address/${address}`, '_blank');
+  // };
 
   return (
     <div className="mr-10 mt-8">

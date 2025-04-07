@@ -1,8 +1,6 @@
-import { clientConfig, SESSION_KEY_VALIDATOR, SESSION_VALIDATOR_ABI } from '@/config';
+import type { AbstractClient } from '@abstract-foundation/agw-client';
 import type { SessionConfig } from '@abstract-foundation/agw-client/sessions';
-import type { Address } from 'viem';
-import { createPublicClient, http } from 'viem';
-import { abstractTestnet } from 'viem/chains';
+import type { Address, Hash } from 'viem';
 import { clearStoredSession } from './clearStoredSession';
 import { createAndStoreSession } from './createAndStoreSession';
 
@@ -28,30 +26,17 @@ import { createAndStoreSession } from './createAndStoreSession';
  */
 export const validateSession = async (
   address: Address,
-  sessionHash: string,
+  sessionHash: Hash,
+  agwClient: AbstractClient,
   createSessionAsync: (params: {
     session: SessionConfig;
-  }) => Promise<{ transactionHash?: `0x${string}`; session: SessionConfig }>
+  }) => Promise<{ transactionHash?: Hash; session: SessionConfig }>
 ): Promise<boolean> => {
   console.log('Validating session for address:', address);
-  const publicClient = createPublicClient({
-    chain: clientConfig.chain,
-    transport: http(),
-  });
 
   try {
-    const status = (await publicClient.readContract({
-      address: SESSION_KEY_VALIDATOR as `0x${string}`,
-      abi: SESSION_VALIDATOR_ABI,
-      functionName: 'sessionStatus',
-      args: [address as `0x${string}`, sessionHash],
-    })) as SessionStatus;
-
-    // On Abstract testnet, any session is allowed, so we skip the check
-    // However, on mainnet, we need to check if the session is both whitelisted and active.
-    const isValid =
-      status === SessionStatus.Active ||
-      (clientConfig.chain.id === abstractTestnet.id && status === SessionStatus.NotInitialized);
+    const status: SessionStatus = await agwClient.getSessionStatus(sessionHash);
+    const isValid = status === SessionStatus.Active;
 
     if (!isValid) {
       clearStoredSession(address);

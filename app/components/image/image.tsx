@@ -12,5 +12,5 @@ export const Image = ({ style, ...props }: ImageProps) => {
     defaultStyle.width = props.width ? `${props.width}px` : 'auto';
     defaultStyle.height = props.height ? `${props.height}px` : 'auto';
   }
-  return <NextImage style={{ ...defaultStyle, ...style }} {...props} />;
+  return <NextImage style={{ ...defaultStyle, ...style }} {...props} unoptimized />;
 };

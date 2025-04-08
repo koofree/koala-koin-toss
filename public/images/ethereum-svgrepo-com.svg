@@ -1,7 +1,17 @@
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg fill="#ffffff" width="64px" height="64px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
-<g id="SVGRepo_bgCarrier" stroke-width="0"/>
-<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
-<g id="SVGRepo_iconCarrier"> <path d="M15.927 23.959l-9.823-5.797 9.817 13.839 9.828-13.839-9.828 5.797zM16.073 0l-9.819 16.297 9.819 5.807 9.823-5.801z"/> </g>
-</svg>
+<svg width="14" height="21" viewBox="0 0 14 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#clip0_433_88068)">
+        <path d="M6.94132 0.500122L6.80835 0.951772V14.0565L6.94132 14.1891L13.0242 10.5934L6.94132 0.500122Z"
+            fill="#B7B5BC" />
+        <path d="M6.94099 0.500122L0.85791 10.5934L6.94099 14.1891V7.82846V0.500122Z" fill="#DDDBE0" />
+        <path d="M6.94042 15.3407L6.86548 15.4321V20.1002L6.94042 20.3189L13.0271 11.7469L6.94042 15.3407Z"
+            fill="#BAB9C1" />
+        <path d="M6.94099 20.3189V15.3407L0.85791 11.7469L6.94099 20.3189Z" fill="#DDDBE2" />
+        <path d="M6.94019 14.1891L13.0231 10.5934L6.94019 7.82843V14.1891Z" fill="#A19EA9" />
+        <path d="M0.85791 10.5934L6.94099 14.1891V7.82843L0.85791 10.5934Z" fill="#BAB7C0" />
+    </g>
+    <defs>
+        <clipPath id="clip0_433_88068">
+            <rect width="12.2808" height="20" fill="white" transform="translate(0.859131 0.5)" />
+        </clipPath>
+    </defs>
+</svg>

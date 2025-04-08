@@ -1,4 +1,5 @@
 // Configuration based on environment
+import { formatUnits } from 'viem';
 import { abstractTestnet } from 'viem/chains';
 import koalaKoinTossV1 from '../public/abis/KoalaKoinTossV1.json';
 
@@ -7,6 +8,7 @@ const environments = {
   development: {
     chain: abstractTestnet,
     contractAddress: '0xb7732fb08646261f69DAd26f2f2C8b4f8dcC5070',
+    kpAddress: '0xf3E1263c2C0a660f567B5338895C4E7D616a138B',
     paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
@@ -39,6 +41,7 @@ const environments = {
       // testnet: false,
     },
     contractAddress: '0xb7732fb08646261f69DAd26f2f2C8b4f8dcC5070', // TODO:Replace with production contract address
+    kpAddress: '0xf3E1263c2C0a660f567B5338895C4E7D616a138B', // TODO:Replace with production kp address
     paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
     getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
       switch (true) {
@@ -54,13 +57,17 @@ const environments = {
 };
 
 // Select configuration based on NODE_ENV
-const environment = (process.env.NODE_ENV || 'development') as keyof typeof environments;
+export const environment = (process.env.NODE_ENV || 'development') as keyof typeof environments;
 const currentConfig = environments[environment] || environments.development;
 
 // Import KoalaKoinTossV1 ABI from the JSON file
 export const koalaKoinTossV1Abi = koalaKoinTossV1.abi;
 // Replace with your actual contract address
 export const contractAddress: `0x${string}` = currentConfig.contractAddress as `0x${string}`;
+// Replace with your actual paymaster address
+export const kpAddress: `0x${string}` = currentConfig.kpAddress as `0x${string}`;
+export const kpSymbol = 'XT';
+
 // Replace with your actual paymaster address
 export const paymasterAddress: `0x${string}` = currentConfig.paymasterAddress as `0x${string}`;
 // client config to specify the chain
@@ -136,3 +143,27 @@ export const ENCRYPTION_KEY_PREFIX = 'kkt_encryption_key_';
  * other wallets.
  */
 export const STORAGE_KEY_PREFIX = 'kkt_session_';
+
+export const BLOCK_NUMBER_TO_FETCH = 1000000;
+
+/**
+ * @constant {number} POOL_EDGE
+ * @description The edge of the pool
+ *
+ * The edge of the pool is the amount of money that is added to the pool each time a player wins
+ * This value could be updated by the contract owner, so we need to fetch it depending on the updated block number.
+ *
+ */
+const getPoolEdge = (blockNumber?: number): number => {
+  switch (true) {
+    // TODO: Add more cases when the pool edge is updated
+    case blockNumber === undefined:
+      return 15000000;
+    default:
+      return 15000000;
+  }
+};
+export const POOL_EDGE: bigint = BigInt(getPoolEdge());
+export const POOL_EDGE_DISCRIMINATOR = 1 - Number(formatUnits(POOL_EDGE, 8));
+
+export const INITIAL_BET_AMOUNT = 0.001;

@@ -1,6 +1,7 @@
 'use client';
 
 import { kpSymbol } from '@/config';
+import { useUserGameOptionStore } from '@/store/useUserGameOptionStore';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { Image } from './image/image';
@@ -209,26 +210,22 @@ const LosingMessage = ({ payout, animationEnabled }: LosingMessageProps) => {
 };
 
 interface CoinDisplayProps {
-  count: number;
-  minHeads: number;
   isFlipping: boolean;
   results: Array<'HEADS' | 'TAILS' | null>;
-  selectedSide: 'HEADS' | 'TAILS' | null;
   animationEnabled: boolean;
   isWin: boolean | null;
   reward: number;
 }
 
 export const CoinDisplay = ({
-  count,
-  minHeads,
   isFlipping,
   results,
-  selectedSide,
   animationEnabled,
   isWin,
   reward: payout,
 }: CoinDisplayProps) => {
+  const { userGameOption } = useUserGameOptionStore();
+
   const [coinDisplay, setCoinDisplay] = useState<
     Array<{
       key: number;
@@ -251,7 +248,9 @@ export const CoinDisplay = ({
   useEffect(() => {
     if (results.includes(null)) {
       setCoinDisplay(
-        results.map((result, idx) => ({ key: idx, result, isFlipping: isFlipping, isReady: true }))
+        Array(userGameOption.coinCount)
+          .fill(null)
+          .map((_, idx) => ({ key: idx, result: null, isFlipping: isFlipping, isReady: true }))
       );
     } else {
       const coinDisplay = results.map((result, idx) => ({
@@ -262,9 +261,12 @@ export const CoinDisplay = ({
       }));
       const sortedCoinDisplay = [...coinDisplay].sort((a, b) => {
         // Sort coins with result matching selectedSide first
-        if (a.result === selectedSide && b.result !== selectedSide) {
+        if (a.result === userGameOption.selectedSide && b.result !== userGameOption.selectedSide) {
           return -1; // a comes before b
-        } else if (a.result !== selectedSide && b.result === selectedSide) {
+        } else if (
+          a.result !== userGameOption.selectedSide &&
+          b.result === userGameOption.selectedSide
+        ) {
           return 1; // b comes before a
         }
         return 0; // keep original order for equal cases
@@ -273,7 +275,13 @@ export const CoinDisplay = ({
       setCoinDisplay(coinDisplay);
       setSortedCoinDisplay(sortedCoinDisplay);
     }
-  }, [results, isFlipping, selectedSide, count, minHeads]);
+  }, [
+    results,
+    isFlipping,
+    userGameOption.selectedSide,
+    userGameOption.coinCount,
+    userGameOption.minHeads,
+  ]);
 
   useEffect(() => {
     setCoinComponents(
@@ -285,18 +293,25 @@ export const CoinDisplay = ({
           <Coin
             key={idx}
             idx={idx}
-            count={count}
-            minHeads={minHeads}
+            count={userGameOption.coinCount}
+            minHeads={userGameOption.minHeads}
             isFlipping={isFlipping}
             isReady={isReady}
             isResultHeads={isResultHeads}
-            selectedSide={selectedSide}
+            selectedSide={userGameOption.selectedSide}
             animationEnabled={animationEnabled}
           />
         );
       })
     );
-  }, [coinDisplay, isFlipping, selectedSide, animationEnabled]);
+  }, [
+    coinDisplay,
+    isFlipping,
+    userGameOption.selectedSide,
+    userGameOption.coinCount,
+    userGameOption.minHeads,
+    animationEnabled,
+  ]);
 
   return (
     <div className="flex flex-wrap gap-2 justify-center items-center w-[704px] mx-auto relative">

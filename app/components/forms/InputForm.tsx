@@ -1,15 +1,13 @@
-import { floorNumber } from '@/utils/floorNumber';
 import { useEffect, useState } from 'react';
 import { Image } from '../image/image';
 
 interface SliderFormProps {
   value: number;
-  setValue: (count: number) => void;
-  max: number;
+  setValue: (count: number | string | undefined) => void;
   disabled?: boolean;
 }
 
-export const InputForm = ({ value, setValue, max, disabled }: SliderFormProps) => {
+export const InputForm = ({ value, setValue, disabled }: SliderFormProps) => {
   const [inputValue, setInputValue] = useState(value.toString());
 
   const handleCoinCountChange = (_value: string) => {
@@ -22,12 +20,6 @@ export const InputForm = ({ value, setValue, max, disabled }: SliderFormProps) =
     if (_value.endsWith('.') || _value.endsWith('0')) {
       setInputValue(_value);
       return;
-    }
-
-    let value = floorNumber(parseFloat(_value));
-
-    if (value > max) {
-      value = max;
     }
 
     setValue(value);
@@ -56,21 +48,21 @@ export const InputForm = ({ value, setValue, max, disabled }: SliderFormProps) =
       <input
         type="text"
         value={inputValue}
-        onChange={(e) => handleCoinCountChange(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
         className="w-[120px] h-[60px] appearance-none bg-transparent cursor-pointer
                     bg-contain text-white focus:outline-none"
         disabled={disabled}
       />
       <div className="flex flex-row gap-1 right-[20px]">
         <button
-          onClick={() => !disabled && handleCoinCountChange((value / 2).toString())}
+          onClick={() => !disabled && setValue(value / 2)}
           className="w-[36px] h-[28px] text-white 
                     bg-[url('/images/replaces/btn_1:2.png')] 
                     bg-cover bg-center bg-no-repeat
                     hover:opacity-90 active:opacity-70 transition-opacity"
         ></button>
         <button
-          onClick={() => !disabled && handleCoinCountChange((value * 2).toString())}
+          onClick={() => !disabled && setValue(value * 2)}
           className="w-[36px] h-[28px] text-white 
                     bg-[url('/images/replaces/btn_x2.png')] 
                     bg-cover bg-center bg-no-repeat

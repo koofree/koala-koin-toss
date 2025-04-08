@@ -1,22 +1,16 @@
+import { useUserGameOptionStore } from '@/store/useUserGameOptionStore';
 import { Image } from '../image/image';
 
 interface TitlePanelProps {
-  selectedSide: 'HEADS' | 'TAILS' | null;
-  coinCount: number;
-  minHeads: number;
   winningProbability: number;
   onClick: () => void;
   isHistoryOpen: boolean;
 }
 
-export const TitlePanel = ({
-  selectedSide,
-  coinCount,
-  minHeads,
-  winningProbability,
-  onClick,
-  isHistoryOpen,
-}: TitlePanelProps) => {
+export const TitlePanel = ({ winningProbability, onClick, isHistoryOpen }: TitlePanelProps) => {
+  const { userGameOption } = useUserGameOptionStore();
+  const { coinCount, minHeads, selectedSide } = userGameOption;
+
   if (isHistoryOpen) {
     return (
       <div

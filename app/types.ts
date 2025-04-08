@@ -20,3 +20,19 @@ export type GameResult = {
   commitTransactionHash: Hash;
   revealTransactionHash: Hash;
 };
+
+export type GameOption = [
+  number, // 0 gameId
+  number, // 1 coinCount
+  number, // 2 minHeads
+  string, // 3 prizePool
+  number, // 4 expectedRate
+  number, // 5 winChance
+  [number, number], // 6 betLimits
+];
+
+export type UserGameOption = {
+  coinCount: number;
+  minHeads: number;
+  option?: GameOption;
+};

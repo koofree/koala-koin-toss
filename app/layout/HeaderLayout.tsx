@@ -2,26 +2,10 @@ import Link from 'next/link';
 
 import { Image } from '@/components/image/image';
 import { UserPanel } from '@/components/UserPanel';
-import { UserStatus, WalletBalance } from '@/types';
-import { Address } from 'viem';
 
-interface HeaderLayoutProps {
-  address?: Address;
-  walletBalance?: WalletBalance;
-  kpBalance?: WalletBalance;
-  login: () => void;
-  logout: () => void;
-  status: UserStatus;
-}
+interface HeaderLayoutProps {}
 
-export const HeaderLayout = ({
-  address,
-  walletBalance,
-  kpBalance,
-  login,
-  logout,
-  status,
-}: HeaderLayoutProps) => {
+export const HeaderLayout = ({}: HeaderLayoutProps) => {
   return (
     <div className="flex flex-row justify-between items-center">
       <div className="flex justify-center ml-10 mt-8">
@@ -33,14 +17,7 @@ export const HeaderLayout = ({
           />
         </Link>
       </div>
-      <UserPanel
-        address={address}
-        walletBalance={walletBalance}
-        kpBalance={kpBalance}
-        login={login}
-        logout={logout}
-        status={status}
-      />
+      <UserPanel />
     </div>
   );
 };

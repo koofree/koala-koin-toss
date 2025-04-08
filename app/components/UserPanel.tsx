@@ -1,40 +1,19 @@
 'use client';
 
-import { floorNumber } from '@/utils/floorNumber';
+import { useBalance } from '@/hooks/useBalance';
+import { roundNumber } from '@/utils/floorNumber';
 import { formatAddress } from '@/utils/format';
-import { useEffect } from 'react';
-import { formatUnits } from 'viem';
+import { useLoginWithAbstract } from '@abstract-foundation/agw-react';
+import { useAccount } from 'wagmi';
 import { PanelButton } from './buttons/PanelButton';
 import { Image } from './image/image';
 
-interface UserPanelProps {
-  login: () => void;
-  logout: () => void;
-  address?: `0x${string}`;
-  walletBalance?: { value: bigint; decimals: number; symbol: string };
-  kpBalance?: { value: bigint; decimals: number; symbol: string };
-  status: 'connected' | 'reconnecting' | 'connecting' | 'disconnected';
-}
+interface UserPanelProps {}
 
-export const UserPanel = ({
-  login,
-  logout,
-  address,
-  walletBalance,
-  kpBalance,
-  status,
-}: UserPanelProps) => {
-  const formattedBalance = walletBalance
-    ? Number(formatUnits(walletBalance.value, walletBalance.decimals))
-    : 0;
-  const formattedKpBalance = kpBalance
-    ? Number(formatUnits(kpBalance.value, kpBalance.decimals))
-    : 0;
-
-  useEffect(() => {
-    if (status === 'connected') {
-    }
-  }, [status]);
+export const UserPanel = ({}: UserPanelProps) => {
+  const { login, logout } = useLoginWithAbstract();
+  const { address, status } = useAccount();
+  const { ethBalance, tokenBalance } = useBalance();
 
   // const moveToExplorer = () => {
   // window.open(`${clientConfig.chain.blockExplorers.default.url}/address/${address}`, '_blank');
@@ -62,7 +41,7 @@ export const UserPanel = ({
               className="my-auto inline mr-[3px]"
             />
             <span className="text-white">
-              {floorNumber(formattedBalance)} {walletBalance?.symbol}
+              {roundNumber(ethBalance.formatted)} {ethBalance.symbol}
             </span>
           </div>
           <div className="my-auto ">
@@ -76,7 +55,7 @@ export const UserPanel = ({
               className="my-auto inline mr-[5px]"
             />
             <span className="text-white">
-              {floorNumber(formattedKpBalance, 2)} {kpBalance?.symbol}
+              {roundNumber(tokenBalance.formatted, 2)} {tokenBalance.symbol}
             </span>
           </div>
           <div

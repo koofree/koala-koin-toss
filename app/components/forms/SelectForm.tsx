@@ -1,18 +1,10 @@
+import { useGameOptionsStore } from '@/store/useGameOptionsStore';
+import { useUserGameOptionStore } from '@/store/useUserGameOptionStore';
 import { useState } from 'react';
 
-interface SelectFormProps {
-  minHeads: number;
-  coinCount: number;
-  allGameOptions: Array<[number, number, number, string, number]>;
-  setMinHeadsAndCoinCount: (minHeads: number, coinCount: number) => void;
-}
-
-export const SelectForm = ({
-  minHeads,
-  coinCount,
-  allGameOptions,
-  setMinHeadsAndCoinCount,
-}: SelectFormProps) => {
+export const SelectForm = () => {
+  const { gameOptions: allGameOptions, getByCoinCountAndMinHeads } = useGameOptionsStore();
+  const { userGameOption, setOption } = useUserGameOptionStore();
   const [isOpen, setIsOpen] = useState(false);
 
   const options = [
@@ -68,12 +60,14 @@ export const SelectForm = ({
   ];
 
   const selectedOption =
-    options.find((option) => option.minHeads === minHeads && option.coinCount === coinCount) ??
-    options[6];
+    options.find(
+      (option) =>
+        option.minHeads === userGameOption.minHeads && option.coinCount === userGameOption.coinCount
+    ) ?? options[6];
 
   const handleOptionSelect = (option: (typeof options)[0]) => {
     if (option.minHeads && option.coinCount) {
-      setMinHeadsAndCoinCount(option.minHeads, option.coinCount);
+      setOption({ coinCount: option.coinCount, minHeads: option.minHeads });
     }
 
     setIsOpen(false);
@@ -91,7 +85,7 @@ export const SelectForm = ({
         className="flex items-center justify-between w-full h-[60px]
         bg-[url('/images/middle/dropdown/btn_dropdown.png')] 
         bg-cover bg-center bg-no-repeat 
-        px-3 py-1 rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg
+        px-4 py-1 rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg
         text-white hover:opacity-90 transition-opacity"
       >
         <span>{selectedOption.label}</span>

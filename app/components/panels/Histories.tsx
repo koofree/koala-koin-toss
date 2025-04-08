@@ -1,18 +1,17 @@
 import Link from 'next/link';
 
 import { clientConfig, kpSymbol } from '@/config';
-import { GameResult } from '@/types';
-import { floorNumber } from '@/utils/floorNumber';
+import { useGameHistory } from '@/hooks/useGameHistory';
+import { useGameOptionsStore } from '@/store/useGameOptionsStore';
+import { GameOption, GameResult } from '@/types';
+import { roundNumber } from '@/utils/floorNumber';
 import { dateFormat, formatAddress } from '@/utils/format';
 import { getErc20Transfer } from '@/utils/getLogs';
 import { useEffect, useState } from 'react';
 import { createPublicClient, http, PublicClient, TransactionReceipt } from 'viem';
+import { useAccount } from 'wagmi';
 
-interface HistoriesProps {
-  myGameHistory: GameResult[];
-  allGameHistory: GameResult[];
-  allGameOptions: Array<[number, number, number, string, number]>;
-}
+interface HistoriesProps {}
 
 const MyHistoryRow = ({
   publicClient,
@@ -23,7 +22,7 @@ const MyHistoryRow = ({
   publicClient: PublicClient;
   address: `0x${string}`;
   game: GameResult;
-  gameOption?: [number, number, number, string, number];
+  gameOption?: GameOption;
 }) => {
   const [reward, setReward] = useState('');
 
@@ -44,7 +43,7 @@ const MyHistoryRow = ({
 
   useEffect(() => {
     if (game.won === true) {
-      setReward(floorNumber(game.reward) + ' ETH');
+      setReward(roundNumber(game.reward) + ' ETH');
     } else {
       setRewardAsync();
     }
@@ -80,7 +79,11 @@ const MyHistoryRow = ({
   );
 };
 
-const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesProps) => {
+const Histories = () => {
+  const { address } = useAccount();
+  const { myGameHistory, allGameHistory } = useGameHistory(address);
+  const { getByGameId } = useGameOptionsStore();
+
   // Create a public client to interact with the blockchain
   const publicClient = createPublicClient({
     ...clientConfig,
@@ -110,9 +113,7 @@ const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesP
             <table className="w-full border-collapse text-xs">
               <tbody>
                 {myGameHistory.map((game) => {
-                  const gameOption = allGameOptions.find(
-                    (option) => BigInt(option[0]) === game.gameId
-                  );
+                  const gameOption = getByGameId(game.gameId);
                   return (
                     <MyHistoryRow
                       key={game.timestamp}
@@ -152,9 +153,7 @@ const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesP
             <table className="w-full border-collapse text-xs scrollbar-hide">
               <tbody>
                 {allGameHistory.map((game) => {
-                  const gameOption = allGameOptions.find(
-                    (option) => BigInt(option[0]) === game.gameId
-                  );
+                  const gameOption = getByGameId(game.gameId);
                   return (
                     <tr key={game.timestamp} className="">
                       <td className="pt-2 w-[120px]">
@@ -182,7 +181,7 @@ const Histories = ({ myGameHistory, allGameHistory, allGameOptions }: HistoriesP
                           {game.won !== undefined ? (
                             <span
                               className={game.won ? 'text-green-400' : 'text-red-400'}
-                            >{`${game.won ? floorNumber(game.reward) + ' ETH' : ''}`}</span>
+                            >{`${game.won ? roundNumber(game.reward) + ' ETH' : ''}`}</span>
                           ) : (
                             '-'
                           )}

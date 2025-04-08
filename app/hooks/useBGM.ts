@@ -45,11 +45,12 @@ export const useBGM = () => {
         }
       });
       setAudioRef(nextAudio);
-      nextAudio.play().catch((err) => console.error('Error playing audio:', err));
+      nextAudio.play().catch((err) => {
+        setIsPlaying(false);
+      });
     });
     setAudioRef(audio);
     audio.play().catch((err) => {
-      console.error('Error playing audio:', err);
       setIsPlaying(false);
     });
   };

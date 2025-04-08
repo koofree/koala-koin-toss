@@ -65,6 +65,7 @@ export const TitlePanel = ({ winningProbability, onClick, isHistoryOpen }: Title
                 : '/images/middle/coins/ic_koa_back_24px.png'
             }
             width={24}
+            height={24}
             alt="1 TO WIN"
           />
           <label htmlFor="1-to-win" className="text-white text-2xl cursor-pointer font-semibold">
@@ -99,6 +100,7 @@ export const TitlePanel = ({ winningProbability, onClick, isHistoryOpen }: Title
                 : '/images/middle/coins/ic_koa_back_24px.png'
             }
             width={24}
+            height={24}
             alt="1 TO WIN"
           />
           <label htmlFor="1-to-win" className="text-white text-2xl cursor-pointer font-semibold">

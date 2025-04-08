@@ -3,7 +3,7 @@ import NextAbstractWalletProvider from './components/NextAbstractWalletProvider'
 import './globals.css';
 
 export const viewport: Viewport = {
-  width: '1280px',
+  width: 1280,
   userScalable: true,
   viewportFit: 'auto',
   interactiveWidget: 'resizes-visual',

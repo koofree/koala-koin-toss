@@ -14,6 +14,7 @@ export const HeaderLayout = ({}: HeaderLayoutProps) => {
             src="/images/replaces/lg_koala_koin-toss_original.png"
             alt="Dancing Koala"
             width={126}
+            height={44}
           />
         </Link>
       </div>

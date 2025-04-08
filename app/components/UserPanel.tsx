@@ -6,6 +6,7 @@ import { formatAddress } from '@/utils/format';
 import { useLoginWithAbstract } from '@abstract-foundation/agw-react';
 import { useAccount } from 'wagmi';
 import { PanelButton } from './buttons/PanelButton';
+import EthereumIcon from './image/EthereumIcon';
 import { Image } from './image/image';
 
 interface UserPanelProps {}
@@ -32,14 +33,8 @@ export const UserPanel = ({}: UserPanelProps) => {
             backdrop-blur-sm
           "
         >
-          <div className="flex flex-row items-center">
-            <Image
-              src="/images/ethereum-svgrepo-com.svg"
-              alt="ETH"
-              width={16}
-              height={16}
-              className="my-auto inline mr-[3px]"
-            />
+          <div className="flex flex-row items-center gap-1">
+            <EthereumIcon />
             <span className="text-white">
               {roundNumber(ethBalance.formatted)} {ethBalance.symbol}
             </span>
@@ -47,12 +42,13 @@ export const UserPanel = ({}: UserPanelProps) => {
           <div className="my-auto ">
             <div className="h-4 w-[1px] bg-white/30" about="bar"></div>
           </div>
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center justify-center gap-1">
             <Image
               src="/images/koala/ic_kp_small.png"
               width={16}
+              height={16}
               alt="1 TO WIN"
-              className="my-auto inline mr-[5px]"
+              className="mr-[5px]"
             />
             <span className="text-white">
               {roundNumber(tokenBalance.formatted, 2)} {tokenBalance.symbol}

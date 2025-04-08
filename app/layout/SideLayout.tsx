@@ -37,6 +37,7 @@ export const SideLayout = ({ side }: SideLayoutProps) => {
             src="/images/gif/torch.gif"
             alt="Torch"
             width={48}
+            height={57}
             className="max-w-48 min-w-0"
             unoptimized
           />
@@ -47,12 +48,19 @@ export const SideLayout = ({ side }: SideLayoutProps) => {
         {side === 'right' && <Image src="/images/footer/ic_cactus4.png" alt="Cactus 4" />}
         <div className="flex flex-col items-end">
           {side === 'right' && (
-            <Image src="/images/gif/spark.gif" width={20} alt="Cactus 2" className="right-0" />
+            <Image
+              src="/images/gif/spark.gif"
+              width={20}
+              height={20}
+              alt="Cactus 2"
+              className="right-0"
+            />
           )}
           <Image
             src="/images/gif/torch.gif"
             alt="Torch"
             width={48}
+            height={57}
             className="max-w-48 min-w-0"
             unoptimized
           />

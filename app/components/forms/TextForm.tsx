@@ -1,4 +1,4 @@
-import { Image } from '../image/image';
+import EthereumIcon from '../image/EthereumIcon';
 
 interface TextFormProps {
   value: number;
@@ -13,13 +13,7 @@ export const TextForm = ({ value }: TextFormProps) => {
         "
     >
       <div className="w-[16px] inline-block mx-2">
-        <Image
-          src="/images/ethereum-svgrepo-com.svg"
-          alt="ETH"
-          className="flex w-[16px] my-auto mr-3"
-          width={16}
-          height={16}
-        />
+        <EthereumIcon />
       </div>
       <input
         type="text"

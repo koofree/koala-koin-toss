@@ -334,11 +334,19 @@ export const CoinDisplay = ({
   }, [coinComponents]);
 
   return (
-    <div
+    <MotionDiv
       className={`flex flex-wrap gap-2 justify-center items-center mx-auto relative`}
       style={{ width: width }}
+      layout
+      transition={{ duration: 0.3 }}
     >
-      {coinComponents}
+      {coinComponents.sort((a, b) => {
+        const aKey = a.key?.toString();
+        const bKey = b.key?.toString();
+        const aIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === aKey);
+        const bIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === bKey);
+        return aIndex - bIndex;
+      })}
       {isWin === null ? (
         <></>
       ) : isWin ? (
@@ -354,6 +362,6 @@ export const CoinDisplay = ({
           animationEnabled={animationEnabled}
         />
       )}
-    </div>
+    </MotionDiv>
   );
 };

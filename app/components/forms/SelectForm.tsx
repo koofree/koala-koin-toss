@@ -82,7 +82,7 @@ export const SelectForm = ({
   return (
     <div
       className="relative w-[216px] h-[60px] bg-[#24223D] 
-      rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg shadow-2xl
+      rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg
     "
     >
       <button
@@ -91,7 +91,7 @@ export const SelectForm = ({
         className="flex items-center justify-between w-full h-[60px]
         bg-[url('/images/middle/dropdown/btn_dropdown.png')] 
         bg-cover bg-center bg-no-repeat 
-        px-3 py-1 rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg shadow-2xl
+        px-3 py-1 rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg
         text-white hover:opacity-90 transition-opacity"
       >
         <span>{selectedOption.label}</span>
@@ -108,7 +108,7 @@ export const SelectForm = ({
         />
       </button>
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 shadow-xl">
+        <div className="absolute z-10 w-full mt-1">
           <div
             className="py-2
             bg-[url('/images/middle/dropdown/dropdown_list_middle.png')] 

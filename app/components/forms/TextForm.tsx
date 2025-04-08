@@ -9,7 +9,7 @@ export const TextForm = ({ value }: TextFormProps) => {
     <div
       className="flex items-center bg-[#24223D] 
         w-[240px] pr-3 pl-2 
-        rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg shadow-2xl
+        rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg
         "
     >
       <div className="w-[16px] inline-block mx-2">

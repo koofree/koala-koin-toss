@@ -14,7 +14,7 @@ export const SliderForm = ({ value, setValue, active = true, max = 10 }: SliderF
     <div
       className="flex flex-row items-center justify-center bg-[#24223D] px-3 py-[6px] 
       rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg
-      shadow-2xl w-[216px] h-[60px]"
+      w-[216px] h-[60px]"
     >
       <div className="w-[41px] text-white">X {value}</div>
       <input
@@ -46,7 +46,7 @@ export const SliderForm = ({ value, setValue, active = true, max = 10 }: SliderF
     <div
       className="flex flex-row items-center justify-center bg-[#24223D] px-3 py-[6px] 
       rounded-tl-2xl rounded-br-2xl rounded-bl-lg rounded-tr-lg
-      shadow-2xl w-[216px] h-[60px]"
+      w-[216px] h-[60px]"
     >
       <div className="w-[41px] text-gray-500">X {value}</div>
       <input

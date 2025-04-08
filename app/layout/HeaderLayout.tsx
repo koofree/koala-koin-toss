@@ -27,7 +27,7 @@ export const HeaderLayout = ({
       <div className="flex justify-center ml-10 mt-8">
         <Link href="/">
           <Image
-            src="/images/header/lg_koala_koin-toss_original.png"
+            src="/images/replaces/lg_koala_koin-toss_original.png"
             alt="Dancing Koala"
             width={126}
           />

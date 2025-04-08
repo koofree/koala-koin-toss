@@ -13,7 +13,6 @@ interface ActionButtonsProps {
   balance: number;
   winningProbability: number;
   expectedValue: number;
-  repeatTrying: number;
   disabled: boolean;
   isHistoryOpen: boolean;
   setIsHistoryOpen: (open: boolean) => void;
@@ -28,7 +27,6 @@ export const ControlPanel = ({
   balance,
   winningProbability,
   expectedValue,
-  repeatTrying,
   disabled,
   isHistoryOpen,
   setIsHistoryOpen,
@@ -62,7 +60,6 @@ export const ControlPanel = ({
           balance={balance}
           expectedValue={expectedValue}
           disabled={disabled}
-          repeatTrying={repeatTrying}
         />
       ) : (
         <Histories />

@@ -21,7 +21,6 @@ interface SettingsProps {
   balance: number;
   expectedValue: number;
   disabled: boolean;
-  repeatTrying: number;
 }
 
 const Settings = ({
@@ -33,7 +32,6 @@ const Settings = ({
   balance,
   expectedValue,
   disabled,
-  repeatTrying,
 }: SettingsProps) => {
   const { ethBalance } = useBalance();
   const { userGameOption, setCoinCount, setMinHeads, setSelectedSide, setBetAmount } =
@@ -106,10 +104,7 @@ const Settings = ({
               className="w-[16px] h-[16px]"
             />
             <label className="text-gray-500">
-              AUTOBET{' '}
-              <b className={repeatTrying > 0 ? 'animate-pulse text-yellow-300' : 'text-sm'}>
-                {repeatTrying > 0 ? '(tap spacebar)' : '(Coming Soon)'}
-              </b>
+              AUTOBET <b className={'text-sm'}>(Coming Soon)</b>
             </label>
           </div>
           <SliderForm

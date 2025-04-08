@@ -21,7 +21,7 @@ export const useBalance = (): {
   tokenBalance: { formatted: number; symbol: string };
   refetch: () => void;
 } => {
-  const { address, status } = useAccount();
+  const { address } = useAccount();
 
   const { data: ethBalance, refetch: refetchEthBalance } = wagmiUseBalance({
     address: address,

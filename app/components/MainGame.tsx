@@ -11,15 +11,10 @@ import { CoinDisplay } from './CoinDisplay';
 import { ControlPanel } from './ControlPanel';
 import { Image } from './image/image';
 import { SpinningCoin } from './image/SpinningCoin';
-interface MainGameProps {}
 
-export const MainGame = ({}: MainGameProps) => {
+export const MainGame = () => {
   // Create a public client to interact with the blockchain
   const { publicClient } = usePublicClientStore();
-  if (!publicClient) {
-    return <></>;
-  }
-
   const { address: userAddress } = useAccount();
   const { ethBalance } = useBalance();
 
@@ -58,8 +53,10 @@ export const MainGame = ({}: MainGameProps) => {
 
   // Initialize the game options
   useEffect(() => {
-    initializeAllGameOptions(publicClient);
-  }, []);
+    if (publicClient) {
+      initializeAllGameOptions(publicClient);
+    }
+  }, [publicClient]);
 
   // After loading complete, set the initial game options
   useEffect(() => {
@@ -87,6 +84,10 @@ export const MainGame = ({}: MainGameProps) => {
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
     };
   }, []);
+
+  if (!publicClient) {
+    return <></>;
+  }
 
   return (
     <div className="flex flex-col max-w-screen-xl min-w-[1280px] h-full z-10">

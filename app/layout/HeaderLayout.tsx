@@ -3,9 +3,7 @@ import Link from 'next/link';
 import { Image } from '@/components/image/image';
 import { UserPanel } from '@/components/UserPanel';
 
-interface HeaderLayoutProps {}
-
-export const HeaderLayout = ({}: HeaderLayoutProps) => {
+export const HeaderLayout = () => {
   return (
     <div className="flex flex-row justify-between items-center">
       <div className="flex justify-center ml-10 mt-8">

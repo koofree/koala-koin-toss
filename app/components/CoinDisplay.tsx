@@ -57,10 +57,9 @@ const Coin = ({
   return (
     <MotionDiv
       key={idx}
-      className={`relative ${count === 1 ? 'w-[264px] h-[264px]' : 'w-[128px] h-[128px]'} ${
-        idx % 5 === 0 ? 'sm:basis-auto' : ''
-      }`}
+      className={`relative ${count === 1 ? 'w-[264px] h-[264px]' : 'w-[128px] h-[128px]'}`}
       layout
+      transition={{ duration: 0.3 }}
     >
       <div
         className="absolute inset-0"
@@ -244,6 +243,7 @@ export const CoinDisplay = ({
   >([]);
 
   const [coinComponents, setCoinComponents] = useState<JSX.Element[]>([]);
+  const [width, setWidth] = useState<number>(704);
 
   useEffect(() => {
     if (results.includes(null)) {
@@ -313,13 +313,31 @@ export const CoinDisplay = ({
     animationEnabled,
   ]);
 
+  useEffect(() => {
+    if (coinComponents.length > 2) {
+      const length = Math.round((704 * Math.round(coinComponents.length / 2)) / 5);
+      setWidth(length);
+    } else {
+      setWidth(704);
+    }
+  }, [coinComponents]);
+
   return (
-    <div className="flex flex-wrap gap-2 justify-center items-center w-[704px] mx-auto relative">
-      {coinComponents.sort((a, b) => {
-        const aIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === a.key?.toString());
-        const bIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === b.key?.toString());
-        return aIndex - bIndex;
-      })}
+    <div
+      className={`flex flex-wrap gap-2 justify-center items-center mx-auto relative`}
+      style={{ width: width }}
+    >
+      {isWin === null
+        ? coinComponents
+        : coinComponents.sort((a, b) => {
+            const aIndex = sortedCoinDisplay.findIndex(
+              (r) => r.key.toString() === a.key?.toString()
+            );
+            const bIndex = sortedCoinDisplay.findIndex(
+              (r) => r.key.toString() === b.key?.toString()
+            );
+            return aIndex - bIndex;
+          })}
       {isWin === null ? (
         <></>
       ) : isWin ? (

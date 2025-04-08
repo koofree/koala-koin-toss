@@ -3,7 +3,7 @@ import { useUserGameOptionStore } from '@/store/useUserGameOptionStore';
 import { useState } from 'react';
 
 export const SelectForm = () => {
-  const { gameOptions: allGameOptions, getByCoinCountAndMinHeads } = useGameOptionsStore();
+  const { gameOptions: allGameOptions } = useGameOptionsStore();
   const { userGameOption, setOption } = useUserGameOptionStore();
   const [isOpen, setIsOpen] = useState(false);
 

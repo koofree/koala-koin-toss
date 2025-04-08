@@ -11,8 +11,6 @@ import { useEffect, useState } from 'react';
 import { createPublicClient, http, PublicClient, TransactionReceipt } from 'viem';
 import { useAccount } from 'wagmi';
 
-interface HistoriesProps {}
-
 const MyHistoryRow = ({
   publicClient,
   address,

@@ -9,9 +9,7 @@ import { PanelButton } from './buttons/PanelButton';
 import EthereumIcon from './image/EthereumIcon';
 import { Image } from './image/image';
 
-interface UserPanelProps {}
-
-export const UserPanel = ({}: UserPanelProps) => {
+export const UserPanel = () => {
   const { login, logout } = useLoginWithAbstract();
   const { address, status } = useAccount();
   const { ethBalance, tokenBalance } = useBalance();

@@ -31,10 +31,11 @@ export const useUserGameOptionStore = create<UserGameOption>((set, get) => {
     },
     setCoinCount: (coinCount) => {
       const { getByCoinCountAndMinHeads } = useGameOptionsStore.getState();
-      const option = getByCoinCountAndMinHeads(coinCount, get().userGameOption.minHeads);
+      const minHeads = Math.min(coinCount, get().userGameOption.minHeads);
+      const option = getByCoinCountAndMinHeads(coinCount, minHeads);
       set({
         gameId: option?.[0],
-        userGameOption: { ...get().userGameOption, coinCount, option },
+        userGameOption: { ...get().userGameOption, coinCount, minHeads, option },
       });
     },
     setMinHeads: (minHeads) => {

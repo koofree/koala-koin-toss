@@ -149,10 +149,16 @@ const WinningMessage = ({ payout, animationEnabled }: WinningMessageProps) => {
       transition={{ duration: 0.5 }}
     >
       {/* border: 3px solid #EC6600 */}
-      <p className="text-white text-4xl font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500">
+      <p
+        className="text-white text-4xl font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500"
+        style={{ WebkitTextStrokeColor: '#eab308' }}
+      >
         You Win!!
       </p>
-      <p className="text-white text-[28px] font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500">
+      <p
+        className="text-white text-[28px] font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500"
+        style={{ WebkitTextStrokeColor: '#eab308' }}
+      >
         + {payout} ETH
       </p>
     </MotionDiv>
@@ -186,10 +192,16 @@ const LosingMessage = ({ payout, animationEnabled }: LosingMessageProps) => {
       transition={{ duration: 0.5 }}
     >
       {/* border: 3px solid #1A1A1A */}
-      <p className="text-white text-4xl font-['Press_Start_2P'] text-stroke-2 text-stroke-zinc-900">
+      <p
+        className="text-white text-4xl font-['Press_Start_2P'] text-stroke-2 text-stroke-zinc-900"
+        style={{ WebkitTextStrokeColor: '#1A1A1A' }}
+      >
         You Lose
       </p>
-      <p className="text-white text-[28px] font-['Press_Start_2P'] text-stroke-2 text-stroke-zinc-900">
+      <p
+        className="text-white text-[28px] font-['Press_Start_2P'] text-stroke-2 text-stroke-zinc-900"
+        style={{ WebkitTextStrokeColor: '#1A1A1A' }}
+      >
         BUT YOU RECEIVED +{payout} {kpSymbol}
       </p>
     </MotionDiv>

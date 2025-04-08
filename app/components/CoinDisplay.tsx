@@ -30,13 +30,15 @@ const Coin = ({
   animationEnabled,
 }: CoinProps) => {
   const [progress, setProgress] = useState(0);
+  const [isLocalFlipping, setIsLocalFlipping] = useState(false);
 
-  const animationDuration = animationEnabled ? 2000 : 0;
+  // Random duration around 2 seconds (1800-2200ms)
+  const animationDuration = animationEnabled ? 1400 + Math.floor(Math.random() * 1200) : 0;
 
   useEffect(() => {
     if (isFlipping) {
       // Increase the step size to make the flipping speed faster while keeping the same duration
-
+      setIsLocalFlipping(true);
       const flipCount = 100000;
       const interval = setInterval(() => {
         setProgress((prev) => {
@@ -50,7 +52,10 @@ const Coin = ({
 
       return () => clearInterval(interval);
     } else {
-      setProgress(0);
+      setTimeout(() => {
+        setProgress(0);
+        setIsLocalFlipping(false);
+      }, 100 * idx);
     }
   }, [isFlipping, animationDuration]);
 
@@ -64,12 +69,12 @@ const Coin = ({
       <div
         className="absolute inset-0"
         style={{
-          transform: isFlipping ? `rotateY(${progress * 10}deg)` : 'none',
+          transform: `rotateY(${progress * 10}deg)`,
           transition: 'transform 0.1s linear',
           transformStyle: 'preserve-3d',
         }}
       >
-        {isFlipping ? (
+        {isLocalFlipping ? (
           <>
             {(progress * 10) % 360 < 180 ? (
               <div className="absolute inset-0 backface-hidden">
@@ -124,15 +129,18 @@ const Coin = ({
 };
 
 interface WinningMessageProps {
+  delay: number;
   payout: number;
   animationEnabled: boolean;
 }
 
-const WinningMessage = ({ payout, animationEnabled }: WinningMessageProps) => {
+const WinningMessage = ({ delay, payout, animationEnabled }: WinningMessageProps) => {
   useEffect(() => {
     if (animationEnabled) {
-      const audio = new Audio('/sounds/win.mp3');
-      audio.play();
+      setTimeout(() => {
+        const audio = new Audio('/sounds/win.mp3');
+        audio.play();
+      }, delay);
     }
   }, []);
 
@@ -146,7 +154,7 @@ const WinningMessage = ({ payout, animationEnabled }: WinningMessageProps) => {
             bg-cover bg-center bg-no-repeat"
       layout="size"
       animate={{ opacity: [0, 1] }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.5, delay: delay / 1000 }}
     >
       {/* border: 3px solid #EC6600 */}
       <p
@@ -166,15 +174,18 @@ const WinningMessage = ({ payout, animationEnabled }: WinningMessageProps) => {
 };
 
 interface LosingMessageProps {
+  delay: number;
   payout: number;
   animationEnabled: boolean;
 }
 
-const LosingMessage = ({ payout, animationEnabled }: LosingMessageProps) => {
+const LosingMessage = ({ delay, payout, animationEnabled }: LosingMessageProps) => {
   useEffect(() => {
     if (animationEnabled) {
-      const audio = new Audio('/sounds/lose.mp3');
-      audio.play();
+      setTimeout(() => {
+        const audio = new Audio('/sounds/lose.mp3');
+        audio.play();
+      }, delay);
     }
   }, []);
 
@@ -189,7 +200,7 @@ const LosingMessage = ({ payout, animationEnabled }: LosingMessageProps) => {
             "
       layout="size"
       animate={{ opacity: [0, 1] }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.5, delay: delay / 1000 }}
     >
       {/* border: 3px solid #1A1A1A */}
       <p
@@ -323,28 +334,34 @@ export const CoinDisplay = ({
   }, [coinComponents]);
 
   return (
-    <div
+    <MotionDiv
       className={`flex flex-wrap gap-2 justify-center items-center mx-auto relative`}
       style={{ width: width }}
+      layout
+      transition={{ duration: 0.3 }}
     >
-      {isWin === null
-        ? coinComponents
-        : coinComponents.sort((a, b) => {
-            const aIndex = sortedCoinDisplay.findIndex(
-              (r) => r.key.toString() === a.key?.toString()
-            );
-            const bIndex = sortedCoinDisplay.findIndex(
-              (r) => r.key.toString() === b.key?.toString()
-            );
-            return aIndex - bIndex;
-          })}
+      {coinComponents.sort((a, b) => {
+        const aKey = a.key?.toString();
+        const bKey = b.key?.toString();
+        const aIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === aKey);
+        const bIndex = sortedCoinDisplay.findIndex((r) => r.key.toString() === bKey);
+        return aIndex - bIndex;
+      })}
       {isWin === null ? (
         <></>
       ) : isWin ? (
-        <WinningMessage payout={payout} animationEnabled={animationEnabled} />
+        <WinningMessage
+          delay={coinDisplay.length * 100 + 100}
+          payout={payout}
+          animationEnabled={animationEnabled}
+        />
       ) : (
-        <LosingMessage payout={payout} animationEnabled={animationEnabled} />
+        <LosingMessage
+          delay={coinDisplay.length * 100 + 100}
+          payout={payout}
+          animationEnabled={animationEnabled}
+        />
       )}
-    </div>
+    </MotionDiv>
   );
 };

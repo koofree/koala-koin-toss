@@ -2,8 +2,12 @@ import { useGameOptionsStore } from '@/store/useGameOptionsStore';
 import { useUserGameOptionStore } from '@/store/useUserGameOptionStore';
 import { useState } from 'react';
 
-export const SelectForm = () => {
-  const { gameOptions: allGameOptions } = useGameOptionsStore();
+interface SelectFormProps {
+  disabled: boolean;
+}
+
+export const SelectForm = ({ disabled }: SelectFormProps) => {
+  const { getByCoinCountAndMinHeads } = useGameOptionsStore();
   const { userGameOption, setOption } = useUserGameOptionStore();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -12,49 +16,43 @@ export const SelectForm = () => {
       idx: 0,
       minHeads: 5,
       coinCount: 10,
-      label: `10:5 (x${allGameOptions.find((option) => option[1] === 10 && option[2] === 5)?.[4]})`,
-      isActive:
-        allGameOptions.find((option) => option[1] === 10 && option[2] === 5)?.[4] !== undefined,
+      label: `10:5 (x${getByCoinCountAndMinHeads(10, 5)?.[4]})`,
+      isActive: getByCoinCountAndMinHeads(10, 5) !== undefined,
     },
     {
       idx: 1,
       minHeads: 1,
       coinCount: 1,
-      label: `1:1 (x${allGameOptions.find((option) => option[1] === 1 && option[2] === 1)?.[4]})`,
-      isActive:
-        allGameOptions.find((option) => option[1] === 1 && option[2] === 1)?.[4] !== undefined,
+      label: `1:1 (x${getByCoinCountAndMinHeads(1, 1)?.[4]})`,
+      isActive: getByCoinCountAndMinHeads(1, 1) !== undefined,
     },
     {
       idx: 2,
       minHeads: 3,
       coinCount: 4,
-      label: `4:3 (x${allGameOptions.find((option) => option[1] === 4 && option[2] === 3)?.[4]})`,
-      isActive:
-        allGameOptions.find((option) => option[1] === 4 && option[2] === 3)?.[4] !== undefined,
+      label: `4:3 (x${getByCoinCountAndMinHeads(4, 3)?.[4]})`,
+      isActive: getByCoinCountAndMinHeads(4, 3) !== undefined,
     },
     {
       idx: 3,
       minHeads: 5,
       coinCount: 6,
-      label: `6:5 (x${allGameOptions.find((option) => option[1] === 6 && option[2] === 5)?.[4]})`,
-      isActive:
-        allGameOptions.find((option) => option[1] === 6 && option[2] === 5)?.[4] !== undefined,
+      label: `6:5 (x${getByCoinCountAndMinHeads(6, 5)?.[4]})`,
+      isActive: getByCoinCountAndMinHeads(6, 5) !== undefined,
     },
     {
       idx: 4,
       minHeads: 8,
       coinCount: 9,
-      label: `9:8 (x${allGameOptions.find((option) => option[1] === 9 && option[2] === 8)?.[4]})`,
-      isActive:
-        allGameOptions.find((option) => option[1] === 9 && option[2] === 8)?.[4] !== undefined,
+      label: `9:8 (x${getByCoinCountAndMinHeads(9, 8)?.[4]})`,
+      isActive: getByCoinCountAndMinHeads(9, 8) !== undefined,
     },
     {
       idx: 5,
       minHeads: 10,
       coinCount: 10,
-      label: `10:10 (x${allGameOptions.find((option) => option[1] === 10 && option[2] === 10)?.[4]})`,
-      isActive:
-        allGameOptions.find((option) => option[1] === 10 && option[2] === 10)?.[4] !== undefined,
+      label: `10:10 (x${getByCoinCountAndMinHeads(10, 10)?.[4]})`,
+      isActive: getByCoinCountAndMinHeads(10, 10) !== undefined,
     },
     { idx: 6, minHeads: 0, coinCount: 0, label: 'CUSTOM', isActive: true },
   ];
@@ -81,7 +79,7 @@ export const SelectForm = () => {
     >
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
         className="flex items-center justify-between w-full h-[60px]
         bg-[url('/images/middle/dropdown/btn_dropdown.png')] 
         bg-cover bg-center bg-no-repeat 

@@ -73,8 +73,9 @@ export const useGamePlay = ({ userAddress, publicClient }: GamePlayProps) => {
     }
 
     setIsFlipping(true);
+    new Audio('/sounds/coin-donation-2-180438.mp3').play();
 
-    const sessionData = await getStoredSession(userAddress, abstractClient, createSessionAsync);
+    const sessionData = await getStoredSession(userAddress, abstractClient);
     if (!sessionData) {
       createAndStoreSession(userAddress, createSessionAsync);
       setIsFlipping(false);
@@ -128,7 +129,7 @@ export const useGamePlay = ({ userAddress, publicClient }: GamePlayProps) => {
 
     setIsWin(gameResult.won);
     if (gameResult.won) {
-      setReward(gameResult.reward);
+      setReward(roundNumber(gameResult.reward));
     } else {
       const receipt: TransactionReceipt = (await publicClient.getTransactionReceipt({
         hash: gameResult.revealTransactionHash,
@@ -137,7 +138,7 @@ export const useGamePlay = ({ userAddress, publicClient }: GamePlayProps) => {
       const reward: number | undefined =
         receipt && userAddress ? await getErc20Transfer(receipt, userAddress) : undefined;
 
-      setReward(reward ? reward : 0);
+      setReward(reward ? roundNumber(reward) : 0);
     }
 
     setResults(

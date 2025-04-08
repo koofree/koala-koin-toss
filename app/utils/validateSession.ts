@@ -1,8 +1,6 @@
 import type { AbstractClient } from '@abstract-foundation/agw-client';
-import type { SessionConfig } from '@abstract-foundation/agw-client/sessions';
 import type { Address, Hash } from 'viem';
 import { clearStoredSession } from './clearStoredSession';
-import { createAndStoreSession } from './createAndStoreSession';
 
 /**
  * @function validateSession
@@ -19,7 +17,6 @@ import { createAndStoreSession } from './createAndStoreSession';
  *
  * @param {Address} address - The wallet address that owns the session
  * @param {string} sessionHash - The hash of the session to validate
- * @param {(params: { session: SessionConfig }) => Promise<{ transactionHash?: `0x${string}`; session: SessionConfig }>} createSessionAsync - The function to create a new session
  *
  * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether
  *                            the session is valid (true) or not (false)
@@ -27,10 +24,7 @@ import { createAndStoreSession } from './createAndStoreSession';
 export const validateSession = async (
   address: Address,
   sessionHash: Hash,
-  agwClient: AbstractClient,
-  createSessionAsync: (params: {
-    session: SessionConfig;
-  }) => Promise<{ transactionHash?: Hash; session: SessionConfig }>
+  agwClient: AbstractClient
 ): Promise<boolean> => {
   console.log('Validating session for address:', address);
 
@@ -40,7 +34,6 @@ export const validateSession = async (
 
     if (!isValid) {
       clearStoredSession(address);
-      await createAndStoreSession(address, createSessionAsync);
     }
 
     return isValid;

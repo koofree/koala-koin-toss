@@ -120,8 +120,6 @@ export const useGameOptionsStore = create<GameOptions>((set, get) => {
             ];
 
             newAllGameOptions.push(newGameOption);
-
-            console.log('newGameOption', newGameOption);
           }
         }
       }

@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
-const bgmList = ['8bit-mix-56351.mp3', '8-bit-heaven-26287.mp3'];
+const bgmList = [
+  'game-music-player-console-8bit-background-intro-theme-297305.mp3',
+  'very-lush-and-swag-loop-74140.mp3',
+];
 
 export const useBGM = () => {
   const [userInteracted, setUserInteracted] = useState(false);

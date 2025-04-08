@@ -139,8 +139,8 @@ const WinningMessage = ({ payout, animationEnabled }: WinningMessageProps) => {
   return (
     <MotionDiv
       className="
-            h-[400px]
-            w-[704px]
+            h-[350px]
+            w-[700px]
             absolute flex flex-col items-center justify-center space-y-4
             bg-[url('/images/middle/ellipse_win.png')]
             bg-cover bg-center bg-no-repeat"
@@ -151,13 +151,13 @@ const WinningMessage = ({ payout, animationEnabled }: WinningMessageProps) => {
       {/* border: 3px solid #EC6600 */}
       <p
         className="text-white text-4xl font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500"
-        style={{ WebkitTextStrokeColor: '#eab308' }}
+        style={{ WebkitTextStrokeColor: '#EC6600' }}
       >
         You Win!!
       </p>
       <p
         className="text-white text-[28px] font-['Press_Start_2P'] text-stroke-2 text-stroke-yellow-500"
-        style={{ WebkitTextStrokeColor: '#eab308' }}
+        style={{ WebkitTextStrokeColor: '#EC6600' }}
       >
         + {payout} ETH
       </p>
@@ -183,7 +183,7 @@ const LosingMessage = ({ payout, animationEnabled }: LosingMessageProps) => {
       className="
             h-[400px]
             w-[704px]
-            absolute flex flex-col items-center justify-center overflow-visible
+            absolute flex flex-col items-center justify-center space-y-4
             bg-[url('/images/middle/ellipse_lose.png')]
             bg-cover bg-center bg-no-repeat
             "

@@ -50,7 +50,6 @@ export const UserPanel = ({
             rounded-full 
             bg-white/15 
             p-3 px-3
-            shadow-lg 
             backdrop-blur-sm
           "
         >

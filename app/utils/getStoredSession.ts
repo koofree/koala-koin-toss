@@ -33,10 +33,7 @@ import { validateSession } from './validateSession';
  */
 export const getStoredSession = async (
   address: Address,
-  agwClient: AbstractClient,
-  createSessionAsync: (params: {
-    session: SessionConfig;
-  }) => Promise<{ transactionHash?: `0x${string}`; session: SessionConfig }>
+  agwClient: AbstractClient
 ): Promise<{ session: SessionConfig; privateKey: Address } | null> => {
   console.log('Getting stored session for address:', address);
   if (!address) return null;
@@ -49,7 +46,9 @@ export const getStoredSession = async (
     const decryptedData = await decrypt(encryptedData, key);
     const parsedData = JSON.parse(decryptedData);
     const sessionHash = getSessionHash(parsedData.session);
-    await validateSession(address, sessionHash, agwClient, createSessionAsync);
+    const isValid = await validateSession(address, sessionHash, agwClient);
+    if (!isValid) return null;
+
     return parsedData;
   } catch (error) {
     console.error('Failed to decrypt session:', error);

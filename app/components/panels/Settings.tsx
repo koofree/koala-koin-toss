@@ -142,7 +142,7 @@ const Settings = ({
 
         <div className="flex flex-col space-y-2 w-1/3 mt-10">
           <label className="text-gray-300 min-h-[28px]">PRESETS</label>
-          <SelectForm />
+          <SelectForm disabled={isFlipping} />
         </div>
 
         <div className="flex flex-col space-y-2 w-1/3 mt-10">

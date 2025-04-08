@@ -1,5 +1,4 @@
 import type { AbstractClient } from '@abstract-foundation/agw-client';
-import type { SessionConfig } from '@abstract-foundation/agw-client/sessions';
 import type { Address, Hash } from 'viem';
 import { clearStoredSession } from './clearStoredSession';
 
@@ -18,7 +17,6 @@ import { clearStoredSession } from './clearStoredSession';
  *
  * @param {Address} address - The wallet address that owns the session
  * @param {string} sessionHash - The hash of the session to validate
- * @param {(params: { session: SessionConfig }) => Promise<{ transactionHash?: `0x${string}`; session: SessionConfig }>} createSessionAsync - The function to create a new session
  *
  * @returns {Promise<boolean>} A promise that resolves to a boolean indicating whether
  *                            the session is valid (true) or not (false)

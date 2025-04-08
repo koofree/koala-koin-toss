@@ -255,7 +255,6 @@ export const CoinDisplay = ({
 
   const [coinComponents, setCoinComponents] = useState<JSX.Element[]>([]);
   const [width, setWidth] = useState<number>(704);
-  const [rerender, setRerender] = useState(false);
 
   useEffect(() => {
     if (results.includes(null)) {
@@ -339,17 +338,7 @@ export const CoinDisplay = ({
       className={`flex flex-wrap gap-2 justify-center items-center mx-auto relative`}
       style={{ width: width }}
     >
-      {!rerender
-        ? coinComponents
-        : coinComponents.sort((a, b) => {
-            const aIndex = sortedCoinDisplay.findIndex(
-              (r) => r.key.toString() === a.key?.toString()
-            );
-            const bIndex = sortedCoinDisplay.findIndex(
-              (r) => r.key.toString() === b.key?.toString()
-            );
-            return aIndex - bIndex;
-          })}
+      {coinComponents}
       {isWin === null ? (
         <></>
       ) : isWin ? (

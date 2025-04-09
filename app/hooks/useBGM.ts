@@ -1,5 +1,5 @@
+import { INITIAL_BGM_VOLUME } from '@/config';
 import { useEffect, useState } from 'react';
-
 const bgmList = [
   'game-music-player-console-8bit-background-intro-theme-297305.mp3',
   'very-lush-and-swag-loop-74140.mp3',
@@ -56,6 +56,7 @@ export const useBGM = () => {
   const _playMusic = () => {
     if (audioRef) {
       audioRef.currentTime = currentTime;
+      audioRef.volume = INITIAL_BGM_VOLUME;
       audioRef.play().catch(() => {
         setIsPlaying(false);
       });
@@ -69,11 +70,13 @@ export const useBGM = () => {
           }
         });
         setAudioRef(nextAudio);
+        nextAudio.volume = INITIAL_BGM_VOLUME;
         nextAudio.play().catch(() => {
           setIsPlaying(false);
         });
       });
       setAudioRef(audio);
+      audio.volume = INITIAL_BGM_VOLUME;
       audio.play().catch(() => {
         setIsPlaying(false);
       });

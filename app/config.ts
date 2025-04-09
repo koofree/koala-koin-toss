@@ -104,7 +104,8 @@ export const BUILD_TIME = process.env.BUILD_TIME || new Date().toISOString();
  * - useGameOptionsStore.ts for game options caching
  * - useGameCountStore.ts for game count persistence
  */
-export const KEY_PREFIX = 'koala_koin_toss_';
+export const KEY_PREFIX = 'kkt_';
+export const ENCRYPTION_KEY_PREFIX = `${KEY_PREFIX}encryption_key_`;
 export const SESSION_STORAGE_KEY_PREFIX = `${KEY_PREFIX}session_`;
 export const SETTING_STORAGE_KEY = `${KEY_PREFIX}setting`;
 export const GAME_OPTIONS_STORAGE_KEY = `${KEY_PREFIX}game_options`;

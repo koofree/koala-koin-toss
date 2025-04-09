@@ -3,23 +3,19 @@ import { formatUnits } from 'viem';
 import { abstractTestnet } from 'viem/chains';
 import koalaKoinTossV1 from '../public/abis/KoalaKoinTossV1.json';
 
-// Define environment-specific configurations
+/**
+ * Environment-specific configurations for different deployment environments
+ * Used in:
+ * - useContract.ts for contract initialization
+ * - useWallet.ts for wallet connection
+ * - usePaymaster.ts for paymaster operations
+ */
 const environments = {
   development: {
     chain: abstractTestnet,
-    contractAddress: '0xb7732fb08646261f69DAd26f2f2C8b4f8dcC5070',
-    kpAddress: '0xf3E1263c2C0a660f567B5338895C4E7D616a138B',
-    paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
-    getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
-      switch (true) {
-        case coinCount === 1 && minHeads === 1:
-          return 0;
-        case coinCount === 2 && minHeads === 2:
-          return 1;
-        default:
-          return undefined;
-      }
-    },
+    contractAddress: '0xb7732fb08646261f69DAd26f2f2C8b4f8dcC5070', // Used in useContract.ts for contract initialization
+    kpAddress: '0xf3E1263c2C0a660f567B5338895C4E7D616a138B', // Used in usePaymaster.ts for KP token operations
+    paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391', // Used in usePaymaster.ts for paymaster operations
   },
   production: {
     chain: {
@@ -43,16 +39,6 @@ const environments = {
     contractAddress: '0xb7732fb08646261f69DAd26f2f2C8b4f8dcC5070', // TODO:Replace with production contract address
     kpAddress: '0xf3E1263c2C0a660f567B5338895C4E7D616a138B', // TODO:Replace with production kp address
     paymasterAddress: '0x5407B5040dec3D339A9247f3654E59EEccbb6391',
-    getGameNumber: (coinCount: number, minHeads: number): number | undefined => {
-      switch (true) {
-        case coinCount === 1 && minHeads === 1:
-          return 0;
-        case coinCount === 2 && minHeads === 2:
-          return 1;
-        default:
-          return undefined;
-      }
-    },
   },
 };
 
@@ -60,113 +46,81 @@ const environments = {
 export const environment = (process.env.NODE_ENV || 'development') as keyof typeof environments;
 const currentConfig = environments[environment] || environments.development;
 
-// Import KoalaKoinTossV1 ABI from the JSON file
+/**
+ * Contract ABI used in:
+ * - useContract.ts for contract method calls
+ * - useGameOptionsStore.ts for reading game options
+ * - useGameCountStore.ts for tracking game count
+ */
 export const koalaKoinTossV1Abi = koalaKoinTossV1.abi;
-// Replace with your actual contract address
+
+/**
+ * Contract addresses and configurations used across the application
+ * Used in:
+ * - useContract.ts for contract initialization
+ * - usePaymaster.ts for paymaster operations
+ * - useWallet.ts for wallet connection
+ */
 export const contractAddress: `0x${string}` = currentConfig.contractAddress as `0x${string}`;
-// Replace with your actual paymaster address
 export const kpAddress: `0x${string}` = currentConfig.kpAddress as `0x${string}`;
 export const kpSymbol = 'XT';
-
-// Replace with your actual paymaster address
 export const paymasterAddress: `0x${string}` = currentConfig.paymasterAddress as `0x${string}`;
-// client config to specify the chain
 export const clientConfig = {
   chain: currentConfig.chain,
 };
-export const getGameNumber = currentConfig.getGameNumber;
+
+/**
+ * Contract function names used in:
+ * - useContract.ts for contract method calls
+ * - useGameOptionsStore.ts for reading game options
+ * - useGameCountStore.ts for tracking game count
+ */
 export const functionNames = {
-  koinToss: 'koin_toss',
-  koinTossEth: 'koin_toss_eth',
-  getPayout: 'getPayout',
-  getGameOptions: 'gameOptions',
-  getBetLimits: 'getBetLimits',
-  getGameCount: 'gameCount',
-  getPrizePools: 'prizePools',
+  koinToss: 'koin_toss', // Used in useContract.ts for placing bets
+  koinTossEth: 'koin_toss_eth', // Used in useContract.ts for ETH bets
+  getPayout: 'getPayout', // Used in useGameOptionsStore.ts for calculating payouts
+  getGameOptions: 'gameOptions', // Used in useGameOptionsStore.ts for fetching game options
+  getBetLimits: 'getBetLimits', // Used in useGameOptionsStore.ts for bet limits
+  getGameCount: 'gameCount', // Used in useGameCountStore.ts for tracking games
+  getPrizePools: 'prizePools', // Used in useGameOptionsStore.ts for prize pool info
 };
 
+/**
+ * Contract event names used in:
+ * - useContract.ts for event listening
+ * - useGameCountStore.ts for game state updates
+ */
 export const eventNames = {
-  TossCommitted: 'TossCommitted',
-  TossRevealed: 'TossRevealed',
+  TossCommitted: 'TossCommitted', // Used in useContract.ts for bet commitment events
+  TossRevealed: 'TossRevealed', // Used in useContract.ts for bet reveal events
 };
 
 // For build-time timestamp (this will be replaced with actual build time)
 export const BUILD_TIME = process.env.BUILD_TIME || new Date().toISOString();
 
 /**
- * @constant {string} SESSION_KEY_VALIDATOR
- * @description The address of the Abstract Global Wallet session key validator contract
- * Docs: https://docs.abs.xyz/abstract-global-wallet/session-keys/going-to-production
- *
- * This contract is used to verify the validity of session keys and determine their status.
- * It implements the sessionStatus function which takes an account address and a session hash
- * and returns the current status of that session.
+ * Storage key prefixes used in:
+ * - useSettingStore.ts for user settings
+ * - useGameOptionsStore.ts for game options caching
+ * - useGameCountStore.ts for game count persistence
  */
-export const SESSION_KEY_VALIDATOR = '0x00180f0b9d72664AC2D494Dec6E39d3aC061ed65';
-
-/**
- * @constant {Array} SESSION_VALIDATOR_ABI
- * @description The ABI (Application Binary Interface) for the session key validator contract
- *
- * Contains the function signature for sessionStatus which can be used to check if a session
- * is still valid. This ABI only includes the relevant function needed for session validation.
- */
-export const SESSION_VALIDATOR_ABI = [
-  {
-    inputs: [
-      { internalType: 'address', name: 'account', type: 'address' },
-      { internalType: 'bytes32', name: 'sessionHash', type: 'bytes32' },
-    ],
-    name: 'sessionStatus',
-    outputs: [{ internalType: 'enum SessionLib.Status', name: '', type: 'uint8' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-];
-
-export const KEY_PREFIX = 'kkt_';
-
-/**
- * @constant {string} ENCRYPTION_KEY_PREFIX
- * @description Prefix used for storing encryption keys in local storage
- *
- * The actual storage key is created by appending the user's wallet address to this prefix,
- * ensuring each wallet address has its own unique encryption key stored separately from the
- * encrypted session data.
- */
-export const ENCRYPTION_KEY_PREFIX = `${KEY_PREFIX}encryption_key_`;
-
-/**
- * @constant {string} STORAGE_KEY_PREFIX
- * @description Prefix used for storing session data in local storage
- *
- * The actual storage key is created by appending the user's wallet address to this prefix,
- * ensuring each wallet address has its own unique session data stored separately from the
- * other wallets.
- */
+export const KEY_PREFIX = 'koala_koin_toss_';
 export const SESSION_STORAGE_KEY_PREFIX = `${KEY_PREFIX}session_`;
-
-/**
- * @constant {string} SETTING_STORAGE_KEY_PREFIX
- * @description Prefix used for storing setting data in local storage
- *
- * The actual storage key is created by appending the user's wallet address to this prefix,
- * ensuring each wallet address has its own unique setting data stored separately from the
- * other wallets.
- */
 export const SETTING_STORAGE_KEY = `${KEY_PREFIX}setting`;
-
 export const GAME_OPTIONS_STORAGE_KEY = `${KEY_PREFIX}game_options`;
 export const GAME_OPTIONS_STORAGE_UPDATED_AT_KEY = `${KEY_PREFIX}game_options_updated_at`;
 
-export const BLOCK_NUMBER_TO_FETCH = 1000000;
 /**
- * @constant {number} POOL_EDGE
- * @description The edge of the pool
- *
- * The edge of the pool is the amount of money that is added to the pool each time a player wins
- * This value could be updated by the contract owner, so we need to fetch it depending on the updated block number.
- *
+ * Game configuration constants used in:
+ * - useGameOptionsStore.ts for game options
+ * - useContract.ts for contract interactions
+ */
+export const BLOCK_NUMBER_TO_FETCH = 1000000;
+
+/**
+ * Pool edge configuration used in:
+ * - useGameOptionsStore.ts for payout calculations
+ * - useContract.ts for contract interactions
  */
 const getPoolEdge = (blockNumber?: number): number => {
   switch (true) {
@@ -180,5 +134,10 @@ const getPoolEdge = (blockNumber?: number): number => {
 export const POOL_EDGE: bigint = BigInt(getPoolEdge());
 export const POOL_EDGE_DISCRIMINATOR = 1 - Number(formatUnits(POOL_EDGE, 8));
 
+/**
+ * Initial game settings used in:
+ * - useUserGameOptionStore.ts for default bet amounts
+ * - useSettingStore.ts for default sound settings
+ */
 export const INITIAL_BET_AMOUNT = 0.001;
 export const INITIAL_BGM_VOLUME = 0.3;

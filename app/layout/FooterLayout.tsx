@@ -1,3 +1,6 @@
+import { LINKS } from '@/config';
+import Link from 'next/link';
+
 export const FooterLayout = () => {
   return (
     <div
@@ -16,7 +19,7 @@ export const FooterLayout = () => {
         <div
           className="flex flex-col space-y-1 
             2xl:flex-row 
-            2xl:space-x-2 
+            2xl:space-x-2
             2xl:space-y-0
             items-end
             text-white/70 text-xs"
@@ -31,15 +34,20 @@ export const FooterLayout = () => {
             2xl:space-x-2
             2xl:space-y-0
             items-end
-            text-white/70 text-xs flex "
+            text-white/70 text-xs flex"
         >
-          <span className="font-['Press_Start_2P']">
-            Fair randomness powered with Proof of Play
-          </span>
+          <span className="font-['Press_Start_2P']">Fair randomness powered with</span>
+          <Link href={LINKS.PROOF_OF_PLAY_LINK} target="_blank" className="flex pl-1">
+            <span className="font-['Press_Start_2P']">Proof of Play</span>
+          </Link>
           <span className="hidden 2xl:inline text-white/20 font-['Press_Start_2P']">|</span>
-          <span className="font-['Press_Start_2P']">Documentation</span>
+          <Link href={LINKS.DOCUMENTATION_LINK} target="_blank" className="flex">
+            <span className="font-['Press_Start_2P']">Documentation</span>
+          </Link>
           <span className="hidden 2xl:inline text-white/20 font-['Press_Start_2P']">|</span>
-          <span className="font-['Press_Start_2P']">X (TWITTER)</span>
+          <Link href={LINKS.X_LINK} target="_blank" className="flex">
+            <span className="font-['Press_Start_2P']">X (TWITTER)</span>
+          </Link>
         </div>
       </div>
     </div>

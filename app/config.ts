@@ -142,3 +142,12 @@ export const POOL_EDGE_DISCRIMINATOR = 1 - Number(formatUnits(POOL_EDGE, 8));
  */
 export const INITIAL_BET_AMOUNT = 0.001;
 export const INITIAL_BGM_VOLUME = 0.3;
+
+/**
+ * Links
+ */
+export const LINKS = {
+  PROOF_OF_PLAY_LINK: 'https://www.proofofplay.com/',
+  DOCUMENTATION_LINK: 'https://koalafun.xyz/',
+  X_LINK: 'https://x.com/',
+};

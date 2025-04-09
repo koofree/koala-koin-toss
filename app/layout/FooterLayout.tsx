@@ -37,15 +37,19 @@ export const FooterLayout = () => {
             text-white/70 text-xs flex"
         >
           <span className="font-['Press_Start_2P']">Fair randomness powered with</span>
-          <Link href={LINKS.PROOF_OF_PLAY_LINK} target="_blank" className="flex pl-1">
+          <Link
+            href={LINKS.PROOF_OF_PLAY_LINK}
+            target="_blank"
+            className="flex pl-1 hover:text-white"
+          >
             <span className="font-['Press_Start_2P']">Proof of Play</span>
           </Link>
           <span className="hidden 2xl:inline text-white/20 font-['Press_Start_2P']">|</span>
-          <Link href={LINKS.DOCUMENTATION_LINK} target="_blank" className="flex">
+          <Link href={LINKS.DOCUMENTATION_LINK} target="_blank" className="flex hover:text-white">
             <span className="font-['Press_Start_2P']">Documentation</span>
           </Link>
           <span className="hidden 2xl:inline text-white/20 font-['Press_Start_2P']">|</span>
-          <Link href={LINKS.X_LINK} target="_blank" className="flex">
+          <Link href={LINKS.X_LINK} target="_blank" className="flex hover:text-white">
             <span className="font-['Press_Start_2P']">X (TWITTER)</span>
           </Link>
         </div>

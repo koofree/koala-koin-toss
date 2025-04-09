@@ -1,6 +1,6 @@
 import { Image } from '@/components/image/image';
+import Settings from './panels/GameOption';
 import Histories from './panels/Histories';
-import Settings from './panels/Settings';
 import { TitlePanel } from './panels/TitlePanel';
 
 interface ActionButtonsProps {

@@ -124,6 +124,8 @@ export const SESSION_VALIDATOR_ABI = [
   },
 ];
 
+export const KEY_PREFIX = 'kkt_';
+
 /**
  * @constant {string} ENCRYPTION_KEY_PREFIX
  * @description Prefix used for storing encryption keys in local storage
@@ -132,7 +134,7 @@ export const SESSION_VALIDATOR_ABI = [
  * ensuring each wallet address has its own unique encryption key stored separately from the
  * encrypted session data.
  */
-export const ENCRYPTION_KEY_PREFIX = 'kkt_encryption_key_';
+export const ENCRYPTION_KEY_PREFIX = `${KEY_PREFIX}encryption_key_`;
 
 /**
  * @constant {string} STORAGE_KEY_PREFIX
@@ -142,10 +144,22 @@ export const ENCRYPTION_KEY_PREFIX = 'kkt_encryption_key_';
  * ensuring each wallet address has its own unique session data stored separately from the
  * other wallets.
  */
-export const STORAGE_KEY_PREFIX = 'kkt_session_';
+export const SESSION_STORAGE_KEY_PREFIX = `${KEY_PREFIX}session_`;
+
+/**
+ * @constant {string} SETTING_STORAGE_KEY_PREFIX
+ * @description Prefix used for storing setting data in local storage
+ *
+ * The actual storage key is created by appending the user's wallet address to this prefix,
+ * ensuring each wallet address has its own unique setting data stored separately from the
+ * other wallets.
+ */
+export const SETTING_STORAGE_KEY = `${KEY_PREFIX}setting`;
+
+export const GAME_OPTIONS_STORAGE_KEY = `${KEY_PREFIX}game_options`;
+export const GAME_OPTIONS_STORAGE_UPDATED_AT_KEY = `${KEY_PREFIX}game_options_updated_at`;
 
 export const BLOCK_NUMBER_TO_FETCH = 1000000;
-
 /**
  * @constant {number} POOL_EDGE
  * @description The edge of the pool

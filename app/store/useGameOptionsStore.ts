@@ -2,6 +2,8 @@ import {
   BUILD_TIME,
   contractAddress,
   functionNames,
+  GAME_OPTIONS_STORAGE_KEY,
+  GAME_OPTIONS_STORAGE_UPDATED_AT_KEY,
   koalaKoinTossV1Abi,
   POOL_EDGE_DISCRIMINATOR,
 } from '@/config';
@@ -36,8 +38,8 @@ export const useGameOptionsStore = create<GameOptions>((set, get) => {
   };
 
   const initializeAllGameOptions = async (publicClient: PublicClient) => {
-    let storedAllGameOptionsUpdatedAt = localStorage.getItem('allGameOptionsUpdatedAt');
-    let storedAllGameOptions = localStorage.getItem('allGameOptions');
+    let storedAllGameOptions = localStorage.getItem(GAME_OPTIONS_STORAGE_KEY);
+    let storedAllGameOptionsUpdatedAt = localStorage.getItem(GAME_OPTIONS_STORAGE_UPDATED_AT_KEY);
 
     // check if the allGameOptions is outdated
     if (
@@ -45,8 +47,8 @@ export const useGameOptionsStore = create<GameOptions>((set, get) => {
       storedAllGameOptionsUpdatedAt &&
       new Date(storedAllGameOptionsUpdatedAt) < new Date(BUILD_TIME)
     ) {
-      localStorage.removeItem('allGameOptionsUpdatedAt');
-      localStorage.removeItem('allGameOptions');
+      localStorage.removeItem(GAME_OPTIONS_STORAGE_KEY);
+      localStorage.removeItem(GAME_OPTIONS_STORAGE_UPDATED_AT_KEY);
       storedAllGameOptions = null;
       storedAllGameOptionsUpdatedAt = null;
     }
@@ -131,8 +133,8 @@ export const useGameOptionsStore = create<GameOptions>((set, get) => {
 
     set({ gameOptions: newAllGameOptions as Array<GameOption> });
 
-    localStorage.setItem('allGameOptions', JSON.stringify(newAllGameOptions));
-    localStorage.setItem('allGameOptionsUpdatedAt', new Date().toISOString());
+    localStorage.setItem(GAME_OPTIONS_STORAGE_KEY, JSON.stringify(newAllGameOptions));
+    localStorage.setItem(GAME_OPTIONS_STORAGE_UPDATED_AT_KEY, new Date().toISOString());
   };
 
   return {

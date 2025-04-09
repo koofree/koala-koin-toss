@@ -158,7 +158,10 @@ export const MainGame = () => {
               />
             </div>
             <div className="flex items-center mr-6 cursor-pointer gap-2">
-              <div className="text-white flex items-center font-['Press_Start_2P'] text-sm">
+              <div
+                className="text-white flex items-center font-['Press_Start_2P'] text-sm"
+                onClick={() => setSoundEnabled(!soundEnabled)}
+              >
                 SOUND EFFECT
               </div>
               <Image
@@ -175,7 +178,10 @@ export const MainGame = () => {
               />
             </div>
             <div className="flex items-center cursor-pointer gap-2">
-              <div className="text-white flex items-center font-['Press_Start_2P'] text-sm">
+              <div
+                className="text-white flex items-center font-['Press_Start_2P'] text-sm"
+                onClick={() => setBGMEnabled(!BGMEnabled)}
+              >
                 BGM
               </div>
               <Image

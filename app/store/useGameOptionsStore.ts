@@ -5,10 +5,9 @@ import {
   GAME_OPTIONS_STORAGE_KEY,
   GAME_OPTIONS_STORAGE_UPDATED_AT_KEY,
   koalaKoinTossV1Abi,
-  POOL_EDGE_DISCRIMINATOR,
 } from '@/config';
 import { GameOption } from '@/types';
-import { floorNumber, roundNumber } from '@/utils/floorNumber';
+import { calculateMultiplier, floorNumber, roundNumber } from '@/utils/floorNumber';
 import { formatUnits, PublicClient } from 'viem';
 import { create } from 'zustand';
 
@@ -110,10 +109,7 @@ export const useGameOptionsStore = create<GameOptions>((set, get) => {
               Number(gameOption[1]),
               Number(gameOption[2]),
               String(prizePools[1]).toUpperCase(),
-              roundNumber(
-                Number(formatUnits(gameOption[5], 8)) * (1 - 0.035) * POOL_EDGE_DISCRIMINATOR,
-                2
-              ),
+              calculateMultiplier(gameOption as [number, number, number, string, number, bigint]),
               Number(roundNumber(Number(gameOption[4]) / 1_000_000, 2)),
               [
                 roundNumber(Number(formatUnits(betLimits[0], 18))),

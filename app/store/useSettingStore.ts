@@ -1,4 +1,4 @@
-import { SETTING_STORAGE_KEY } from '@/config';
+import { BUILD_TIME, SETTING_STORAGE_KEY } from '@/config';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -20,6 +20,7 @@ export const useSettingStore = create<SettingStore>()(
     {
       name: `${SETTING_STORAGE_KEY}`,
       storage: createJSONStorage(() => localStorage),
+      version: Date.parse(BUILD_TIME).valueOf(),
     }
   )
 );

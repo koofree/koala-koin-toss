@@ -7,6 +7,7 @@ import {
   koalaKoinTossV1Abi,
   paymasterAddress,
 } from '@/config';
+import useSettingStore from '@/store/useSettingStore';
 import { useUserGameOptionStore } from '@/store/useUserGameOptionStore';
 import { GameOption } from '@/types';
 import { clearStoredSession } from '@/utils/clearStoredSession';
@@ -32,6 +33,7 @@ type GamePlayProps = {
 export const useGamePlay = ({ userAddress, publicClient }: GamePlayProps) => {
   const { myGameHistory } = useGameHistory(userAddress);
   const { ethBalance, refetch } = useBalance();
+  const { soundEnabled } = useSettingStore();
 
   const [isWin, setIsWin] = useState<boolean | null>(null);
   const { gameId, userGameOption, setOption, setBetAmount, setSelectedSide } =
@@ -73,7 +75,10 @@ export const useGamePlay = ({ userAddress, publicClient }: GamePlayProps) => {
     }
 
     setIsFlipping(true);
-    new Audio('/sounds/coin-donation-2-180438.mp3').play();
+
+    if (soundEnabled) {
+      new Audio('/sounds/coin-donation-2-180438.mp3').play();
+    }
 
     const sessionData = await getStoredSession(userAddress, abstractClient);
     if (!sessionData) {

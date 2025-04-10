@@ -33,25 +33,40 @@ export const useUserGameOptionStore = create<UserGameOption>((set, get) => {
       const { getByCoinCountAndMinHeads } = useGameOptionsStore.getState();
       const minHeads = Math.min(coinCount, get().userGameOption.minHeads);
       const option = getByCoinCountAndMinHeads(coinCount, minHeads);
+      const betLimits = option?.[6];
+      const betAmount = Math.min(
+        get().userGameOption.betAmount,
+        betLimits?.[1] ?? INITIAL_BET_AMOUNT
+      );
       set({
         gameId: option?.[0],
-        userGameOption: { ...get().userGameOption, coinCount, minHeads, option },
+        userGameOption: { ...get().userGameOption, coinCount, minHeads, option, betAmount },
       });
     },
     setMinHeads: (minHeads) => {
       const { getByCoinCountAndMinHeads } = useGameOptionsStore.getState();
       const option = getByCoinCountAndMinHeads(get().userGameOption.coinCount, minHeads);
+      const betLimits = option?.[6];
+      const betAmount = Math.min(
+        get().userGameOption.betAmount,
+        betLimits?.[1] ?? INITIAL_BET_AMOUNT
+      );
       set({
         gameId: option?.[0],
-        userGameOption: { ...get().userGameOption, minHeads, option },
+        userGameOption: { ...get().userGameOption, minHeads, option, betAmount },
       });
     },
     setOption: (option: { coinCount: number; minHeads: number }) => {
       const { getByCoinCountAndMinHeads } = useGameOptionsStore.getState();
       const gameOption = getByCoinCountAndMinHeads(option.coinCount, option.minHeads);
+      const betLimits = gameOption?.[6];
+      const betAmount = Math.min(
+        get().userGameOption.betAmount,
+        betLimits?.[1] ?? INITIAL_BET_AMOUNT
+      );
       set({
         gameId: gameOption?.[0],
-        userGameOption: { ...get().userGameOption, ...option, option: gameOption },
+        userGameOption: { ...get().userGameOption, ...option, option: gameOption, betAmount },
       });
     },
     setBetAmount: (betAmount) => {

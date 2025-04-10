@@ -1,6 +1,7 @@
 'use client';
 
 import { kpSymbol } from '@/config';
+import useSettingStore from '@/store/useSettingStore';
 import { useUserGameOptionStore } from '@/store/useUserGameOptionStore';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
@@ -134,9 +135,11 @@ interface WinningMessageProps {
   animationEnabled: boolean;
 }
 
-const WinningMessage = ({ delay, payout, animationEnabled }: WinningMessageProps) => {
+const WinningMessage = ({ delay, payout }: WinningMessageProps) => {
+  const { soundEnabled } = useSettingStore();
+
   useEffect(() => {
-    if (animationEnabled) {
+    if (soundEnabled) {
       setTimeout(() => {
         const audio = new Audio('/sounds/win.mp3');
         audio.play();
@@ -179,9 +182,11 @@ interface LosingMessageProps {
   animationEnabled: boolean;
 }
 
-const LosingMessage = ({ delay, payout, animationEnabled }: LosingMessageProps) => {
+const LosingMessage = ({ delay, payout }: LosingMessageProps) => {
+  const { soundEnabled } = useSettingStore();
+
   useEffect(() => {
-    if (animationEnabled) {
+    if (soundEnabled) {
       setTimeout(() => {
         const audio = new Audio('/sounds/lose.mp3');
         audio.play();

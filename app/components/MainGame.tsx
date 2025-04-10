@@ -7,6 +7,7 @@ import { usePublicClientStore } from '@/store/usePublicClientStore';
 import { useBGM } from '@/hooks/useBGM';
 import { useGamePlay } from '@/hooks/useGamePlay';
 import { useGameOptionsStore } from '@/store/useGameOptionsStore';
+import useSettingStore from '@/store/useSettingStore';
 import { CoinDisplay } from './CoinDisplay';
 import { ControlPanel } from './ControlPanel';
 import { Image } from './image/image';
@@ -18,20 +19,26 @@ export const MainGame = () => {
   const { address: userAddress } = useAccount();
   const { ethBalance } = useBalance();
 
-  const [autoFlip, setAutoFlip] = useState(false);
-  const [animationEnabled, setAnimationEnabled] = useState(true);
-  const [autoFlipCount, setAutoFlipCount] = useState(1);
+  const { soundEnabled, BGMEnabled, setSoundEnabled, setBGMEnabled } = useSettingStore();
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  // now unuse this states (coming soon)
+  const [autoFlip, setAutoFlip] = useState(false);
+  const [autoFlipCount, setAutoFlipCount] = useState(1);
 
   const { playMusic, stopMusic } = useBGM();
 
   useEffect(() => {
-    playMusic();
+    if (BGMEnabled) {
+      playMusic();
+    } else {
+      stopMusic();
+    }
 
     return () => {
       stopMusic();
     };
-  }, []);
+  }, [BGMEnabled]);
 
   // Game states
   const { loadingProgress, initializeAllGameOptions } = useGameOptionsStore();
@@ -91,11 +98,11 @@ export const MainGame = () => {
 
   return (
     <div className="flex flex-col max-w-screen-xl min-w-[1280px] h-full z-10">
-      <div className="h-[35vh] min-h-[300px] flex items-center">
+      <div className="h-[35%] min-h-[300px] flex items-center">
         <CoinDisplay
           isFlipping={isFlipping}
           results={results}
-          animationEnabled={animationEnabled}
+          animationEnabled={true}
           isWin={isWin}
           reward={reward}
         />
@@ -130,7 +137,7 @@ export const MainGame = () => {
         )}
         {loadingProgress >= 100 && (
           <div className="flex justify-end pr-20 pt-2">
-            <div className="flex items-center mr-6 cursor-pointer">
+            <div className="flex items-center mr-6 cursor-pointer gap-2">
               <div
                 className="text-white flex items-center font-['Press_Start_2P'] text-sm"
                 onClick={() => setIsHistoryOpen(!isHistoryOpen)}
@@ -150,21 +157,46 @@ export const MainGame = () => {
                 className="mx-2"
               />
             </div>
-            <div className="text-white flex items-center font-['Press_Start_2P'] text-sm">
-              ANIMATION
+            <div className="flex items-center mr-6 cursor-pointer gap-2">
+              <div
+                className="text-white flex items-center font-['Press_Start_2P'] text-sm"
+                onClick={() => setSoundEnabled(!soundEnabled)}
+              >
+                SOUND EFFECT
+              </div>
+              <Image
+                src={
+                  soundEnabled
+                    ? '/images/replaces/btn_toggle_on.png'
+                    : '/images/replaces/btn_toggle_off.png'
+                }
+                width={60}
+                height={30}
+                alt={soundEnabled ? 'Toggle On' : 'Toggle Off'}
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                className="mx-2 cursor-pointer"
+              />
             </div>
-            <Image
-              src={
-                animationEnabled
-                  ? '/images/replaces/btn_toggle_on.png'
-                  : '/images/replaces/btn_toggle_off.png'
-              }
-              width={60}
-              height={30}
-              alt={animationEnabled ? 'Toggle On' : 'Toggle Off'}
-              onClick={() => setAnimationEnabled(!animationEnabled)}
-              className="mx-2 cursor-pointer"
-            />
+            <div className="flex items-center cursor-pointer gap-2">
+              <div
+                className="text-white flex items-center font-['Press_Start_2P'] text-sm"
+                onClick={() => setBGMEnabled(!BGMEnabled)}
+              >
+                BGM
+              </div>
+              <Image
+                src={
+                  BGMEnabled
+                    ? '/images/replaces/btn_toggle_on.png'
+                    : '/images/replaces/btn_toggle_off.png'
+                }
+                width={60}
+                height={30}
+                alt={BGMEnabled ? 'Toggle On' : 'Toggle Off'}
+                onClick={() => setBGMEnabled(!BGMEnabled)}
+                className="mx-2 cursor-pointer"
+              />
+            </div>
           </div>
         )}
       </div>

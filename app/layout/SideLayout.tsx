@@ -14,7 +14,7 @@ export const SideLayout = ({ side }: SideLayoutProps) => {
         z-0
       `}
     >
-      <div className="h-[35vh] min-h-[300px]">&nbsp;</div>
+      <div className="h-[35%] min-h-[300px]">&nbsp;</div>
       <div className="flex flex-row justify-center min-h-[600px] pt-40">
         <Image
           src={

@@ -1,4 +1,4 @@
-import { STORAGE_KEY_PREFIX } from '@/config';
+import { SESSION_STORAGE_KEY_PREFIX } from '@/config';
 import type { Address } from 'viem';
 
 /**
@@ -16,5 +16,5 @@ import type { Address } from 'viem';
  */
 export const getStorageKey = async (userAddress: Address): Promise<string> => {
   console.log('Getting storage key for address:', userAddress);
-  return `${STORAGE_KEY_PREFIX}${userAddress}`;
+  return `${SESSION_STORAGE_KEY_PREFIX}${userAddress}`;
 };

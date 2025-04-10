@@ -161,7 +161,7 @@ async function main() {
 
   const localFolder = process.argv[2] || process.env.target_path || '../out';
   const bucketName = process.argv[3] || process.env.bucket_name || 'abstract';
-  const s3Prefix = process.argv[4] || '';
+  const s3Prefix = process.argv[4] || process.env.s3_prefix || 'game/';
 
   console.log(`Starting upload from ${localFolder} to ${bucketName}`);
 

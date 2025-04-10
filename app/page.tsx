@@ -18,7 +18,7 @@ export default function Home() {
     >
       <div className="flex flex-col max-w-[1920px] min-h-[1000px] w-full h-full">
         <HeaderLayout />
-        <div className="flex flex-row justify-center w-full h-full overflow-hidden relative">
+        <div className="flex flex-row justify-center w-full h-full relative">
           <SideLayout side="left" />
           <SideLayout side="right" />
           <MainGame />

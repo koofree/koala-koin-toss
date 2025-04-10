@@ -148,6 +148,6 @@ export const INITIAL_BGM_VOLUME = 0.3;
  */
 export const LINKS = {
   PROOF_OF_PLAY_LINK: 'https://www.proofofplay.com/',
-  DOCUMENTATION_LINK: 'https://koalafun.xyz/',
+  DOCUMENTATION_LINK: 'https://docs.koalafun.xyz/',
   X_LINK: 'https://x.com/',
 };

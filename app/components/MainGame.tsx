@@ -98,7 +98,7 @@ export const MainGame = () => {
 
   return (
     <div className="flex flex-col max-w-screen-xl min-w-[1280px] h-full z-10">
-      <div className="h-[35vh] min-h-[300px] flex items-center">
+      <div className="h-[35%] min-h-[300px] flex items-center">
         <CoinDisplay
           isFlipping={isFlipping}
           results={results}
